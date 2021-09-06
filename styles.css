@@ -1,0 +1,119 @@
+﻿body {
+    font-family: Cambria, serif;
+    background-color: #ccc;
+    margin: 0;
+    overflow-x:auto;
+    overflow-y:scroll;
+}
+
+img {
+    display: block;
+}
+
+navbar {
+    list-style-type: none;
+    margin: 0;
+    display: block;
+    position: fixed;
+    height: 48px;
+    top: 0px;
+    left: 198px;
+    width: 100%;
+    border-bottom: 1px solid #000;
+    padding: 0;
+    overflow: hidden;
+    background: linear-gradient(#fff, #aaa);
+}
+.navbrand {
+    border: 1px solid #000;
+    display: block;
+    position: fixed;
+    padding: 0;
+    margin: 0;
+    left: 0px;
+    top: 0px;
+    width: 196px;
+    height: 48px;
+    background-color: #000;
+}
+    .navbrand .img-top {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 99;
+    }
+    .navbrand:hover .img-top {
+        display: block;
+        border: 1px solid #000;
+    }
+nlink {
+    display: block;
+    text-align: center;
+    font-size: 18px;
+    top: 16px;
+    bottom: 0px;
+    float: left;
+    border-right: 1px;
+    background: rgba(255,255,255,0.25);
+}
+    nlink a {
+        display: block;
+        padding: 20px 6px 8px 6px;
+        border-left: 1px solid transparent;
+        border-right: 1px solid #aaa;
+        text-decoration: none;
+    }
+        nlink a:hover {
+            text-decoration: underline;
+            border-left: 1px solid #333;
+            border-right: 1px solid #333;
+            background: rgba(255,255,255,0.5);
+        }
+
+.sidenav {
+    position: fixed;
+    z-index: 0;
+    top: 49px;
+    left: 0;
+    bottom: 0px;
+    width: 197px;
+    float: left;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-right: 1px solid #000;
+    display: block;
+    background-color: #ccc;
+}
+
+    .sidenav a {
+        font-size: 14px;
+        float: left;
+        display: block;
+        color: #000;
+        text-align: left;
+        padding: 4px 8px;
+        width: 196px;
+        overflow: hidden;
+        text-decoration: none;
+        border-bottom: 1px solid #777;
+        background: transparent;
+    }
+
+        .sidenav a:hover {
+            color: #00f;
+            text-decoration: underline;
+            background: linear-gradient(#fff, #aaa);
+        }
+
+.main {
+    float:left;
+    margin-left: 200px;
+    margin-top: 50px;
+    padding: 2px;
+    width:800px;
+    border-right: 1px solid #ccc;
+    background: #fff;
+    overflow-y:hidden;
+    overflow-x:auto;
+}

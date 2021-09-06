@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Fuze</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Times New Roman', 'Times New Roman', serif;
+            margin: 0;
+            background-color: #000;
+        }
+
+        img {
+            display: block;
+        }
+
+        /* Style the top navigation bar */
+        .navbar {
+            display: block;
+            overflow: hidden;
+            background-color: #333;
+            border-bottom: 2px groove #777;
+        }
+
+
+
+        /* Style navbar images*/
+        /*
+            .navbar b {
+                float: left;
+                display: block;
+                color: black;
+                padding: 1px 1px;
+                border: 1px groove #ccc;
+            } */
+
+        .navbar-brand {
+            float: left;
+            width: 94px;
+            height: 44px;
+            position: relative;
+            display: block;
+            border: 1px groove #ccc;
+        }
+
+            .navbar-brand .img-top {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 99;
+            }
+
+            .navbar-brand:hover .img-top {
+                display: block;
+            }
+
+        /* Style the navigation bar links */
+        .navbar a {
+            font-size: 29px;
+            float: left;
+            display: block;
+            color: #FFF;
+            text-align: center;
+            padding: 4px 8px;
+            text-decoration: none;
+            border: 2px groove #888;
+        }
+
+            /* Change color on hover */
+            .navbar a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <b class="navbar-brand" href="#">
+            <img src="images/fuze-min.png" alt="logo normal">
+            <img src="images/fuze-min-hover.png" class="img-top" alt="logo hover">
+        </b>
+        <a href="/">Default.aspx</a>
+        <a href="#">Link</a>
+        <a href="#">Link</a>
+        <a href="#" class="right">Link</a>
+    </div>
+
+</body>
+</html>

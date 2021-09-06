@@ -1,0 +1,19 @@
+if fuze-engine is greater than fuze-game, server load will be reduced, however cheating is easier
+comprimise: fuze-game loads vectors and tells fuze-engine where they are. vector is off-loaded when it is off-screen,
+therefore removing a possible zoom hack
+the game stores the position of everyone, that position is sent to the engine
+the only thing fuze-engine can send to fuze-game while playing are key presses
+the game, however, can send the position, points and kills, position of other players (if they are on screen) ETC
+fuze-game crunches the numbers for colission physics, but there arent going to be many in this game
+fuze-engine does the heavylifting for turning the vectors into displayed text.
+fuze engine is a short code so can be done in c++ easily as well, making the downloadable offline game easy to install and develop by combining the exe/dll?
+moomoo-style scripting using AHK will be prevented just by the game making them quite pointless
+eg no booster pads, and spikes can only be placed as mines behind the player, or maybe they will take some sort of resources or cooldown
+also, some guns only shoot where you point the mouse to, and others all shoot at set intervals and at the same times (every 1s, 0.5s, 0.25s), unlike the spreadshot or streamline in diep.io
+
+fuze-engine.js / fuze-engine.exe/dll:
+sends keypresses and mouse position to the game
+receives vectors that are on screen and turns it into text to be rendered
+
+fuze-game.exe:
+does everything else
