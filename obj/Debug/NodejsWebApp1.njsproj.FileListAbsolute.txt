@@ -1,3 +1,6 @@
 C:\Users\The user\source\repos\NodejsWebApp1\obj\Debug\NodejsWebApp1.njsprojAssemblyReference.cache
 C:\Users\The user\source\repos\NodejsWebApp1\obj\Debug\NodejsWebApp1.njsproj.CoreCompileInputs.cache
 C:\Users\The user\source\repos\NodejsWebApp1\bin\Microsoft.NodejsTools.WebRole.dll
+C:\Users\The user\source\repos\fuze-page\obj\Debug\NodejsWebApp1.njsprojAssemblyReference.cache
+C:\Users\The user\source\repos\fuze-page\obj\Debug\NodejsWebApp1.njsproj.CoreCompileInputs.cache
+C:\Users\The user\source\repos\fuze-page\bin\Microsoft.NodejsTools.WebRole.dll

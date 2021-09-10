@@ -2,7 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 
-http.createServer(function (req, res) {
+server = http.createServer(function (req, res) {
     console.log('request ', req.url);
 
     var filePath = '.' + req.url;
@@ -52,5 +52,6 @@ http.createServer(function (req, res) {
         }
     });
 
-}).listen(1337);
-console.log('Server running at http://127.0.0.1:1337');
+});
+server.listen(5000);
+console.log('Server running at http://127.0.0.1:5000');
