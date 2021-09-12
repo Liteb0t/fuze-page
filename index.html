@@ -3,52 +3,58 @@
 <head>
     <title>Free games and software</title>
     <meta name="description" content="Fuze page is the home for upcoming online browser game: Fuze Game">
-    <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,blog,software,fuze game">
+    <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,blog,software,fuze game,fuze engine">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <link rel="icon" href="window-icon.png" type="image/png">
-    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="main-styles.css" />
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
-    <div class="navbrand">
-        <a href="index.html"><img src="fuze-min.png" alt="logo normal"></a>
-        <a href="index.html"><img src="fuze-min-hover.png" class="img-top" alt="logo hover"></a>
+    <!--Navigation bar-->
+    <div id="nav-placeholder">
+
     </div>
-    <navbar>
-        <nlink><a class="topnavbtn" href="index.html">Home</a></nlink>
-        <nlink><a class="topnavbtn" href="changelog.html">Changelog</a></nlink>
-        <nlink><a class="topnavbtn" href="blank.html">Blank page</a></nlink>
-        <nlink><a class="topnavbtn" href="game.html" target="_blank" rel="noopener noreferrer">Play</a></nlink>
-    </navbar>
-    <div class="sidenav">
-        <a href="#about">About</a>
-        <a href="#fuze-engine">Fuze engine</a>
-        <a href="#links">Links</a>
-    </div>
-    <div class="main">
-        <div id="#about">
-            <h1>About</h1>
-            <p>
-                Fuze page is - i guess - my blog, and my current project is Fuze Engine & Fuze Game (very creative names, i know).<br />
-                It is based on popular browser game <a href="https://diep.io">Diep.io</a>, but with many additions and changes - making it not really a replacement or clone of diep.io, but a new game entirely.
-                The current future plans for the game (it might change) also takes inspiration from <a href="https://robocraftgame.com/#feature">Robocraft</a> where you design your own tank out of blocks. The use of it here is: It will be two-dimensional, and 'blocks' will be shown as unicode characters (more on that in the Fuze Engine section). The tool used to design it can just be a .txt file from notepad, or be done within the site in a text box.<br />
-                A second inspiration is <a href="https://moomoo.io">Moomoo.io</a>, where you build structures, like walls or windmills, to level up. The entire moomoo.io won't be copied, its just used as an example because you will be able to build some of those structures in Fuze Game.<br />
-                The original idea was to have the game a lot like diep.io, except instead of getting an option to upgrade your tank to a higher level preset every 15 levels, you gain upgrade points that can be used to add a new barrel to the tank (you choose the type of barrel), and each type of gun has its own upgrades (you can upgrade the bullet speed, damage, etc. This is in diep.io to an extent but the upgrades apply for ALL the guns on the tank, not individual ones) as well as the tank itself having upgrades (this is already in diep.io). But i came up with the new idea and thought it was more unique and would really make this game stand out against the other diep.io based io games being made right now.
-            </p>
-        </div>
-        <div id="#fuze-engine">
-            <h1>Fuze Engine</h1>
-            <p>
-                Fuze engine is a new javascript game engine i am developing, and Fuze Game will run on it. It renders not with pixels, but unicode characters, similar in a way to <a href="https://en.wikipedia.org/wiki/Teletext">Teletext</a> but this runs in a browser and can process movement and collisions. It takes a small ascii .txt file and loads it into a 2D level with walls and stuff.<br />
-                The unicodes used might include <a href="https://unicode.org/charts/PDF/U1FB00.pdf">Symbols for Legacy Computing</a> to display objects in more than 4 directions but for now is just <a href="https://unicode.org/charts/PDF/U2580.pdf">Block Elements</a>.
-            </p>
-        </div>
-        <div id="#links">
-            <h1>Links</h1>
-            <p>
-                <a href="https://discord.gg/FNJMc58">Website discord</a>
-            </p>
-        </div>
-    </div>
+
+    <script>
+        $(function () {
+            $("#nav-placeholder").load("nav.html");
+        });
+    </script>
+    <!--end of Navigation bar-->
+    <table class="the-page">
+        <tr>
+            <td class="sidenav">
+                <a href="#overview">Overview</a>
+                <a href="#fuze-engine">Fuze Engine</a>
+                <a href="#fuze-game">Fuze Game</a>
+            </td>
+            <td class="main">
+                <div id="#overview">
+                    <h2>Overview</h2>
+                    <p>
+                        Welcome to Fuze Page!<br />
+                        Play Fuze Game and/or join the Discord server
+                        and interact with the active community (lie)<br />
+                        This website is currently going through a design change: the latest edits can be found on the <a href="/new-look.html">test page</a>.<br />
+                    </p>
+                </div>
+                <div id="#fuze-engine">
+                    <h2>Fuze Engine</h2>
+                    <p>
+                        A game engine which uses unicode text to render objects.
+                    </p>
+                </div>
+                <div id="fuze-game">
+                    <h2>Fuze Game</h2>
+                    <p>
+                        This web game runs on Fuze Engine.<br />
+                        Fuze Game takes inspiration from diep.io and robocraft to create a multiplayer game, where players build their own 2D spaceship out of blocks, and battle others.<br />
+                        The game can also be downloaded for offline play.
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

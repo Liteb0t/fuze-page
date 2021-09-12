@@ -67,6 +67,9 @@
     <Content Include="inh\info.html" />
     <Content Include="inh\navbar.html" />
     <Content Include="level\0-test.txt" />
+    <Content Include="main-styles.css">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="nav.html">
       <SubType>Code</SubType>
     </Content>
@@ -77,16 +80,6 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="package.json" />
-    <Content Include="Page1.html">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Page2.html">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="example.html" />
-    <Content Include="watkin.html">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="README.md" />
     <Content Include="styles.css" />
     <Content Include="warning-icon.png" />
