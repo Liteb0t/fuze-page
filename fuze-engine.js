@@ -33,7 +33,7 @@ document.addEventListener('keydown', (event) => {
 
 // comment vsauce out if you're using another JS file to create the vectors.
 // make sure it uses the same names: player = [{id, type, xpos, ETC}]
-var vsauce = { id: 'default', type: "basic", xpos: 10, ypos: 10, xsize: 6, ysize: 4, xspeed: 1, yspeed: 1 };
+// var vsauce = { id: 'default', type: "basic", xpos: 10, ypos: 10, xsize: 6, ysize: 4, xspeed: 1, yspeed: 1 };
 function updateScreen() {
     screen_width = parseInt(document.getElementById("scr-width").value);
     screen_height = parseInt(document.getElementById("scr-height").value);
@@ -90,9 +90,9 @@ function update(time) {
     }
     lastFrameTime = time; // remember the time of the rendered frame
     // render the frame
-    if (player.xspeed > 30) { player.xspeed = 30; } if (player.yspeed > 15) { player.yspeed = 15; }
-    if (player.xspeed < -30) { player.xspeed = -30; } if (player.yspeed < -15) { player.yspeed = -15; }
-    player.xpile += player.xspeed / 30;
+    if (player.xspeed > 60) { player.xspeed = 60; } if (player.yspeed > 30) { player.yspeed = 30; }
+    if (player.xspeed < -60) { player.xspeed = -60; } if (player.yspeed < -30) { player.yspeed = -30; }
+    player.xpile += player.xspeed / 60;
     player.ypile += player.yspeed / 30;
     if (player.xpile >= 1) { player.xpos += 1; player.xpile -= 1; } else if (player.xpile <= -1) { player.xpos -= 1; player.xpile += 1; }
     if (player.ypile >= 1) { player.ypos += 1; player.ypile -= 1; } else if (player.ypile <= -1) { player.ypos -= 1; player.ypile += 1; }

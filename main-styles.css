@@ -1,14 +1,16 @@
 ﻿body {
     font-family: 'Times New Roman', Times, serif;
-    background-color: #333;
+    background-color: #337;
     overflow-x: auto;
     overflow-y: auto;
     width: 1000px;
     height: 100%;
     margin: auto;
     border: 1px solid #ccc;
-    overflow-x:auto;
-    overflow-y:auto;
+    overflow-x: auto;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    font-size: 16px;
 }
 
 table {
@@ -30,14 +32,19 @@ td {
     padding-bottom: 5px;
 }
 
+.below-nav {
+    background-color: #444;
+    min-height: 500px;
+}
+
 .navbrand {
     border: none;
     border-right: 2px solid #aaa;
     display: inline-block;
     position: relative;
-    margin:auto;
+    margin: auto;
     padding: 0px;
-    float:left;
+    float: left;
     top: 0px;
     width: 200px;
     height: 48px;
@@ -48,7 +55,7 @@ td {
     .navbrand .img-top {
         display: none;
         position: relative;
-        margin:auto;
+        margin: auto;
         top: 0px;
         left: 0px;
         z-index: 99;
@@ -70,33 +77,33 @@ td {
     background-image: linear-gradient(#d11, #611);
     font-size: 24px;
     color: white;
-    float:left;
+    float: left;
     left: 0px;
-    height:48px;
-    font-weight:500;
+    height: 48px;
+    font-weight: 500;
     border-bottom: 2px solid #aaa;
     overflow: hidden;
 }
 
-.navbar a{
-    display: inline-block;
-    position: relative;
-    color: white;
-    margin: 0px;
-    height: 50px;
-    text-align: center;
-    text-decoration: none;
-    vertical-align: bottom;
-    bottom: 0px;
-    padding: 6px;
-    border-right: 1px solid #000;
-    background: none;
-}
+    .navbar a {
+        display: inline-block;
+        position: relative;
+        color: white;
+        margin: 0px;
+        height: 50px;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: bottom;
+        bottom: 0px;
+        padding: 6px;
+        border-right: 1px solid #000;
+        background: none;
+    }
 
-.navbar a:hover {
-    text-decoration: underline;
-    background: linear-gradient(#aaa, #222);
-}
+        .navbar a:hover {
+            text-decoration: underline;
+            background: linear-gradient(#aaa, #222);
+        }
 
     .navbar:after {
         content: "";
@@ -105,10 +112,11 @@ td {
     }
 
 .sidenav {
-    width:200px;
+    width: 200px;
     vertical-align: top;
     margin: 0;
     padding: 0;
+    background-color: #333;
     border-right: 2px solid #aaa;
     left: 0px;
     top: 0px;
@@ -136,6 +144,20 @@ td {
     padding: 4px;
     color: white;
     text-emphasis-color: #f0f;
+    min-height: 500px;
+    width: 790px;
+    vertical-align: top;
+}
+
+.embed {
+    border-style: solid;
+    border-color: #fff;
+    border-width: 2px;
+    padding: 2px;
+}
+
+.main p {
+    margin-bottom: 40px;
 }
 
 h2 {

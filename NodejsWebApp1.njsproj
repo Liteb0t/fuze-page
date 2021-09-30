@@ -46,6 +46,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="changelog.html" />
+    <Content Include="communism.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="error.html">
       <SubType>Code</SubType>
     </Content>

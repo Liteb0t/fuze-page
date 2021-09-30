@@ -10,6 +10,7 @@
     overflow-x:auto;
     overflow-y:auto;
     margin-bottom: 20px;
+    font-size: 16px;
 }
 
 table {
@@ -115,6 +116,7 @@ td {
     vertical-align: top;
     margin: 0;
     padding: 0;
+    background-color: #333;
     border-right: 2px solid #aaa;
     left: 0px;
     top: 0px;
@@ -143,7 +145,19 @@ td {
     color: white;
     text-emphasis-color: #f0f;
     min-height: 500px;
+    width: 790px;
     vertical-align: top;
+}
+
+.embed {
+    border-style: solid;
+    border-color: #fff;
+    border-width: 2px;
+    padding: 2px;
+}
+
+.main p {
+    margin-bottom: 40px;
 }
 
 h2 {
