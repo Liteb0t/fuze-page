@@ -49,6 +49,13 @@
     <Content Include="communism.html">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="downloads\fuzevd-1_1\fuzevd-installer.msi" />
+    <Content Include="downloads\fuzevd-1_1\Release.7z" />
+    <Content Include="downloads\fuzevd-1_1\Release.zip" />
+    <Content Include="downloads\fuzevd-1_1\setup.exe" />
+    <Content Include="edit-html.vbs">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="error.html">
       <SubType>Code</SubType>
     </Content>
@@ -58,6 +65,9 @@
     <Content Include="fuze-logo-discord.png" />
     <Content Include="fuze-min-hover.png" />
     <Content Include="fuze-min.png" />
+    <Content Include="fuzevd.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="game.html">
       <SubType>Code</SubType>
     </Content>
@@ -73,7 +83,12 @@
     <Content Include="main-styles.css">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="media\fuzevd-capture-2.PNG" />
+    <Content Include="media\fvd-icon-exp.ico" />
     <Content Include="nav.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="nav3.html">
       <SubType>Code</SubType>
     </Content>
     <Content Include="new-look.html">
@@ -85,13 +100,17 @@
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="styles.css" />
+    <Content Include="tricerasmash.html" />
     <Content Include="warning-icon.png" />
     <Content Include="window-icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="downloads\fuzevd-1_1\" />
     <Folder Include="fonts\" />
     <Folder Include="inh\" />
     <Folder Include="level\" />
+    <Folder Include="downloads\" />
+    <Folder Include="media\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

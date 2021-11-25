@@ -11,6 +11,10 @@ server = http.createServer(function (req, res) {
     }
 
     var extname = String(path.extname(filePath)).toLowerCase();
+    if (extname == '') {
+        extname = '.html';
+        filePath = filePath + '.html';
+    }
     var mimeTypes = {
         '.txt': 'text/plain',
         '.html': 'text/html',
