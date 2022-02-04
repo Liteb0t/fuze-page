@@ -6,7 +6,7 @@
     <RootNamespace>NodejsWebApp1</RootNamespace>
     <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
     <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
-    <NodeExePath>C:\Program Files\nodejs\node.exe</NodeExePath>
+    <NodeExePath>\\dldafs01\studentfolders$\MichaelGlukhov20\My Documents\node-v16.13.0-win-x86\node.exe</NodeExePath>
     <Environment>NODE_SKIP_PLATFORM_CHECK=1</Environment>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -62,9 +62,6 @@
     <Content Include="fonts\IBMPlexMono-Medium.ttf" />
     <Content Include="fonts\IBMPlexMono-Medium.woff" />
     <Content Include="fonts\IBMPlexMono-Medium.woff2" />
-    <Content Include="fuze-logo-discord.png" />
-    <Content Include="fuze-min-hover.png" />
-    <Content Include="fuze-min.png" />
     <Content Include="fuzevd.html">
       <SubType>Code</SubType>
     </Content>
@@ -83,8 +80,15 @@
     <Content Include="main-styles.css">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="media\arab-music.mid" />
+    <Content Include="media\fuze-logo-discord.png" />
+    <Content Include="media\fuze-min-hover.png" />
+    <Content Include="media\fuze-min.png" />
     <Content Include="media\fuzevd-capture-2.PNG" />
     <Content Include="media\fvd-icon-exp.ico" />
+    <Content Include="media\mash-invasion.png" />
+    <Content Include="media\warning-icon.png" />
+    <Content Include="media\window-icon.png" />
     <Content Include="nav.html">
       <SubType>Code</SubType>
     </Content>
@@ -101,8 +105,6 @@
     <Content Include="README.md" />
     <Content Include="styles.css" />
     <Content Include="tricerasmash.html" />
-    <Content Include="warning-icon.png" />
-    <Content Include="window-icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="downloads\fuzevd-1_1\" />
