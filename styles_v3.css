@@ -1,0 +1,160 @@
+body {
+	margin: auto auto;
+	background-color: #36A;
+	position: relative;
+	width: 86%;
+	border-left: 1px solid #28343B;
+	border-right: 1px solid #28343B;
+	border-bottom: 1px solid #28343B;
+	min-width: 610px;
+	margin-bottom: 10px;
+}
+
+#banner {
+    background-color: black;
+    background-image: url(media/header.png);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: top right;
+    padding: 0;
+	padding-left: 5px;
+    height: 50px;
+    margin-bottom: 0;
+    border-bottom: 0;
+    border-top: 0;
+    border-left: 1px solid #28343B;
+    border-right: 1px solid #28343B;
+}
+
+#banner h1 {
+    height: 40px;
+    vertical-align: middle;
+    font-size: 36px;
+    color: white;
+    font-weight: thicc;
+    display: block;
+    margin: 0;
+    float: left;
+	padding: 4px;
+}
+
+#banner a {
+	top: 0;
+}
+
+#banner img {
+	border: 1px solid #fff;
+	vertical-align: text-top;
+}
+
+#banner h1 a:link, #banner h1 a:hover, #banner h1 a:active, #banner h1 a:visited {
+    text-decoration: none;
+}
+
+navbar {
+	display: block;
+	position: sticky;
+	top: 0;
+	background-color: brown;
+	height: 32px;
+	border-top: 2px solid #222;
+	border-bottom: 2px solid #222;
+    border-left: 1px solid #28343B;
+    border-right: 1px solid #28343B;
+	padding-bottom: 1px;
+}
+
+navbar img {
+	padding: 0;
+	margin: 0;
+	display: block;
+}
+
+navbar a {
+	display: block;
+	font-size: 18px;
+	color: #FFF;
+	float: left;
+	padding: 6px;
+	border-right: 1px solid #987;
+	background: none;
+}
+
+navbar a #navbrand {
+	padding: 0px;
+	margin: 0;
+	float: left;
+	height: 36px;
+	display: block;
+	vertical-align: middle;
+}
+
+navbar a:hover {
+	color: #000;
+	background: linear-gradient(#FFF, #EC9);
+}
+
+navbar #login_button {
+	font-weight: bold;
+	float: right;
+	color: black;
+	border-left: 1px solid #000;
+	background-color: #6E6;
+	border-right: none;
+}
+
+navbar #login_button:hover {
+	color: white;
+	background: linear-gradient(#CFC,#030)
+}
+
+#main {
+	background-color: #FFF;
+	color: black;
+    border-left: 1px solid #28343B;
+    border-right: 1px solid #28343B;
+    border-bottom: 1px solid #28343B;
+	padding: 5px 5px 10px 5px;
+	margin: 0px;
+	min-height: 300px;
+}
+
+#main p {
+	margin-top: 0;
+}
+
+#main h2 {
+	border-top: 1px solid #aaa;
+}
+/*
+#main h3 {
+	padding: 10px 5px 10px 5px;
+	margin: 10px 0px 10px 0px;
+}
+*/
+#main img {
+	padding: 2px;
+	border: 1px solid #222;
+}
+
+table {
+	border: 1px solid #222;
+	width: 100%;
+	max-width: 1000px;
+}
+
+th {
+	text-align: left;
+	padding: 5px 5px 5px 5px;
+}
+td {
+	border: 1px solid #aaa;
+	padding: 2px 1px 2px 5px;
+}
+td h4 {
+	padding: 0px;
+	margin: 0px;
+}
+tr {
+	margin: 0;
+}

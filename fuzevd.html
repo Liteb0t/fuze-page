@@ -6,67 +6,70 @@
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,blog,software,changelog,updates,fuze game">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="main-styles.css" />
-    <link rel="icon" href="window-icon.png" type="image/png">
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles_v3.css" />
+    <link rel="icon" href="media/favicon.png" type="image/png">
 </head>
 <body>
-    <!--Navigation bar-->
-    <div id="nav-placeholder">
 
-    </div>
+<div id="banner">
+<h1 id="title">
+FuzeVD - Fuze.page
+</h1>
+</div>
 
-    <script>
-        $(function () {
-            $("#nav-placeholder").load("nav.html");
-        });
-    </script>
-    <!--end of Navigation bar-->
-    <table>
-        <tr class="below-nav">
-            <td class="sidenav">
-                <a href="#overview">Overview</a>
-                <a href="#download">Download</a>
-                <a href="#showcase">Showcase</a>
-            </td>
-            <td class="main">
-                <div id="#overview">
-                    <h2>Overview</h2>
-                    <p>
-                        <img src="/media/fvd-icon-exp.ICO" style="float:right;"/>
-                        FuzeVD is a GUI application preinstalled with youtube-dl and FFMPEG to bring easy formatted downloads across many sites, primarily youtube.<br />
-                        Youtube-dl: <a href="https://yt-dl.org/">https://yt-dl.org/</a><br />
-                        FFMPEG: <a href="https://ffmpeg.org/">https://ffmpeg.org/</a><br />
-                    </p>
-                </div>
-                <div id="#download">
-                    <h2>Download</h2>
-                    <p>
-                        Version 1.1 - windows installer (24.8MB)<br />
-                        <a href="/downloads/fuzevd-1_1/fuzevd-installer.msi">fuzevd-installer.msi</a><br />
-                        <br />
-                        Version 1.1 - ZIP package (23.7MB)<br />
-                        <a href="/downloads/fuzevd-1_1/Release.zip">Release.zip</a><br />
-                        <br />
-                        Version 1.1 - 7z package (19.1MB)<br />
-                        <a href="/downloads/fuzevd-1_1/Release.7z">Release.7z</a><br />
-                        <br />
-                        Version 1.1 - Minimal windows installer (722KB)<br />
-                        <a href="/downloads/fuzevd-1_1/setup.exe">setup.exe</a><br />
-                        For a minimal install, remember to copy youtube-dl.exe and ffmpeg.exe into the FuzeVD folder.<br />
-                        This is located in C:/Program Files (x86)/FuzeVD/ by default.
-                        <br />
-                    </p>
-                </div>
-                <div id="#showcase">
-                    <h2>Showcase</h2>
-                    <p>
-                        Downloading a secret video ...(image)<br />
-                        <img src="/media/fuzevd-capture-2.PNG" class="embed">
-                    </p>
-                </div>
-            </td>
-        </tr>
-    </table>
+<navbar>
+<a style="padding: 0; margin: 0" href="/" id="navbrand">
+<img height="34" width="73" alt="Fuze" id="logo" src="media/fuze-min.png"
+                 onmouseover="this.src='media/fuze-min-hover.png';"
+                 onmouseout="this.src='media/fuze-min.png';">
+</img>
+</a>
+<a href="game.html">Fuze Game</a>
+<a href="fuzevd.html">FuzeVD</a>
+<a href="communism.html">Community</a>
+<a href="tricerasmash.html">Tricerasmash</a>
+<a href="changelog.html">Changelog</a>
+<a href="https://www.youtube.com/watch?v=6n3pFFPSlW4" id="login_button">Log in</a>
+</navbar>
+
+<div id="main">
+	<div id="#overview">
+		<h2>Overview</h2>
+		<p>
+			<img src="/media/fvd-icon-exp.ICO" style="float:right;"/>
+			FuzeVD is a GUI application preinstalled with youtube-dl and FFMPEG to bring easy formatted downloads across many sites, primarily youtube.<br />
+			Youtube-dl: <a href="https://yt-dl.org/">https://yt-dl.org/</a><br />
+			FFMPEG: <a href="https://ffmpeg.org/">https://ffmpeg.org/</a><br />
+		</p>
+	</div>
+	<div id="#download">
+		<h2>Download</h2>
+		<p>
+			Version 1.1 - windows installer (24.8MB)<br />
+			<a href="/downloads/fuzevd-1_1/fuzevd-installer.msi">fuzevd-installer.msi</a><br />
+			<br />
+			Version 1.1 - ZIP package (23.7MB)<br />
+			<a href="/downloads/fuzevd-1_1/Release.zip">Release.zip</a><br />
+			<br />
+			Version 1.1 - 7z package (19.1MB)<br />
+			<a href="/downloads/fuzevd-1_1/Release.7z">Release.7z</a><br />
+			<br />
+			Version 1.1 - Minimal windows installer (722KB)<br />
+			<a href="/downloads/fuzevd-1_1/setup.exe">setup.exe</a><br />
+			For a minimal install, remember to copy youtube-dl.exe and ffmpeg.exe into the FuzeVD folder.<br />
+			This is located in C:/Program Files (x86)/FuzeVD/ by default.
+			<br />
+		</p>
+	</div>
+	<div id="#showcase">
+		<h2>Showcase</h2>
+		<p>
+			Downloading a secret video ...(image)<br />
+			<img width="358" height="434" src="media/fuzevd-capture-2.PNG" class="embed">
+		</p>
+	</div>
+
+</div>
+
 </body>
 </html>

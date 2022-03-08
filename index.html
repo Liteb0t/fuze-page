@@ -1,68 +1,70 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Free games and software</title>
+    <title>Fuze.page</title>
     <meta name="description" content="Fuze page is the home for upcoming online browser game: Fuze Game">
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,blog,software,fuze game,fuze engine">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <link rel="icon" href="window-icon.png" type="image/png">
-    <link rel="stylesheet" type="text/css" href="main-styles.css" />
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <link rel="icon" href="media/favicon.png" type="image/png">
+    <link rel="stylesheet" type="text/css" href="styles_v3.css" />
 </head>
 <body>
-    <!--Navigation bar-->
-    <div id="nav-placeholder">
 
-    </div>
+<div id="banner">
+<h1 id="title">
+Home Page
+</h1>
+</div>
 
-    <script>
-        $(function () {
-            $("#nav-placeholder").load("nav.html");
-        });
-    </script>
-    <!--end of Navigation bar-->
-    <table>
-        <tr class="below-nav">
-            <td class="sidenav">
-                <a href="#overview">Overview</a>
-                <a href="#fuze-engine">Fuze Engine</a>
-                <a href="#fuze-game">Fuze Game</a>
-                <a href="#fuzevd">FuzeVD</a>
-            </td>
-            <td class="main">
-                <div id="#overview">
-                    <h2>Overview</h2>
-                    <p>
-                        Welcome to Fuze Page!<br />
-                        Play Fuze Game and/or join the Discord server
-                        and interact with the active community (lie)<br />
-                        This website is currently going through a design change: the latest edits can be found on the <a href="/new-look.html">test page</a>.<br />
-                    </p>
-                </div>
-                <div id="#fuze-engine">
-                    <h2>Fuze Engine</h2>
-                    <p>
-                        A game engine which uses unicode text to render objects.
-                    </p>
-                </div>
-                <div id="fuze-game">
-                    <h2>Fuze Game</h2>
-                    <p>
-                        This web game runs on Fuze Engine.<br />
-                        Fuze Game takes inspiration from diep.io and robocraft to create a multiplayer game, where players build their own 2D spaceship out of blocks, and battle others.<br />
-                        The game can also be downloaded for offline play.
-                    </p>
-                </div>
-                <div id="fuzevd">
-                    <h2>FuzeVD (Video Downloader)</h2>
-                    <p>
-                        A GUI for youtube-dl and ffmpeg. Download media from youtube and many other sites with a format and quality selection.<br />
-                        Link: <a href="https://fuze.page/fuzevd/">https://fuze.page/fuzevd/</a>
-                    </p>
-                </div>
-            </td>
-        </tr>
-    </table>
+<navbar>
+<a style="padding: 0; margin: 0" href="/" id="navbrand">
+<img height="34" width="73" alt="Fuze" id="logo" src="media/fuze-min.png"
+                 onmouseover="this.src='media/fuze-min-hover.png';"
+                 onmouseout="this.src='media/fuze-min.png';">
+</img>
+</a>
+<a href="game.html">Fuze Game</a>
+<a href="fuzevd.html">FuzeVD</a>
+<a href="communism.html">Community</a>
+<a href="tricerasmash.html">Tricerasmash</a>
+<a href="changelog.html">Changelog</a>
+<a href="https://www.youtube.com/watch?v=6n3pFFPSlW4" id="login_button">Log in</a>
+</navbar>
+
+<div id="main">
+	<div id="#overview">
+		<h2>Overview</h2>
+		<p>
+			Welcome to Fuze Page!<br />
+			Play Fuze Game and/or join the Discord server
+			and interact with the active community (lie)<br />
+			This website is currently going through a design change: the latest edits can be found on the <a href="/new-look.html">test page</a>.<br />
+		</p>
+	</div>
+	<div id="#fuze-engine">
+		<h2>Fuze Engine</h2>
+		<p>
+			A game engine which uses unicode text to render objects.
+		</p>
+	</div>
+	<div id="fuze-game">
+		<h2>Fuze Game</h2>
+		<p>
+			This web game runs on Fuze Engine.<br />
+			Fuze Game takes inspiration from diep.io and robocraft to create a multiplayer game, where players build their own 2D spaceship out of blocks, and battle others.<br />
+			The game can also be downloaded for offline play.
+		</p>
+	</div>
+	<div id="fuzevd">
+		<h2>FuzeVD (Video Downloader)</h2>
+		<p>
+			A GUI for youtube-dl and ffmpeg. Download media from youtube and many other sites with a format and quality selection.<br />
+			Link: <a href="https://fuze.page/fuzevd">https://fuze.page/fuzevd</a>
+		</p>
+	</div>
+
+</div>
+
 </body>
 </html>
