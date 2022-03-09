@@ -6,7 +6,7 @@
     <RootNamespace>NodejsWebApp1</RootNamespace>
     <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
     <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
-    <NodeExePath>\\dldafs01\studentfolders$\MichaelGlukhov20\My Documents\node-v16.13.0-win-x86\node.exe</NodeExePath>
+    <NodeExePath>G:\Program Files\nodejs\node.exe</NodeExePath>
     <Environment>NODE_SKIP_PLATFORM_CHECK=1</Environment>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -32,12 +32,13 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="fuze-engine.js">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="fuze-game-local.js">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="fuze-engine\fuze-engine.js" />
+    <Compile Include="fuze-engine\fuze-game-local.js" />
+    <Compile Include="level\fuze-engine-1.js" />
+    <Compile Include="level\fuze-engine-2.js" />
+    <Compile Include="level\fuze-game-local-2.js" />
+    <Compile Include="libs\howler.core.min.js" />
+    <Compile Include="libs\howler.js" />
     <Compile Include="server.js" />
     <Content Include="1337-fanclub.html">
       <SubType>Code</SubType>
@@ -49,19 +50,41 @@
     <Content Include="communism.html">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="docs\fuze-engine vs fuze-game anticheat.txt" />
     <Content Include="downloads\fuzevd-1_1\fuzevd-installer.msi" />
     <Content Include="downloads\fuzevd-1_1\Release.7z" />
     <Content Include="downloads\fuzevd-1_1\Release.zip" />
     <Content Include="downloads\fuzevd-1_1\setup.exe" />
-    <Content Include="edit-html.vbs">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="error.html">
       <SubType>Code</SubType>
     </Content>
     <Content Include="fonts\IBMPlexMono-Medium.ttf" />
     <Content Include="fonts\IBMPlexMono-Medium.woff" />
     <Content Include="fonts\IBMPlexMono-Medium.woff2" />
+    <Content Include="fuze-engine\sounds\Glitch Sound Effect %28Speaker%29.mp3" />
+    <Content Include="fuze-engine\sounds\Megalovania.mp3" />
+    <Content Include="fuze-engine\sounds\peter_owchie.mp3" />
+    <Content Include="fuze-engine\sounds\phrygian.wav" />
+    <Content Include="fuze-engine\textures\amogus.txt" />
+    <Content Include="fuze-engine\textures\bobtank.txt" />
+    <Content Include="fuze-engine\textures\clippy.txt" />
+    <Content Include="fuze-engine\textures\draft.txt" />
+    <Content Include="fuze-engine\textures\fish.txt" />
+    <Content Include="fuze-engine\textures\goblin.txt" />
+    <Content Include="fuze-engine\textures\impostor.txt" />
+    <Content Include="fuze-engine\textures\kyle.txt" />
+    <Content Include="fuze-engine\textures\maps\0-test.txt" />
+    <Content Include="fuze-engine\textures\maps\1-racecourse.txt" />
+    <Content Include="fuze-engine\textures\maps\2-village.txt" />
+    <Content Include="fuze-engine\textures\maps\3-battleground.txt" />
+    <Content Include="fuze-engine\textures\maps\4-shells.txt" />
+    <Content Include="fuze-engine\textures\mario.txt" />
+    <Content Include="fuze-engine\textures\monkey.txt" />
+    <Content Include="fuze-engine\textures\peter.txt" />
+    <Content Include="fuze-engine\textures\player.txt" />
+    <Content Include="fuze-engine\textures\sans.txt" />
+    <Content Include="fuze-engine\textures\snail.txt" />
+    <Content Include="fuze-engine\textures\stewie.txt" />
     <Content Include="fuzevd.html">
       <SubType>Code</SubType>
     </Content>
@@ -71,22 +94,29 @@
     <Content Include="index.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="inh\fuze-min-hover.png" />
-    <Content Include="inh\fuze-min.png" />
-    <Content Include="inh\index.html" />
-    <Content Include="inh\info.html" />
-    <Content Include="inh\navbar.html" />
     <Content Include="level\0-test.txt" />
+    <Content Include="level\1-racecourse.txt" />
+    <Content Include="level\2-village.txt" />
+    <Content Include="level\3-battleground.txt" />
+    <Content Include="level\4-shells.txt" />
+    <Content Include="libs\howler.core.min.txt" />
     <Content Include="main-styles.css">
       <SubType>Code</SubType>
     </Content>
     <Content Include="media\arab-music.mid" />
+    <Content Include="media\favicon.png" />
     <Content Include="media\fuze-logo-discord.png" />
+    <Content Include="media\fuze-logo-new-hover.png" />
+    <Content Include="media\fuze-logo-new.png" />
     <Content Include="media\fuze-min-hover.png" />
     <Content Include="media\fuze-min.png" />
     <Content Include="media\fuzevd-capture-2.PNG" />
     <Content Include="media\fvd-icon-exp.ico" />
+    <Content Include="media\header.PNG" />
     <Content Include="media\mash-invasion.png" />
+    <Content Include="media\Megalovania.mp3" />
+    <Content Include="media\peter_owchie.mp3" />
+    <Content Include="media\phrygian.wav" />
     <Content Include="media\warning-icon.png" />
     <Content Include="media\window-icon.png" />
     <Content Include="nav.html">
@@ -95,24 +125,35 @@
     <Content Include="nav3.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="new-look.html">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="new-styles.css">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="sprites\bobtank.txt" />
+    <Content Include="sprites\draft.txt" />
+    <Content Include="sprites\kyle.txt" />
+    <Content Include="sprites\mario.txt" />
+    <Content Include="sprites\monkey.txt" />
+    <Content Include="sprites\peter.txt" />
+    <Content Include="sprites\player.txt" />
+    <Content Include="sprites\sans.txt" />
+    <Content Include="sprites\snail.txt" />
+    <Content Include="sprites\stewie.txt" />
     <Content Include="styles.css" />
+    <Content Include="styles_v3.css" />
     <Content Include="tricerasmash.html" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="docs\" />
     <Folder Include="downloads\fuzevd-1_1\" />
     <Folder Include="fonts\" />
-    <Folder Include="inh\" />
-    <Folder Include="level\" />
+    <Folder Include="fuze-engine\" />
+    <Folder Include="fuze-engine\sounds\" />
+    <Folder Include="fuze-engine\textures\" />
+    <Folder Include="fuze-engine\textures\maps\" />
     <Folder Include="downloads\" />
+    <Folder Include="level\" />
+    <Folder Include="libs\" />
     <Folder Include="media\" />
+    <Folder Include="sprites\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
