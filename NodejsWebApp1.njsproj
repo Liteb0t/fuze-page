@@ -110,10 +110,12 @@
     <Content Include="media\fuze-logo-new.png" />
     <Content Include="media\fuze-min-hover.png" />
     <Content Include="media\fuze-min.png" />
-    <Content Include="media\fuzevd-capture-2.PNG" />
+    <Content Include="media\fuzevd_cap_1-0.png" />
+    <Content Include="media\fuzevd_cap_1-1.png" />
     <Content Include="media\fvd-icon-exp.ico" />
-    <Content Include="media\header.PNG" />
-    <Content Include="media\mash-invasion.png" />
+    <Content Include="media\header.png" />
+    <Content Include="media\mash_invasion.png" />
+    <Content Include="media\mash_no_translation.png" />
     <Content Include="media\Megalovania.mp3" />
     <Content Include="media\peter_owchie.mp3" />
     <Content Include="media\phrygian.wav" />
