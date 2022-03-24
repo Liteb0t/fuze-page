@@ -820,6 +820,31 @@ function update_sprites(sprites_list) {
 	}
 }
 
+function respawn_player() {
+	if (!(typeof sprites_list["player"] === 'undefined')) {
+		sprites_to_delete.push("player")
+	}
+	create_sprite({ name: "player",
+	x_pos : 73,
+	y_pos : 20,
+	x_size : 12,
+	y_size : 5,
+	x_speed: 0,
+	y_speed: 0,
+	type: "player",
+	show_nametag: true,
+	minimap_character: "P",
+	move_towards: true,
+	has_resistance : true,
+	skin: load_sprite_skin(textures_path + "snail.txt")});
+}
+
+function delete_sprite(sprite) {
+	if (!(typeof sprites_list[sprite] === 'undefined')) {
+		sprites_to_delete.push(sprite)
+	}
+}
+
 function manage_timers(timers) {
 	for (timer in timers) {
 		if (!(typeof timers[timer] === 'undefined')) {

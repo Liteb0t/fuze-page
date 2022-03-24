@@ -43,7 +43,20 @@ type: "enemy",
 lock_direction: true, use_ai: true, ai: {type: "goblin", speed: 50, targets: ["player"]}, show_nametag: true,
 skin: load_sprite_skin(textures_path + "sans.txt"),has_resistance : true});
 create_sprite({ name: "monke_haha" ,x_pos : 666, y_pos : 125, x_size : 21, y_size : 14, x_speed: 140, y_speed: -99,type: "enemy", show_nametag: true, minimap_character: uniconvert['monkey'], lock_direction: true,skin: load_sprite_skin(textures_path + "monkey.txt") });
-create_sprite({ name: "player" ,x_pos : 73 , y_pos : 20 , x_size : 12, y_size : 5, x_speed: 0, y_speed: 0,type: "player", show_nametag: true, minimap_character: "P", move_towards: true, skin: load_sprite_skin(textures_path + "snail.txt"),has_resistance : true});
+
+create_sprite({ name: "player" ,
+x_pos : 73,
+y_pos : 20,
+x_size : 12,
+y_size : 5,
+x_speed: 0,
+y_speed: 0,
+type: "player",
+show_nametag: true,
+minimap_character: "P",
+move_towards: true,
+has_resistance : true,
+skin: load_sprite_skin(textures_path + "snail.txt")});
 
 // define weapons
 weapons.rock = { name: "rock", damage: 10, speed: 30, cooldown: 60 }
@@ -138,10 +151,11 @@ function on_frame(sprites_list) {
 	if (find_sprite_collisions("player").length > 0) {
 		stop_all_sounds();
 		play_audio("glitch", "Glitch Sound Effect (Speaker).mp3", {volume: 1.0});
-		delete(sprites_list["player"]);
 		
-		// crash the game
-		console.log(sprites_list["player"].lol_u_crashed);
+		delete_sprite("player");
+		
+		// uncomment below to crash the game when player dies
+		// console.log(sprites_list["player"].lol_u_crashed);
 	}
 	}
 	
