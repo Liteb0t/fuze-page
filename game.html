@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Fuze Game a2.6.1</title>
+    <title>Fuze Game a2.6.3</title>
     <meta name="description" content="Play the in-development online browser game loosely derived from diep.io">
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,fuze game,update,online,diep,page,fuze page">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -83,11 +83,11 @@
 <body>
     <pre><div id="game-display"></div></pre>
     <div id="controls">
-		Fuze game alpha 2.6.1<br>
+		Fuze game alpha 2.6.3<br>
 		WASD to move<br>
 		E or left click to shoot<br>
-		CTRL + scroll to zoom<br>
-		<div id="fps"></div>
+		CTRL + scroll to zoom, zoom in if it lags<br>
+		<div id="fps">loading...</div>
         <button type="button" onclick='apply_level("1-racecourse")'>import racecourse</button>
 		<br />
 		<button type="button" onclick='apply_level("3-battleground")'>import battleground</button>
@@ -97,14 +97,13 @@
         <br />
 		<div id="lvl_textbox"><textarea id="level_textbox" style="font-size: 11px;font-family: fuzedsys;" rows="18" cols="52"></textarea></div>
 		<br />
-		<input type="checkbox" id="cb_pov">POV within map?</input>
+		<input type="checkbox" id="cb_pov">POV within map?
 		<br>
 		<button type="button" onclick="toggle_dark_theme()">Toggle dark theme</button>
 		<br />
         <h3>Minimap</h3>
-        <pre><div id="minimap">
+        <pre id="minimap">
             Level not loaded
-        </div>
 		</pre>
 		OBJECTIVES:<br />
 		<div id="objectives"></div>

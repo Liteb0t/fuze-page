@@ -1,4 +1,4 @@
-﻿// Fuze engine a2.6.1
+﻿// Fuze engine a2.6.2
 
 // The HTML class that text will be rendered to
 // via document.getElementById(text_display).innerHTML(text_output)
@@ -20,7 +20,8 @@ var text_output = '';
 var temp_char = "'";
 var is_empty;
 var sprites_list = { };
-var weapons = { };
+var weapons = {};
+var loaded_textures = {};
 var collided_x = false;
 var resistance = 0.1;
 var resistance_ramp = 0.0001;
@@ -54,6 +55,15 @@ var keys = { 'left_arrow' : 37,  'up_arrow' : 38,  'right_arrow' : 39,  'down_ar
 var mouse = { x_pos : parseInt(el.clientWidth / 2), y_pos: parseInt(el.clientHeight / 2)}
 var keystate = {};
 
+var mouse_down = 0;
+document.body.onmousedown = function() { 
+	++mouse_down;
+}
+
+document.body.onmouseup = function() {
+	--mouse_down;
+}
+
 document.addEventListener("keydown", function (event) {
     keystate[event.code] = true;
 });
@@ -70,6 +80,7 @@ document.addEventListener("mousemove", function (event) {
     mouse.x_pos = event.clientX;
     mouse.y_pos = event.clientY;
 })
+
 
 // comment vsauce out if you're using another JS file to create the vectors.
 // make sure it uses the same names: sprites_list["player"] = [{id, type, xpos, ETC}]
@@ -472,11 +483,12 @@ function create_sprite(args) {
 		if (typeof args.move_towards === 'undefined') { args.move_towards = false; }
 		if (typeof args.show_nametag === 'undefined') { args.show_nametag = true; }
 		if (typeof args.use_ai === 'undefined') { args.use_ai = false; }
+		if (typeof args.ai_phase === 'undefined') { args.ai_phase = "wander"; }
 		if (typeof args.health === 'undefined') { args.health = 100; }
 		if (typeof args.invincible === 'undefined') { args.invincible = false; }
 		if (typeof args.damage === 'undefined') { args.damage = 5; }
 		if (typeof args.weapons === 'undefined') { args.weapons = []; }
-		if (typeof args.ai === 'undefined') { args.ai = { moves: [], target: "nobody"}; }
+		if (typeof args.ai === 'undefined') { args.ai = { speed: 1, targets: ["nobody"]}; }
 		if (typeof args.lock_direction === 'undefined') { args.lock_direction = false; }
 		if (typeof args.minimap_character === 'undefined') { args.minimap_character = "?"; }
 		if (typeof args.cooldowns === 'undefined') { args.cooldowns = []; }
@@ -484,8 +496,12 @@ function create_sprite(args) {
 		if (typeof args.starting_direction === 'undefined') { args.starting_direction = 90; args.direction = 90; } else {args.direction = args.starting_direction}
 		if (typeof args.has_resistance === 'undefined') { args.has_resistance = false; }
 		if (typeof args.nametag === 'undefined') { args.nametag = args.name + " " + args.health; }
-		if (args.skin == 'load') {
-			sprite_skin = load_sprite_skin(sprite_name);
+        if (args.skin == 'load') {
+            if (typeof loaded_textures[sprite_name] === 'undefined') {
+                sprite_skin = load_sprite_skin(sprite_name);
+            } else {
+                sprite_skin = loaded_textures[sprite_name];
+            }
 			args.skin = sprite_skin.skin;
 			if (typeof args.skin === 'undefined') {
 				console.log("failed loading skin for " + sprite_name)
@@ -506,14 +522,20 @@ function create_sprite(args) {
 			} else {
 				if (typeof args.x_size === 'undefined') { args.x_size = sprite_skin.x_size; }
 				if (typeof args.y_size === 'undefined') { args.y_size = sprite_skin.y_size; }
-				
+                loaded_textures[sprite_name] = sprite_skin;
 			}
 		}
 		
-		else if (!(typeof args.skin === 'undefined')) {
-			sprite_skin = load_sprite_skin(args.skin);
+        else if (!(typeof args.skin === 'undefined')) {
+            if (typeof loaded_textures[args.skin] === "undefined") {
+                sprite_skin = load_sprite_skin(args.skin);
+            }
+            else {
+                sprite_skin = loaded_textures[args.skin]
+            }
 			if (!(typeof sprite_skin === "undefined")) {
 				args.skin = sprite_skin.skin;
+                loaded_textures[args.skin] = sprite_skin;
 			}
 			if (typeof args.x_size === 'undefined') { args.x_size = sprite_skin.x_size; }
 			if (typeof args.y_size === 'undefined') { args.y_size = sprite_skin.y_size; }
@@ -568,8 +590,16 @@ function load_sprite_skin(file_name) {
 			}
 		}
     }
-	// console.log(output_text);
+	console.log(output_text);
 	return { skin : output_text, x_size: output_text[0].length, y_size: output_text.length };
+}
+
+function anger_ai(from_sprite,target_sprite_ai) {
+	if (sprites_list[target_sprite_ai].health > sprites_list[from_sprite].health || randint(0,100) > 73 ) {
+		sprites_list[target_sprite].ai_phase = "chase";
+	} else {
+		sprites_list[target_sprite].ai_phase = "flee";
+	}
 }
 
 function do_ai() {
@@ -579,11 +609,50 @@ function do_ai() {
 				if (sprites_list[sprite].ai.targets.length > 0) {
 					target_sprite = sprites_list[sprite].ai.targets[0];
 					
-					xpos_of_target = sprites_list[target_sprite].x_pos;
-					ypos_of_target = sprites_list[target_sprite].y_pos;
-					
-					xpos_altered = xpos_of_target + randint(-50,50);
-					ypos_altered = ypos_of_target + randint(-30,30);
+					if (sprites_list[sprite].ai_phase == "chase") {
+						// chases player at any cost. very spooky
+						
+						xpos_of_target = sprites_list[target_sprite].x_pos;
+						ypos_of_target = sprites_list[target_sprite].y_pos;
+						
+						xpos_altered = xpos_of_target + randint(-10,10);
+						ypos_altered = ypos_of_target + randint(-5,5);
+						
+						if (randint(0,100) > 90 ) {
+							sprites_list[sprite].ai_phase = "wander";
+						}
+					}
+					else if (sprites_list[sprite].ai_phase == "flee") {
+						// move AWAY from danger
+						
+						if (sprites_list[sprite].x_pos < sprites_list[target_sprite].x_pos) {
+							xpos_of_target = sprites_list[target_sprite].x_pos + (0 - (sprites_list[target_sprite].x_pos - sprites_list[sprite].x_pos));
+						} else {
+							xpos_of_target = sprites_list[target_sprite].x_pos + (sprites_list[sprite].x_pos - sprites_list[target_sprite].x_pos);
+						}
+						if (sprites_list[sprite].y_pos < sprites_list[target_sprite].y_pos) {
+							ypos_of_target = sprites_list[target_sprite].y_pos + (0 - (sprites_list[target_sprite].y_pos - sprites_list[sprite].y_pos) * 2);
+						} else {
+							ypos_of_target = sprites_list[target_sprite].y_pos + (sprites_list[sprite].y_pos - sprites_list[target_sprite].y_pos) * 2;
+						}
+						
+						xpos_altered = xpos_of_target + randint(-10,10);
+						ypos_altered = ypos_of_target + randint(-5,5);
+						
+						if (randint(0,100) > 90 ) {
+							sprites_list[sprite].ai_phase = "wander";
+						}
+					}
+					else {
+						// wander around
+						
+						xpos_altered = sprites_list[target_sprite].x_pos + randint(-100,100);
+						ypos_altered = sprites_list[target_sprite].y_pos + randint(-50,50);
+						
+						if (randint(0,100) > 90 ) {
+							sprites_list[sprite].ai_phase = "chase";
+						}
+					}
 					
 					// xpos_altered = xpos_of_target;
 					// ypos_altered = ypos_of_target;
@@ -826,7 +895,7 @@ function update_sprites(sprites_list) {
 			if (sprite_collisions.length > 0) {
 				for (collided_sprite in sprite_collisions) {
 					sprites_list[sprite].health -= sprites_list[sprite_collisions[collided_sprite]].damage;
-					sprites_list[sprite_collisions[collided_sprite]].health -= sprites_list[sprite].damage;
+					// sprites_list[sprite_collisions[collided_sprite]].health -= sprites_list[sprite].damage;
 					// console.log(sprite + " damaged by " + sprite_collisions[collided_sprite].nametag)
 				}
 				sprites_list[sprite].nametag = sprite + " " + sprites_list[sprite].health;
@@ -910,8 +979,15 @@ function update_sprites(sprites_list) {
 					sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * collision_loss;
 				}
 				bounced_down = true;
-			}
-			if (sprites_list[sprite].lock_direction == false) {
+            }
+            // if (bounced_left && bounced_right && bounced_up && bounced_down) {
+            //    sprites_list[sprite].x_speed = sprites_list[sprite].x_speed / collision_loss;
+            //    sprites_list[sprite].y_speed = sprites_list[sprite].y_speed / collision_loss;
+            // } else {
+            //    if (bounced)
+            // }
+            if (sprites_list[sprite].lock_direction == false) {
+
 				if (bounced_left == true) {
 					if (sprites_list[sprite].starting_direction == "right") {
 						sprites_list[sprite].direction = 90;

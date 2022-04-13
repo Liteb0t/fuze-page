@@ -1,29 +1,29 @@
 ﻿// This isnt part of fuze engine. it just stores and processes the properties of the player and game
 // On multiplayer this file will be modified and on the server-side with some form of anti-cheat
 // var player = { xpos: 88, ypos: 30, xsize: 3, ysize: 2, xspeed: 0, yspeed: 0, xpile:0, ypile:0 };
-// alpha 2.6.1
+// alpha 2.6.3
 
 // define weapons
 weapons.rock = { 
 name: "rock", 
-damage: 8, 
-penetration: 5,
-speed: 40, 
-cooldown: 15, 
-delete_after: 120 }
+damage: 13, 
+penetration: 6,
+speed: 60, 
+cooldown: 18, 
+delete_after: 80 }
 
 weapons.destroyer = {
 name : "destroyer",
-damage: 5,
-penetration: 50,
-speed: 25,
-cooldown: 73,
-delete_after: 50 }
+damage: 11,
+penetration: 30,
+speed: 28,
+cooldown: 40,
+delete_after: 70 }
 
 weapons.sniper = {
 name : "sniper",
-damage: 20,
-penetration: 7,
+damage: 4,
+penetration: 30,
 speed: 90,
 cooldown: 50,
 delete_after: 60 }
@@ -101,9 +101,6 @@ move_towards: true,
 team: "peter",
 has_resistance : true,
 skin: "peter"});
-
-
-
 
 create_sprite({name: "fishron",
 x_pos : randint(50,200),
@@ -183,6 +180,15 @@ function on_frame(sprites_list) {
 		
 		if (keystate.KeyF == true) {
 			use_weapon("player", weapons.sniper, "mouse");
+		}
+		
+		if (keystate.KeyP == true) {
+			respawn_player();
+		}
+		
+		// If player is holding click
+		if (mouse_down == 1) {
+			use_weapon("player", weapons.rock, "mouse");
 		}
 	}
 	sounds["sans_music"].volume(sound_decay(calculate_distance("player", "sans")));
