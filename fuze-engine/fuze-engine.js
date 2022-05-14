@@ -1,4 +1,4 @@
-﻿// Fuze engine a2.6.2
+﻿// Fuze engine a2.7.3
 
 // The HTML class that text will be rendered to
 // via document.getElementById(text_display).innerHTML(text_output)
@@ -13,17 +13,18 @@ var font_size = parseFloat(window.getComputedStyle(el, null).getPropertyValue('f
 var screen_width = parseInt(el.clientWidth / 8);
 var screen_height = parseInt(el.clientHeight / 16);
 var current_file;
-var level;
+var level = "null";
 var start_xrender_from;
 var start_yrender_from;
 var text_output = '';
 var temp_char = "'";
 var is_empty;
 var sprites_list = { };
+var sprites = {};
 var weapons = {};
 var loaded_textures = {};
 var collided_x = false;
-var resistance = 0.1;
+var resistance = 0.25;
 var resistance_ramp = 0.0001;
 var bounciness = 0.5;
 var collision_loss = 0.3;
@@ -34,6 +35,8 @@ var render = false;
 var level_blowup_width = 18;
 var level_blowup_height = 12;
 var listy_text_output = [];
+var levels = [];
+var levels_list = [];
 var objectives = {};
 var minimap_update_interval = 30; // in FRAMES
 var damage_update_timer = 10;
@@ -49,60 +52,95 @@ const frame_time = (1000 / 60) * (60 / fps) - (1000 / 60) * 0.5;
 var filterStrength = 10;
 var frameTime = 0, lastLoop = new Date, thisLoop;
 
-document.getElementById("level_textbox").innerHTML = "\n";
-
 var keys = { 'left_arrow' : 37,  'up_arrow' : 38,  'right_arrow' : 39,  'down_arrow' : 40}
 var mouse = { x_pos : parseInt(el.clientWidth / 2), y_pos: parseInt(el.clientHeight / 2)}
 var keystate = {};
 
 var mouse_down = 0;
+
+// uhhh needed for click functions
 document.body.onmousedown = function() { 
 	++mouse_down;
 }
-
 document.body.onmouseup = function() {
 	--mouse_down;
 }
 
+// add or remove a key to a list of held keys
 document.addEventListener("keydown", function (event) {
     keystate[event.code] = true;
 });
-
 document.addEventListener("keyup", function (event) {
     delete keystate[event.code];
 });
 
+// runs the fuze-game custom code for a click event
 document.addEventListener('click', function(event){
 	on_click(sprites_list);
 }, false);
 
+// update variables for mouse pos which are used for aiming weapons
 document.addEventListener("mousemove", function (event) {
     mouse.x_pos = event.clientX;
     mouse.y_pos = event.clientY;
 })
 
-
-// comment vsauce out if you're using another JS file to create the vectors.
-// make sure it uses the same names: sprites_list["player"] = [{id, type, xpos, ETC}]
-// var vsauce = { id: 'default', type: "basic", xpos: 10, ypos: 10, xsize: 6, ysize: 4, xspeed: 1, yspeed: 1 };
-function updateScreen() {
-    screen_width = parseInt(document.getElementById("scr-width").value);
-    screen_height = parseInt(document.getElementById("scr-height").value);
-    document.getElementById("scr-widthlabel").innerHTML = screen_width;
-    document.getElementById("scr-heightlabel").innerHTML = screen_height;
-    console.log(screen_width);
-    console.log(screen_height);
-}
-
-function toggle_settings() {
-    var x = document.getElementById("controls");
+// show or hide a GUI window when a button is clicked
+function toggle_div(element_id) {
+    var x = document.getElementById(element_id);	
+	
     if (x.style.display === "none") {
 		x.style.display = "block";
-		document.getElementById("btn_settings").innerHTML = "Hide panel";
+		if (element_id == "pause_menu") {
+			pause_game();
+		}
     } else {
 		x.style.display = "none";
-		document.getElementById("btn_settings").innerHTML = "Show panel";
+		if (element_id == "pause_menu") {
+			unpause_game();
+		}
     }
+
+}
+
+function update_pause_menu() {
+	let pause_menu_element = document.getElementById("pause_menu");
+	let temp_add_levels = ""
+	
+	if (document.getElementById("pause_menu").style.display = "block") {}
+	
+	document.getElementById("level_list").innerHTML = ""
+	for (level_id in levels) {
+		temp_add_levels = temp_add_levels + "<div class=\"level_select_box\">Level id: " + level_id + 
+		"<br><button type=\"button\" onclick=\"load_level('" + level_id + "')\">Load</button></div>\n";
+	}
+	document.getElementById("level_list").innerHTML = temp_add_levels;
+}
+
+function select_level(level_id) {
+	document.getElementById('level_textbox').value = levels[level_id].map;
+}
+
+function toggle_pause() {
+	if (render == false) {
+		render = true
+	}
+	else {
+		render = false
+	}
+}
+
+function pause_game() {
+	render = false
+}
+
+function unpause_game() {
+	if (level == "null") {
+		load_level("fz_empty");
+	}
+	change_font_size(14);
+	render = true
+	requestAnimationFrame(update);
 }
 
 function toggle_dark_theme() {
@@ -149,6 +187,14 @@ function mouse_lvl_pos() {
 	return mouse_lvl;
 }
 
+function load_next_level() {
+	if (levels_list.indexOf(level.name) < levels_list.length) {
+		load_level(levels_list[levels_list.indexOf(level.name) + 1]);
+	} else {
+		load_level(levels_list[0]);
+	}
+}
+
 function calculate_weapon_speed(start_point, weapon, target) {
 	let output_speeds = {x_speed: 0, y_speed: 0}
 	
@@ -168,27 +214,32 @@ function calculate_weapon_speed(start_point, weapon, target) {
 			output_speeds.x_speed = output_speeds.x_speed - weapon.speed
 		} else {}
 		*/
-		if (target == "mouse") {
-			target = mouse_lvl_pos();
+		if (target == "stationary") {
+			console.log("mine placed?");
+		} 
+		else {
+			if (target == "mouse") {
+				target = mouse_lvl_pos();
+			}
+
+			if (start_point.x_pos < target.x_pos) {
+				diff_x = target.x_pos - start_point.x_pos;
+			} else {
+				diff_x = 0 - (start_point.x_pos - target.x_pos);
+			}
+			if (start_point.y_pos < target.y_pos) {
+				diff_y = (target.y_pos - start_point.y_pos) * 2;
+			} else {
+				diff_y = 0 - (start_point.y_pos - target.y_pos) * 2;
+			}
+
+			// console.log(diff_x);
+			
+			let multiplier = (Math.abs(diff_x) + Math.abs(diff_y)) / 2;
+			
+			output_speeds.x_speed = (weapon.speed / multiplier) * diff_x + start_point.x_speed;
+			output_speeds.y_speed = (weapon.speed / multiplier) * diff_y + start_point.y_speed;
 		}
-
-        if (start_point.x_pos < target.x_pos) {
-            diff_x = target.x_pos - start_point.x_pos;
-        } else {
-            diff_x = 0 - (start_point.x_pos - target.x_pos);
-        }
-        if (start_point.y_pos < target.y_pos) {
-            diff_y = (target.y_pos - start_point.y_pos) * 2;
-        } else {
-            diff_y = 0 - (start_point.y_pos - target.y_pos) * 2;
-        }
-
-		// console.log(diff_x);
-		
-        let multiplier = (Math.abs(diff_x) + Math.abs(diff_y)) / 2;
-		
-		output_speeds.x_speed = (weapon.speed / multiplier) * diff_x + start_point.x_speed;
-        output_speeds.y_speed = (weapon.speed / multiplier) * diff_y + start_point.y_speed;
 	}
 	return output_speeds
 }
@@ -219,8 +270,8 @@ function randint(low_num, high_num) {
 }
 
 function use_weapon(from_sprite, weapon_chosen, target) {
-	if (!(typeof sprites_list[from_sprite] === 'undefined') &&  !(typeof weapon_chosen === 'undefined')) {
-		if (sprites_list[from_sprite].cooldowns.indexOf(weapon_chosen.name) === -1) {
+	if (!(typeof sprites_list[from_sprite] === 'undefined') &&  !(typeof weapons[weapon_chosen] === 'undefined')) {
+		if (sprites_list[from_sprite].cooldowns.indexOf(weapons[weapon_chosen].name) === -1) {
 			if (target === undefined) {
 				target = { x_pos: sprites_list[from_sprite].x_pos, y_pos: sprites_list[from_sprite].y_pos };
 			} 
@@ -236,8 +287,8 @@ function use_weapon(from_sprite, weapon_chosen, target) {
             start_point.x_pos += Math.floor(start_point.x_size / 2);
             start_point.y_pos += Math.floor(start_point.y_size / 2);
 			
-			sprites_list[from_sprite].cooldowns.push(weapon_chosen.name)
-			create_timer(from_sprite + weapon_chosen.name, delete_cooldown, weapon_chosen.cooldown, {sprite : from_sprite, weapon: weapon_chosen.name}, false);
+			sprites_list[from_sprite].cooldowns.push(weapons[weapon_chosen].name)
+			create_timer(from_sprite + weapons[weapon_chosen].name, delete_cooldown, weapons[weapon_chosen].cooldown, {sprite : from_sprite, weapon: weapons[weapon_chosen].name}, false);
 			let temp_x_pos = sprites_list[from_sprite].x_pos;
 			let temp_y_pos = sprites_list[from_sprite].y_pos;
 			
@@ -249,31 +300,31 @@ function use_weapon(from_sprite, weapon_chosen, target) {
 			
 			temp_y_pos += Math.floor(sprites_list[from_sprite].y_size / 2);
 			
-			let temp_bullet_speeds = calculate_weapon_speed(start_point, weapon_chosen, target);
+			let temp_bullet_speeds = calculate_weapon_speed(start_point, weapons[weapon_chosen], target);
 			
-			create_sprite( {name: weapon_chosen.name, x_pos : start_point.x_pos ,
+			create_sprite( {name: weapons[weapon_chosen].name, x_pos : start_point.x_pos ,
 				y_pos : start_point.y_pos,
 				x_speed: temp_bullet_speeds.x_speed,
 				y_speed: temp_bullet_speeds.y_speed,
 				is_bullet: true,
 				show_nametag: false,
-				health: weapon_chosen.penetration,
-				damage: weapon_chosen.damage,
+				health: weapons[weapon_chosen].penetration,
+				damage: weapons[weapon_chosen].damage,
 				has_resistance: true,
 				lock_direction: true,
 				skin: "load",
 				team: sprites_list[from_sprite].team,
-				delete_after: weapon_chosen.delete_after
+				delete_after: weapons[weapon_chosen].delete_after
 				// ignore_sprites: [from_sprite]
 			})
 			// console.log(sprites_list[temp_name])
 		}
 		else {
-			// console.log(sprites_list[from_sprite].cooldowns[sprites_list[from_sprite].cooldowns.indexOf(weapon_chosen.name)])
+			// console.log(sprites_list[from_sprite].cooldowns[sprites_list[from_sprite].cooldowns.indexOf(weapons[weapon_chosen].name)])
 		}
 	} else {
 		// console.log("from sprite " + sprites_list[from_sprite]);
-		// console.log("usin weapon " + weapon_chosen);
+		// console.log("using weapon " + weapons[weapon_chosen]);
 	}
 }
 
@@ -296,9 +347,53 @@ function update_text(id, the_text) {
 	document.getElementById(id).innerHTML = the_text;
 }
 
+
 function update_objectives_display() {
 	temp_text = "";
-	for (obj in objectives) {
+	for (obj in level.objectives) {
+		temp_row = "";
+		if (level.objectives[obj].is_completed == true) {
+			temp_row += uniconvert['checkbox_tick'];
+		} else {
+			temp_row += uniconvert['checkbox_empty'];
+		}
+		temp_row += " " + level.objectives[obj].type + ": " + level.objectives[obj].target;
+		temp_text += temp_row + "\n";
+	}
+	update_text("objectives", temp_text);
+}
+
+function check_objectives() {
+	let temp_level_complete = false;
+	if (level.objectives.length > 0) {
+		temp_level_complete = true;
+	}
+	for (obj in level.objectives) {
+		if (level.objectives[obj].type == "eliminate") {
+			if (typeof sprites_list[level.objectives[obj].target] === "undefined") {
+				level.objectives[obj].is_completed = true;
+				update_objectives_display();
+			}
+		}
+		if (level.objectives[obj].is_completed == false) {
+			temp_level_complete = false;
+		}
+	}
+	if (temp_level_complete == true) {
+		level_completed();
+	}
+}
+
+function level_completed() {
+	pause_game();
+	toggle_div('level_complete_screen');
+}
+
+/*
+
+function update_objectives_display() {
+	temp_text = "";
+	for (objective in level.objectives) {
 		temp_row = "";
 		if (objectives[obj].is_completed == true) {
 			temp_row += uniconvert['checkbox_tick'];
@@ -310,7 +405,7 @@ function update_objectives_display() {
 	}
 	update_text("objectives", temp_text);
 }
-
+*/
 function is_dead(the_sprite) {
 	temp_result = true;
 	if (!(typeof sprites_list[the_sprite] === 'undefined')) {
@@ -408,40 +503,6 @@ function stop_all_sounds() {
 function is_touching(sprite_1, sprite_2) {
 	let temp_is_touching = false;
 	if (sprites_list[sprite_1].team != sprites_list[sprite_2.team]) {
-		/*
-		// if (collision_type == "hitbox") {
-			
-		if (sprites_list[sprite_1].x_pos > sprites_list[sprite_2].x_pos && sprites_list[sprite_1].x_pos < sprites_list[sprite_2].x_pos + sprites_list[sprite_2].x_size &&
-			sprites_list[sprite_1].y_pos > sprites_list[sprite_2].y_pos && sprites_list[sprite_1].y_pos < sprites_list[sprite_2].y_pos + sprites_list[sprite_2].y_size
-			||
-			sprites_list[sprite_1].x_pos + sprites_list[sprite_1].x_size  + 1> sprites_list[sprite_2].x_pos && sprites_list[sprite_1].x_pos + sprites_list[sprite_1].x_size + 1 < sprites_list[sprite_2].x_pos + sprites_list[sprite_2].x_size &&
-			sprites_list[sprite_1].y_pos > sprites_list[sprite_2].y_pos && sprites_list[sprite_1].y_pos < sprites_list[sprite_2].y_pos + sprites_list[sprite_2].y_size
-			||
-			sprites_list[sprite_1].x_pos > sprites_list[sprite_2].x_pos && sprites_list[sprite_1].x_pos < sprites_list[sprite_2].x_pos + sprites_list[sprite_2].x_size &&
-			sprites_list[sprite_1].y_pos + sprites_list[sprite_1].y_size > sprites_list[sprite_2].y_pos && sprites_list[sprite_1].y_pos + sprites_list[sprite_1].y_size < sprites_list[sprite_2].y_pos + sprites_list[sprite_2].y_size
-			||
-			sprites_list[sprite_1].x_pos + sprites_list[sprite_1].x_size > sprites_list[sprite_2].x_pos && sprites_list[sprite_1].x_pos + sprites_list[sprite_1].x_size < sprites_list[sprite_2].x_pos + sprites_list[sprite_2].x_size &&
-			sprites_list[sprite_1].y_pos + sprites_list[sprite_1].y_size > sprites_list[sprite_2].y_pos && sprites_list[sprite_1].y_pos + sprites_list[sprite_1].y_size < sprites_list[sprite_2].y_pos + sprites_list[sprite_2].y_size
-			||
-			sprites_list[sprite_1].x_pos > sprites_list[sprite_2].x_pos && sprites_list[sprite_1].x_pos < sprites_list[sprite_2].x_pos &&
-			sprites_list[sprite_1].y_pos > sprites_list[sprite_2].y_pos && sprites_list[sprite_1].y_pos < sprites_list[sprite_2].y_pos
-			||
-			sprites_list[sprite_1].x_pos + sprites_list[sprite_1].x_size > sprites_list[sprite_2].x_pos && sprites_list[sprite_1].x_pos + sprites_list[sprite_1].x_size + 1< sprites_list[sprite_2].x_pos &&
-			sprites_list[sprite_1].y_pos > sprites_list[sprite_2].y_pos && sprites_list[sprite_1].y_pos < sprites_list[sprite_2].y_pos
-			||
-			sprites_list[sprite_1].x_pos > sprites_list[sprite_2].x_pos && sprites_list[sprite_1].x_pos < sprites_list[sprite_2].x_pos &&
-			sprites_list[sprite_1].y_pos + sprites_list[sprite_1].y_size > sprites_list[sprite_2].y_pos && sprites_list[sprite_1].y_pos + sprites_list[sprite_1].y_size < sprites_list[sprite_2].y_pos
-			||
-			sprites_list[sprite_1].x_pos + sprites_list[sprite_1].x_size > sprites_list[sprite_2].x_pos && sprites_list[sprite_1].x_pos + sprites_list[sprite_1].x_size < sprites_list[sprite_2].x_pos &&
-			sprites_list[sprite_1].y_pos + sprites_list[sprite_1].y_size > sprites_list[sprite_2].y_pos && sprites_list[sprite_1].y_pos + sprites_list[sprite_1].y_size < sprites_list[sprite_2].y_pos
-		) {
-			temp_is_touching = true;
-		}
-		// }
-		//else {
-			
-		// }
-		*/
 		if (
 		sprites_list[sprite_1].x_pos + sprites_list[sprite_1].x_size > sprites_list[sprite_2].x_pos &&
 		sprites_list[sprite_1].x_pos < sprites_list[sprite_2].x_pos + sprites_list[sprite_2].x_size && 
@@ -467,7 +528,6 @@ function find_sprite_collisions(init_sprite) {
 	return collided_with
 }
 
-// name = STRING, args = DICTIONARY
 function create_sprite(args) {
 	// Check if object name already exists
 	var sprite_name = args.name;
@@ -563,6 +623,37 @@ function create_sprite(args) {
 	}
 }
 
+function delete_all_sprites() {
+	
+}
+
+// load sprite from memory rather than using the filesystem
+function load_sprite(sprite_id, args) {
+	let temp_sprite_name = assign_name(sprite_id);
+	let temp_sprite_args = JSON.parse(JSON.stringify(sprites[sprite_id]));
+	for (parameter in args) {
+		console.log("parameter: " + parameter);
+		console.log("args.parameter: " + args.parameter);
+		console.log("args[parameter]: " + args[parameter]);
+		temp_sprite_args[parameter] = args[parameter];
+	}
+	console.log(temp_sprite_args);
+	create_sprite(temp_sprite_args);
+}
+
+function load_data(includes_file) {
+	let output = {};
+	var lines = loadFile(includes_file).split("\n");
+	console.log("lines: " + lines);
+	for (txt_line in lines) {
+		let temp_obj_name = lines[txt_line].substr(lines[txt_line].lastIndexOf("/") + 1,lines[txt_line].length - (lines[txt_line].lastIndexOf("/") + (lines[txt_line].length - lines[txt_line].indexOf(".") + 1)));
+		console.log(temp_obj_name);
+		output[temp_obj_name] = JSON.parse(loadFile("/fuze-engine" + lines[txt_line]));
+	}
+	console.log("output: " + output);
+	return output
+}
+
 function loadFile(filePath) {
     var result = null;
     var xmlhttp = new XMLHttpRequest();
@@ -571,7 +662,16 @@ function loadFile(filePath) {
     if (xmlhttp.status == 200) {
         result = xmlhttp.responseText;
     }
+	console.log(result);
     return result;
+}
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }
 
 function load_sprite_skin(file_name) {
@@ -594,12 +694,13 @@ function load_sprite_skin(file_name) {
 	return { skin : output_text, x_size: output_text[0].length, y_size: output_text.length };
 }
 
-function anger_ai(from_sprite,target_sprite_ai) {
-	if (sprites_list[target_sprite_ai].health > sprites_list[from_sprite].health || randint(0,100) > 73 ) {
+function anger_ai(from_sprite,target_sprite) {
+	if (sprites_list[target_sprite].health > sprites_list[from_sprite].health || randint(0,100) > 73 ) {
 		sprites_list[target_sprite].ai_phase = "chase";
 	} else {
 		sprites_list[target_sprite].ai_phase = "flee";
 	}
+	return sprites_list[target_sprite].ai_phase
 }
 
 function do_ai() {
@@ -646,8 +747,8 @@ function do_ai() {
 					else {
 						// wander around
 						
-						xpos_altered = sprites_list[target_sprite].x_pos + randint(-100,100);
-						ypos_altered = sprites_list[target_sprite].y_pos + randint(-50,50);
+						xpos_altered = sprites_list[sprite].x_pos + randint(-100,100);
+						ypos_altered = sprites_list[sprite].y_pos + randint(-50,50);
 						
 						if (randint(0,100) > 90 ) {
 							sprites_list[sprite].ai_phase = "chase";
@@ -712,12 +813,34 @@ function apply_level(level_source) {
 	document.getElementById('level_textbox').value = level_textbox_text;
 }
 
-function load_level() {
+function change_font_size(font_size) {
+	document.getElementById("game-display").style.fontSize = font_size + "px";
+	font = {x_size : Math.ceil(font_size / 2), y_size: font_size};
+}
+
+function start_game() {
+	if (level == "null") {
+		load_level("fz_racecourse");
+	}
+	
+	unpause_game();
+	
+	if (!(document.getElementById("pause_menu").style.display == "none")) {
+		document.getElementById("pause_menu").style.display = "none";
+	}
+	if (!(document.getElementById("level_complete_screen").style.display == "none")) {
+		document.getElementById("level_complete_screen").style.display = "none";
+	}
+}
+
+function load_level(level_id) {
     // level = { raw: loadFile('/level/' + level_name + '.txt'), full: [''] };
-	level = { raw: document.getElementById('level_textbox').value, full: [''], rows: [''] };
+	level = levels[level_id];
 	
+	level.full = [''];
+	level.rows = [''];
 	
-	minimap.render = level.raw;
+	minimap.render = level.map;
 	
     // var temp = '';
     console.log(level);
@@ -725,8 +848,8 @@ function load_level() {
 	let current_row_mini = 0;
 	
 	//generate full-sized terrain from txt file
-    for (loop = 0; loop <= level.raw.length; loop++) {
-        if (level.raw[loop] === '\n') {
+    for (loop = 0; loop <= level.map.length; loop++) {
+        if (level.map[loop] === '\n') {
 			
             let row_to_repeat = level.full[current_row];
             // console.log(row_to_repeat)
@@ -737,18 +860,18 @@ function load_level() {
             level.full.push('');
             current_row += level_blowup_height;
 			current_row_mini += 1;
-        } else if (level.raw[loop] === '\r') {
+        } else if (level.map[loop] === '\r') {
             // console.log('pass');
         } else {
-			if ( uniconvert_keys.indexOf(level.raw.charAt(loop)) !== -1 ) {
-				level.full[current_row] += uniconvert[level.raw.charAt(loop)].repeat(level_blowup_width);
+			if ( uniconvert_keys.indexOf(level.map.charAt(loop)) !== -1 ) {
+				level.full[current_row] += uniconvert[level.map.charAt(loop)].repeat(level_blowup_width);
 				
-				if (!(typeof uniconvert[level.raw.charAt(loop)] === 'undefined')) {
-				level.rows[current_row_mini] += uniconvert[level.raw.charAt(loop)]; }
+				if (!(typeof uniconvert[level.map.charAt(loop)] === 'undefined')) {
+				level.rows[current_row_mini] += uniconvert[level.map.charAt(loop)]; }
 			} else {
-				level.full[current_row] += level.raw.charAt(loop).repeat(level_blowup_width);
-				if (!(typeof level.raw.charAt(loop) === 'undefined')) {
-				level.rows[current_row_mini] += level.raw.charAt(loop)
+				level.full[current_row] += level.map.charAt(loop).repeat(level_blowup_width);
+				if (!(typeof level.map.charAt(loop) === 'undefined')) {
+				level.rows[current_row_mini] += level.map.charAt(loop)
 				}
 			}
         }
@@ -759,8 +882,17 @@ function load_level() {
 	level.minimap_height = level.rows.length
 	level.width = level.full[0].length;
 	level.height = level.full.length;
+	
+	viewport.x_pos = Math.floor(level.width / 2);
+	viewport.y_pos = Math.floor(level.height / 2);
+	
+	change_font_size(4);
+	document.getElementById(text_display).innerHTML = render_screen( {screen_width: parseInt(el.clientWidth / font.x_size), screen_height: parseInt(el.clientHeight / font.y_size)} )
+
+	
+	// requestAnimationFrame(update);
     // start rendering
-    if (render == false) { requestAnimationFrame(update); render = true; }
+    // if (render == false) { requestAnimationFrame(update); render = true; }
 }
 
 function render_screen( args ) {
@@ -850,6 +982,8 @@ function update_sprites(sprites_list) {
     var half_width = Math.floor(screen_width / 2);
 	
 	
+	
+	
 	// new physics
 	for (sprite in sprites_list) {
 		
@@ -895,12 +1029,14 @@ function update_sprites(sprites_list) {
 			if (sprite_collisions.length > 0) {
 				for (collided_sprite in sprite_collisions) {
 					sprites_list[sprite].health -= sprites_list[sprite_collisions[collided_sprite]].damage;
+					console.log(anger_ai(sprite,sprite_collisions[collided_sprite]));
 					// sprites_list[sprite_collisions[collided_sprite]].health -= sprites_list[sprite].damage;
 					// console.log(sprite + " damaged by " + sprite_collisions[collided_sprite].nametag)
 				}
 				sprites_list[sprite].nametag = sprite + " " + sprites_list[sprite].health;
 				if (sprites_list[sprite].health < 0) {
 					delete_sprite(sprite);
+					check_objectives();
 				}
 				// 
 			}
@@ -925,7 +1061,7 @@ function update_sprites(sprites_list) {
 		
 	
 		// legacy collisions
-		if ( start_yrender_from + y_pos_onscreen - 1 > 0 &&  start_yrender_from + y_pos_onscreen + sprites_list[sprite].y_size < level.full.length ) {
+		if ( sprites_list[sprite].y_pos - 1 >= 0 && sprites_list[sprite].y_pos + sprites_list[sprite].y_size < level.full.length ) {
 			let bounced_left = false;
 			let bounced_right = false;
 			let bounced_up = false;
@@ -933,59 +1069,72 @@ function update_sprites(sprites_list) {
 			
 			// y-axis collisions
 			// top
-			if ((level.full[start_yrender_from + y_pos_onscreen - 1].charAt(start_xrender_from + x_pos_onscreen) == '\u2588') ||
-				(level.full[start_yrender_from + y_pos_onscreen - 1].charAt(start_xrender_from + x_pos_onscreen + sprites_list[sprite].x_size - 2) == '\u2588')) {
-				if (sprites_list[sprite].y_pile < 0) {
-					sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * collision_loss;
-				}
-				if (sprites_list[sprite].y_speed < 0) {
-					sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * collision_loss;
-				}
+			if ((level.full[sprites_list[sprite].y_pos - 1].charAt(sprites_list[sprite].x_pos) == '\u2588') ||
+				(level.full[sprites_list[sprite].y_pos - 1].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size - 2) == '\u2588')) {
+				
 				bounced_up = true;
 			} 
 			
 			// left
-			if (level.full[start_yrender_from + y_pos_onscreen].charAt(start_xrender_from + x_pos_onscreen - 1) == '\u2588' ||
-				level.full[start_yrender_from + y_pos_onscreen + sprites_list[sprite].y_size - 1].charAt(start_xrender_from + x_pos_onscreen - 1) == '\u2588') {
-				if (sprites_list[sprite].x_pile < 0) {
-					sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * collision_loss;
-				}
-				if (sprites_list[sprite].x_speed < 0) {
-					sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * collision_loss;
-				}
+			if (level.full[sprites_list[sprite].y_pos].charAt(sprites_list[sprite].x_pos - 1) == '\u2588' ||
+				level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size - 1].charAt(sprites_list[sprite].x_pos - 1) == '\u2588') {
+				
 				bounced_left = true;
 				
 			} 
 			
 			// right
-			if (level.full[start_yrender_from + y_pos_onscreen].charAt(start_xrender_from + x_pos_onscreen + sprites_list[sprite].x_size) == '\u2588' ||
-				level.full[start_yrender_from + y_pos_onscreen + sprites_list[sprite].y_size - 1].charAt(start_xrender_from + x_pos_onscreen + sprites_list[sprite].x_size) == '\u2588') {
-				if (sprites_list[sprite].x_pile > 0) {
-					sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * collision_loss;
-				}
-				if (sprites_list[sprite].x_speed > 0) {
-					sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * collision_loss;
-				}
+			if (level.full[sprites_list[sprite].y_pos].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size) == '\u2588' ||
+				level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size - 1].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size) == '\u2588') {
+				
 				bounced_right = true;
 			}
 			
 			// bottom
-			if (level.full[start_yrender_from + y_pos_onscreen + sprites_list[sprite].y_size].charAt(start_xrender_from + x_pos_onscreen) == '\u2588' ||
-				level.full[start_yrender_from + y_pos_onscreen + sprites_list[sprite].y_size].charAt(start_xrender_from + x_pos_onscreen + sprites_list[sprite].x_size - 2) == '\u2588') {
-				if (sprites_list[sprite].y_pile > 0) {
-					sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * collision_loss;
-				}
-				if (sprites_list[sprite].y_speed > 0) {
-					sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * collision_loss;
-				}
+			if (level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size].charAt(sprites_list[sprite].x_pos) == '\u2588' ||
+				level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size - 2) == '\u2588') {
+				
 				bounced_down = true;
             }
-            // if (bounced_left && bounced_right && bounced_up && bounced_down) {
-            //    sprites_list[sprite].x_speed = sprites_list[sprite].x_speed / collision_loss;
-            //    sprites_list[sprite].y_speed = sprites_list[sprite].y_speed / collision_loss;
-            // } else {
-            //    if (bounced)
-            // }
+            if (bounced_left && bounced_right && bounced_up && bounced_down) {
+                // pass
+            } else {
+				if (bounced_left) {
+					if (sprites_list[sprite].x_pile < 0) {
+						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * collision_loss;
+					}
+					if (sprites_list[sprite].x_speed < 0) {
+						sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * collision_loss;
+					}
+				}
+				if (bounced_right) {
+					if (sprites_list[sprite].x_pile > 0) {
+						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * collision_loss;
+					}
+					if (sprites_list[sprite].x_speed > 0) {
+						sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * collision_loss;
+					}
+				}
+				if (bounced_up) {
+					if (sprites_list[sprite].y_pile < 0) {
+						sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * collision_loss;
+					}
+					if (sprites_list[sprite].y_speed < 0) {
+						sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * collision_loss;
+					}
+				}
+				if (bounced_down) {
+					if (sprites_list[sprite].y_pile > 0) {
+						sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * collision_loss;
+					}
+					if (sprites_list[sprite].y_speed > 0) {
+						sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * collision_loss;
+					}
+				}
+            }
+		
+			
+
             if (sprites_list[sprite].lock_direction == false) {
 
 				if (bounced_left == true) {
@@ -1010,16 +1159,10 @@ function update_sprites(sprites_list) {
 }
 
 function respawn_player() {
-	/*
-	if ((typeof sprites_list["player"] === 'undefined')) {
-		delete_sprite("player");
-	}
-	clear_deleted_sprites();
-	*/
 	delete sprites_list["player"];
 	create_sprite({ name: "player",
-	x_pos : 73,
-	y_pos : 20,
+	x_pos : level.spawn_location.x_pos,
+	y_pos : level.spawn_location.y_pos,
 	x_speed: 0,
 	y_speed: 0,
 	type: "player",
@@ -1028,6 +1171,8 @@ function respawn_player() {
 	move_towards: true,
 	has_resistance : true,
 	skin: "snail"});
+	document.getElementById("pause_menu").style.display = "none";
+	unpause_game();
 }
 
 function delete_sprite(sprite) {
@@ -1112,11 +1257,14 @@ function update(time) {
 	
 	manage_timers(timers);
 	
+	/*
 	for (obj in objectives) {
 		if (objectives[obj].conditional(objectives[obj].conditional_args) == true) {
 			objectives[obj].is_completed = true;
 		}
 	}
+	*/
+	check_objectives();
 	
 	// now, process functions from game file.
 	on_frame(sprites_list);
@@ -1136,7 +1284,9 @@ function update(time) {
     document.getElementById(text_display).innerHTML = text_output;
 
     // console.log('frames');
-	requestAnimationFrame(update);
+	if (render == true) {
+		requestAnimationFrame(update);
+	}
 	
 	var thisFrameTime = (thisLoop=new Date) - lastLoop;
 	frameTime+= (thisFrameTime - frameTime) / filterStrength;
@@ -1150,3 +1300,4 @@ var fpsOut = document.getElementById('fps');
 setInterval(function(){
   fpsOut.innerHTML = (1000/frameTime).toFixed(1) + " fps";
 },1000);
+// end

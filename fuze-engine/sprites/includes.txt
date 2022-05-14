@@ -1,0 +1,8 @@
+/sprites/mario.json
+/sprites/sans.json
+/sprites/player.json
+/sprites/peter.json
+/sprites/fishron.json
+/sprites/invader.json
+/sprites/impostor.json
+/sprites/default_sprite.json

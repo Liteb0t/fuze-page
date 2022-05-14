@@ -1,0 +1,15 @@
+{ "name": "player" ,
+"x_pos" : 73,
+"y_pos" : 20,
+"x_speed": 0,
+"y_speed": 0,
+"type": "player",
+"health": 120,
+"show_nametag": true,
+"minimap_character": "P",
+"move_towards": true,
+"team": "player",
+"weapons": ["rock", "destroyer"],
+"has_resistance" : true,
+"skin": "snail"
+}

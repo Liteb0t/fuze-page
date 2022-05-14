@@ -1,0 +1,4 @@
+/weapons/rock.json
+/weapons/destroyer.json
+/weapons/sniper.json
+/weapons/mine.json

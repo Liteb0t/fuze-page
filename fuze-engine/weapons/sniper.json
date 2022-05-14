@@ -1,0 +1,7 @@
+{
+"name": "sniper",
+"damage": 4,
+"penetration": 30,
+"speed": 90,
+"cooldown": 50,
+"delete_after": 60 }

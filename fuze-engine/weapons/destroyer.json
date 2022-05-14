@@ -1,0 +1,7 @@
+{
+"name": "destroyer",
+"damage": 11,
+"penetration": 30,
+"speed": 28,
+"cooldown": 40,
+"delete_after": 70 }

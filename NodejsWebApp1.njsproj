@@ -61,10 +61,25 @@
     <Content Include="fonts\IBMPlexMono-Medium.ttf" />
     <Content Include="fonts\IBMPlexMono-Medium.woff" />
     <Content Include="fonts\IBMPlexMono-Medium.woff2" />
+    <Content Include="fuze-engine\levels\fz_battleground.json" />
+    <Content Include="fuze-engine\levels\fz_empty.json" />
+    <Content Include="fuze-engine\levels\fz_emptya.json" />
+    <Content Include="fuze-engine\levels\fz_maze.json" />
+    <Content Include="fuze-engine\levels\fz_racecourse.json" />
+    <Content Include="fuze-engine\levels\includes.txt" />
     <Content Include="fuze-engine\sounds\Glitch Sound Effect %28Speaker%29.mp3" />
     <Content Include="fuze-engine\sounds\Megalovania.mp3" />
     <Content Include="fuze-engine\sounds\peter_owchie.mp3" />
     <Content Include="fuze-engine\sounds\phrygian.wav" />
+    <Content Include="fuze-engine\sprites\default_sprite.json" />
+    <Content Include="fuze-engine\sprites\fishron.json" />
+    <Content Include="fuze-engine\sprites\impostor.json" />
+    <Content Include="fuze-engine\sprites\includes.txt" />
+    <Content Include="fuze-engine\sprites\invader.json" />
+    <Content Include="fuze-engine\sprites\mario.json" />
+    <Content Include="fuze-engine\sprites\peter.json" />
+    <Content Include="fuze-engine\sprites\player.json" />
+    <Content Include="fuze-engine\sprites\sans.json" />
     <Content Include="fuze-engine\textures\amogus.txt" />
     <Content Include="fuze-engine\textures\bobtank.txt" />
     <Content Include="fuze-engine\textures\clippy.txt" />
@@ -85,6 +100,11 @@
     <Content Include="fuze-engine\textures\sans.txt" />
     <Content Include="fuze-engine\textures\snail.txt" />
     <Content Include="fuze-engine\textures\stewie.txt" />
+    <Content Include="fuze-engine\weapons\destroyer.json" />
+    <Content Include="fuze-engine\weapons\includes.txt" />
+    <Content Include="fuze-engine\weapons\mine.json" />
+    <Content Include="fuze-engine\weapons\rock.json" />
+    <Content Include="fuze-engine\weapons\sniper.json" />
     <Content Include="fuzevd.html">
       <SubType>Code</SubType>
     </Content>
@@ -148,10 +168,13 @@
     <Folder Include="downloads\fuzevd-1_1\" />
     <Folder Include="fonts\" />
     <Folder Include="fuze-engine\" />
+    <Folder Include="fuze-engine\levels\" />
     <Folder Include="fuze-engine\sounds\" />
+    <Folder Include="fuze-engine\sprites\" />
     <Folder Include="fuze-engine\textures\" />
     <Folder Include="fuze-engine\textures\maps\" />
     <Folder Include="downloads\" />
+    <Folder Include="fuze-engine\weapons\" />
     <Folder Include="level\" />
     <Folder Include="libs\" />
     <Folder Include="media\" />

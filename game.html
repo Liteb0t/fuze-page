@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Fuze Game a2.6.3</title>
+    <title>Fuze Game a2.7.3</title>
     <meta name="description" content="Play the in-development online browser game loosely derived from diep.io">
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,fuze game,update,online,diep,page,fuze page">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,7 +23,13 @@
 			font-family: fuzedsys;
 			src: url('/fonts/FSEX302.ttf') format('truetype');
         }
-
+		
+		body {
+			position: fixed;
+			width: 100%;
+			height: auto;
+		}
+		
         #game-display {
             position: fixed;
             /*font-family: IBM; 
@@ -50,66 +56,141 @@
 		}
 		
         #controls {
-			color: #fff;
+			color: #000;
             position: fixed;
-            background-color: rgba(0, 0, 255, 0.50);
             padding: 2px;
-            top: 0;
-            right: 0;
-            height: 100%;
-            width: 320px;
-            border-left: 2px solid #000;
+            top: 2px;
+            right: 2px;
+            min-height: 200px;
+            width: 200px;
+            border: 2px solid #000;
+			float: right;
         }
+		
+		.centred-window {
+			margin: 0 auto;
+			position: relative;
+			background-color: rgba(0, 0, 255, 0.50);
+			border: 2px solid black;
+			padding: 2px;
+		}
+		
+		#pause_menu {
+			width: 500px;
+			height: 480px;
+			z-index: 10;
+			display: block;
+		}
+		
+		.header {
+			height: 30px;
+			font-size: 24px;
+			font-weight: bold;
+			border-bottom: 2px solid #000;
+		}
+		
+		#pause_menu #level_list {
+			float: left;
+			height: 200px;
+			width: 244px;
+		}
+		
+		#pause_menu #settings {
+			float: right;
+			width: 244px;
+			height: 200px;
+			margin: 2px;
+			padding: 2px;
+			border: 1px solid #000;
+		}
+		
+		#pause_menu .level_select_box {
+			padding: 2px;
+			margin-top: 2px;
+			border: 1px solid #000;
+		}
+
+		#level_complete_screen {
+			z-index: 0;
+			top: 100px;
+			width: 400px;
+			height: 200px;
+		}
 
         #minimap {
             font-family: Consolas;
             font-size: 11px;
+			color: #fff;
+            position: fixed;
+            background-color: rgba(0, 0, 255, 0.50);
+            padding: 2px;
+			right: 10px;
+			bottom: 10px;
+			width: 300px;
+			height: 250px;
         }
 		
-		#level-textbox {
+		#level_textbox {
 			font-family: Consolas;
             font-size: 11px;
 		}
 		
-		#btn_settings {
-			z-index:73;
+		#window_buttons {
+			z-index: 73;
 			position: fixed;
 			right: 5px;
 			bottom: 5px;
 		}
-		
+	
     </style>
 </head>
 <body>
-    <pre><div id="game-display"></div></pre>
-    <div id="controls">
-		Fuze game alpha 2.6.3<br>
-		WASD to move<br>
-		E or left click to shoot<br>
-		CTRL + scroll to zoom, zoom in if it lags<br>
+    <pre><div id="game-display" style="color: rgb(0, 0, 0);background-color: rgb(255, 255, 255)"></div></pre>
+	<div id="pause_menu" class="centred-window" style="display: none;">
+	<div class="header">
+	PAUSE MENU
+	<button type="button" id="btn_levels" onclick="toggle_div('pause_menu')" style="float:right;top:0;">[ x ]</button>
+	</div>
+	<div id="level_list">
+	Loading...
+	</div>
+	<div id="settings">
+	WASD to move<br>
+	E or left click to shoot<br>
+	CTRL + scroll to zoom, zoom in if it lags<br>
+	<div><input type="checkbox" id="cb_pov">POV within map?</div>
+	<br />
+	<button type="button" onclick='respawn_player()'>Respawn</button>
+	<br />
+	<button type="button" onclick="toggle_dark_theme()">Toggle dark theme</button>
+	<br />
+	</div>
+	<button type="button" id="btn_start_game" onclick="start_game()">Start game</button>
+	</div>
+	<pre><div id="minimap">
+        Minimap: Level not loaded
+	</div></pre>
+    <div id="controls" style="display: block">
+		<div>
+		Fuze game alpha 2.7.3<br>
+		</div>
 		<div id="fps">loading...</div>
-        <button type="button" onclick='apply_level("1-racecourse")'>import racecourse</button>
 		<br />
-		<button type="button" onclick='apply_level("3-battleground")'>import battleground</button>
-		<br />
-        <button type="button" onclick='load_level()'>start game</button>
-		<button type="button" onclick='respawn_player()'>Respawn</button>
-        <br />
-		<div id="lvl_textbox"><textarea id="level_textbox" style="font-size: 11px;font-family: fuzedsys;" rows="18" cols="52"></textarea></div>
-		<br />
-		<input type="checkbox" id="cb_pov">POV within map?
-		<br>
-		<button type="button" onclick="toggle_dark_theme()">Toggle dark theme</button>
-		<br />
-        <h3>Minimap</h3>
-        <pre id="minimap">
-            Level not loaded
-		</pre>
+		
 		OBJECTIVES:<br />
 		<div id="objectives"></div>
     </div>
-	<div id="button_toggle">
-	<button type="button" id="btn_settings" onclick="toggle_settings()">Hide panel</button>
+	<div id="level_complete_screen" class="centred-window" style="display: none">
+	<div class="header">
+	Level complete!
+	</div>
+	<button type="button" onclick="load_next_level()">Next level</button>
+	<button type="button" onclick="toggle_div('level_complete_screen')">Keep playing</button>
+	<button type="button" id="btn_start_game" onclick="start_game()">Start game</button>
+	</div>
+	<div id="window_buttons">
+	<button type="button" id="btn_levels" onclick="toggle_div('pause_menu')">Pause menu</button>
+	<button type="button" id="btn_settings" onclick="toggle_div('controls')">Toggle panel</button>
 	</div>
     
     <!--fuze-engine processes the interactions between objects and renders the text, while game-local creates, edits, and deletes objects-->

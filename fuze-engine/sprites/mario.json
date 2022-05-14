@@ -1,0 +1,16 @@
+{ 
+"name": "mario",
+"x_pos": 100, 
+"y_pos": 100,
+"health": 73,
+"x_speed": -8, 
+"y_speed": -3,
+"type": "enemy", 
+"team": "enemies",
+"lock_direction": true,
+"use_ai": true,
+"weapons": ["destroyer", "mine"],
+"ai": {"type": "goblin", "speed": 30, "targets": ["player"]},
+"show_nametag": true,
+"skin": "load",
+"has_resistance": true}
