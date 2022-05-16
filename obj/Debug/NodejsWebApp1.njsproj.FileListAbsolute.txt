@@ -7,3 +7,6 @@ C:\Users\The user\source\repos\fuze-page\bin\Microsoft.NodejsTools.WebRole.dll
 \\dldafs01\studentfolders$\MichaelGlukhov20\My Documents\fuze-page-main\obj\Debug\NodejsWebApp1.njsprojAssemblyReference.cache
 \\dldafs01\studentfolders$\MichaelGlukhov20\My Documents\fuze-page-main\obj\Debug\NodejsWebApp1.njsproj.CoreCompileInputs.cache
 \\dldafs01\studentfolders$\MichaelGlukhov20\My Documents\fuze-page-main\bin\Microsoft.NodejsTools.WebRole.dll
+C:\Users\WindowsUser73\source\repos\fuze-page\obj\Debug\NodejsWebApp1.njsprojAssemblyReference.cache
+C:\Users\WindowsUser73\source\repos\fuze-page\obj\Debug\NodejsWebApp1.njsproj.CoreCompileInputs.cache
+C:\Users\WindowsUser73\source\repos\fuze-page\bin\Microsoft.NodejsTools.WebRole.dll

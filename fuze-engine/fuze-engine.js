@@ -1,4 +1,4 @@
-﻿// Fuze engine a2.8.0
+﻿// Fuze engine a2.8.1
 
 // The HTML class that text will be rendered to
 // via document.getElementById(text_display).innerHTML(text_output)
@@ -75,8 +75,12 @@ document.addEventListener("keyup", function (event) {
 });
 
 // runs the fuze-game custom code for a click event
-document.addEventListener('click', function(event){
-	on_click(sprites_list);
+document.addEventListener('click', function (event) {
+
+    // dont use the onclick when in the menus
+    if (render == true) {
+        on_click(sprites_list);
+    }
 }, false);
 
 // update variables for mouse pos which are used for aiming weapons
@@ -103,18 +107,38 @@ function toggle_div(element_id) {
 
 }
 
+// when levels are imported, it updates the gui to list them
 function update_pause_menu() {
-	let pause_menu_element = document.getElementById("pause_menu");
-	let temp_add_levels = ""
+	// let pause_menu_element = document.getElementById("pause_menu");
+    let temp_add_levels = "";
 	
-	if (document.getElementById("pause_menu").style.display = "block") {}
+	// if (document.getElementById("pause_menu").style.display = "block") {}
 	
-	document.getElementById("level_list").innerHTML = ""
+    document.getElementById("level_list").innerHTML = "";
 	for (level_id in levels) {
 		temp_add_levels = temp_add_levels + "<div class=\"level_select_box\">Level id: " + level_id + 
 		"<br><button type=\"button\" onclick=\"load_level('" + level_id + "')\">Load</button></div>\n";
 	}
 	document.getElementById("level_list").innerHTML = temp_add_levels;
+}
+
+// when weapons are imported, it updates the gui to list them
+function update_weapons_chooser() {
+    let temp_add_weapons = "";
+    let temp_add_weapons2 = "";
+    document.getElementById("select_weapon_1").innerHTML = "Loading...";
+    for (weapon_id in weapons) {
+        temp_add_weapons = temp_add_weapons + "<input type=\"radio\" name=\"weapon_1\" id=\"rb_" + weapon_id + "\" onclick=\"select_weapon(1, '" + weapon_id + "')\" />" +
+            "<label for= \"rb_" + weapon_id + "\">" + weapon_id + "</label><br />";
+    }
+    document.getElementById("select_weapon_1").innerHTML = "WEAPON 1:<br />E key / click <br />" + temp_add_weapons;
+
+    document.getElementById("select_weapon_2").innerHTML = "Loading...";
+    for (weapon_id in weapons) {
+        temp_add_weapons2 = temp_add_weapons2 + "<input type=\"radio\" name=\"weapon_2\" id=\"rb_" + weapon_id + "\" onclick=\"select_weapon(2, '" + weapon_id + "')\" />" +
+            "<label for= \"rb_" + weapon_id + "\">" + weapon_id + "</label><br />";
+    }
+    document.getElementById("select_weapon_2").innerHTML = "WEAPON 2:<br />R key<br />" + temp_add_weapons2;
 }
 
 function select_level(level_id) {
@@ -192,6 +216,9 @@ function load_next_level() {
 		load_level(levels_list[levels_list.indexOf(level.name) + 1]);
 	} else {
 		load_level(levels_list[0]);
+    }
+    if (typeof sprites_list["player"] === 'undefined') {
+        respawn_player();
     }
     unpause_game();
     // toggle_div('pause_menu');
@@ -286,7 +313,7 @@ function use_weapon(from_sprite, weapon_number, target) {
         weapon_chosen = sprites_list[from_sprite].weapons[weapon_number - 1];
     }
 	if (!(typeof sprites_list[from_sprite] === 'undefined') &&  !(typeof weapons[weapon_chosen] === 'undefined')) {
-		if (sprites_list[from_sprite].cooldowns.indexOf(weapons[weapon_chosen].name) === -1) {
+		if (sprites_list[from_sprite].cooldowns[weapon_number - 1] == "empty") {
 			if (target === undefined) {
 				target = { x_pos: sprites_list[from_sprite].x_pos, y_pos: sprites_list[from_sprite].y_pos };
 			} 
@@ -302,8 +329,8 @@ function use_weapon(from_sprite, weapon_number, target) {
             start_point.x_pos += Math.floor(start_point.x_size / 2);
             start_point.y_pos += Math.floor(start_point.y_size / 2);
 			
-			sprites_list[from_sprite].cooldowns.push(weapons[weapon_chosen].name)
-			create_timer(from_sprite + weapons[weapon_chosen].name, delete_cooldown, weapons[weapon_chosen].cooldown, {sprite : from_sprite, weapon: weapons[weapon_chosen].name}, false);
+            sprites_list[from_sprite].cooldowns[weapon_number - 1] = weapons[weapon_chosen].name;
+			create_timer(from_sprite + weapon_number, delete_cooldown, weapons[weapon_chosen].cooldown, {sprite : from_sprite, weapon: weapon_number - 1}, false);
 			let temp_x_pos = sprites_list[from_sprite].x_pos;
 			let temp_y_pos = sprites_list[from_sprite].y_pos;
 			
@@ -345,7 +372,7 @@ function use_weapon(from_sprite, weapon_number, target) {
 
 function delete_cooldown(args) {
 	if (!(typeof sprites_list[args.sprite] === 'undefined')) {
-		delete(sprites_list[args.sprite].cooldowns[sprites_list[args.sprite].cooldowns.indexOf(args.weapon)])
+        sprites_list[args.sprite].cooldowns[args.weapon] = "empty";
 	}
 }
 
@@ -362,7 +389,6 @@ function update_text(id, the_text) {
 	document.getElementById(id).innerHTML = the_text;
 }
 
-
 function update_objectives_display() {
 	temp_text = "";
 	for (obj in level.objectives) {
@@ -373,54 +399,37 @@ function update_objectives_display() {
 			temp_row += uniconvert['checkbox_empty'];
 		}
 		temp_row += " " + level.objectives[obj].type + ": " + level.objectives[obj].target;
-		temp_text += temp_row + "\n";
+		temp_text += temp_row + "<br />";
 	}
 	update_text("objectives", temp_text);
 }
 
 function check_objectives() {
-	let temp_level_complete = false;
-	if (level.objectives.length > 0) {
-		temp_level_complete = true;
-	}
-	for (obj in level.objectives) {
-		if (level.objectives[obj].type == "eliminate") {
-			if (typeof sprites_list[level.objectives[obj].target] === "undefined") {
-				level.objectives[obj].is_completed = true;
-				update_objectives_display();
-			}
-		}
-		if (level.objectives[obj].is_completed == false) {
-			temp_level_complete = false;
-		}
-	}
-	if (temp_level_complete == true) {
-		level_completed();
-	}
+    if (level.is_completed == false) { 
+        let temp_level_complete = true;
+        for (obj in level.objectives) {
+            if (level.objectives[obj].type == "eliminate") {
+                if (typeof sprites_list[level.objectives[obj].target] === "undefined") {
+                    level.objectives[obj].is_completed = true;
+                }
+            }
+            if (level.objectives[obj].is_completed == false) {
+                temp_level_complete = false;
+            }
+        }
+        update_objectives_display();
+        if (temp_level_complete == true) {
+            level_completed();
+        }
+    }
 }
 
 function level_completed() {
 	pause_game();
-	toggle_div('level_complete_screen');
+    toggle_div('level_complete_screen');
+    level.is_completed = true;
 }
 
-/*
-
-function update_objectives_display() {
-	temp_text = "";
-	for (objective in level.objectives) {
-		temp_row = "";
-		if (objectives[obj].is_completed == true) {
-			temp_row += uniconvert['checkbox_tick'];
-		} else {
-			temp_row += uniconvert['checkbox_empty'];
-		}
-		temp_row += " " + objectives[obj].message;
-		temp_text += temp_row + "\n"
-	}
-	update_text("objectives", temp_text);
-}
-*/
 function is_dead(the_sprite) {
 	temp_result = true;
 	if (!(typeof sprites_list[the_sprite] === 'undefined')) {
@@ -566,7 +575,7 @@ function create_sprite(args) {
 		if (typeof args.ai === 'undefined') { args.ai = { speed: 1, targets: ["nobody"]}; }
 		if (typeof args.lock_direction === 'undefined') { args.lock_direction = false; }
 		if (typeof args.minimap_character === 'undefined') { args.minimap_character = "?"; }
-		if (typeof args.cooldowns === 'undefined') { args.cooldowns = []; }
+        if (typeof args.cooldowns === 'undefined') { args.cooldowns = ["empty", "empty", "empty", "empty"]; }
 		if (typeof args.delete_after === 'undefined') { args.delete_after = -1; }
 		if (typeof args.starting_direction === 'undefined') { args.starting_direction = 90; args.direction = 90; } else {args.direction = args.starting_direction}
 		if (typeof args.has_resistance === 'undefined') { args.has_resistance = false; }
@@ -837,7 +846,9 @@ function open_level() {
 	if (level == "null") {
 		load_level("fz_racecourse");
 	}
-	
+
+    // create_sprite(JSON.parse(JSON.stringify(sprites["player"])));
+
 	// unpause_game();
 	
 	if (!(document.getElementById("pause_menu").style.display == "none")) {
@@ -852,15 +863,14 @@ function open_level() {
 
 // buttons in weapon select window
 function select_weapon(number,weapon) {
-    sprites_list["player"].weapons[number - 1] = weapon
+    sprites_list["player"].weapons[number - 1] = weapon;
+    sprites["player"].weapons[number - 1] = weapon;
     console.log(weapon);
 }
 
 function load_weapon_select_loadout() {
-    document.getElementById("weapon_loadout").innerHTML = sprites_list["player"].weapons;
+    update_weapons_chooser();
 }
-
-
 
 function load_level(level_id) {
     // level = { raw: loadFile('/level/' + level_name + '.txt'), full: [''] };
@@ -910,14 +920,29 @@ function load_level(level_id) {
 	level.minimap_width = level.rows[0].length
 	level.minimap_height = level.rows.length
 	level.width = level.full[0].length;
-	level.height = level.full.length;
+    level.height = level.full.length;
+
+    // make level skippable if there are no objectives
+    if (level.objectives.length == 0) {
+        level.is_completed = true;
+    }
+    else {
+        level.is_completed = false;
+    }
 	
 	viewport.x_pos = Math.floor(level.width / 2);
 	viewport.y_pos = Math.floor(level.height / 2);
-	
+
+    sprites_list = {};
+    for (the_npc in level.npc_list) {
+        create_sprite(JSON.parse(JSON.stringify(sprites[level.npc_list[the_npc]])));
+    }
+    create_sprite(JSON.parse(JSON.stringify(sprites["player"])));
+
+    update_objectives_display();
+
 	change_font_size(4);
 	document.getElementById(text_display).innerHTML = render_screen( {screen_width: parseInt(el.clientWidth / font.x_size), screen_height: parseInt(el.clientHeight / font.y_size)} )
-
 	
 	// requestAnimationFrame(update);
     // start rendering
@@ -1198,7 +1223,8 @@ function respawn_player() {
 	show_nametag: true,
 	minimap_character: "P",
 	move_towards: true,
-	has_resistance : true,
+    has_resistance: true,
+    weapons: sprites["player"].weapons,
 	skin: "snail"});
 	document.getElementById("pause_menu").style.display = "none";
 	unpause_game();
@@ -1285,15 +1311,8 @@ function update(time) {
 	}
 	
 	manage_timers(timers);
-	
-	/*
-	for (obj in objectives) {
-		if (objectives[obj].conditional(objectives[obj].conditional_args) == true) {
-			objectives[obj].is_completed = true;
-		}
-	}
-	*/
-	check_objectives();
+
+    check_objectives();
 	
 	// now, process functions from game file.
 	on_frame(sprites_list);
@@ -1323,8 +1342,9 @@ function update(time) {
 }
 
 create_timer("do_ai", do_ai, 30, 'undefined', true);
+create_timer("check_objectives", check_objectives,30,'undefined',true)
 
-// Report the fps only every second, to only lightly affect measurements
+// Report the fps only every second, so no lagg
 var fpsOut = document.getElementById('fps');
 setInterval(function(){
   fpsOut.innerHTML = (1000/frameTime).toFixed(1) + " fps";

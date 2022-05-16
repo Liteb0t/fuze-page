@@ -2,4 +2,16 @@
 "spawn_location": {"x_pos": 80, "y_pos": 40},
 "npc_list": ["mario","sans","invader"],
 "scale": {"x_scale": 18, "y_scale": 12},
-"objectives": [{"type": "eliminate", "target": "sans", "is_completed": false},{"type": "eliminate", "target": "invader", "is_completed": false}]}
+  "objectives": [
+    
+    {
+      "type": "eliminate",
+      "target": "sans",
+      "is_completed": false
+    },
+    {
+      "type": "eliminate",
+      "target": "invader",
+      "is_completed": false
+    }
+  ]}

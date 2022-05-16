@@ -1,6 +1,6 @@
 ﻿// This isnt part of fuze engine. it just stores and processes the properties of the player and game
 // On multiplayer this file will be modified and on the server-side with some form of anti-cheat
-// alpha 2.8.0
+// alpha 2.8.1
 
 // define weapons
 weapons = load_data("/fuze-engine/weapons/includes.txt");
@@ -22,10 +22,12 @@ for (a_level in levels) {
 
 sprites = load_data("/fuze-engine/sprites/includes.txt");
 
-// placeholder laod sprites for level
+/*
+// placeholder load sprites for level
 for (the_sprite in sprites) {
 	create_sprite(JSON.parse(JSON.stringify(sprites[the_sprite])));
 }
+*/
 
 var player_speed = 3;
 
