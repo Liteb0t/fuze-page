@@ -123,6 +123,9 @@
     <Content Include="main-styles.css">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="mario.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="media\arab-music.mid" />
     <Content Include="media\favicon.png" />
     <Content Include="media\fuze-logo-discord.png" />
@@ -177,6 +180,7 @@
     <Folder Include="fuze-engine\weapons\" />
     <Folder Include="level\" />
     <Folder Include="libs\" />
+    <Folder Include="mario\" />
     <Folder Include="media\" />
     <Folder Include="sprites\" />
   </ItemGroup>

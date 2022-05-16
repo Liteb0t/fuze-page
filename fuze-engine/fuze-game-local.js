@@ -1,6 +1,6 @@
 ﻿// This isnt part of fuze engine. it just stores and processes the properties of the player and game
 // On multiplayer this file will be modified and on the server-side with some form of anti-cheat
-// alpha 2.7.3
+// alpha 2.8.0
 
 // define weapons
 weapons = load_data("/fuze-engine/weapons/includes.txt");
@@ -65,19 +65,19 @@ function on_frame(sprites_list) {
 		}
 		
 		if (keystate.KeyE == true) {
-			use_weapon("player", "rock", "mouse");
+			use_weapon("player", 1, "mouse");
 		}
 		
 		if (keystate.KeyR == true) {
-			use_weapon("player", "destroyer", "mouse");
+			use_weapon("player", 2, "mouse");
 		}
 		
 		if (keystate.KeyF == true) {
-			use_weapon("player", "sniper", "mouse");
+			use_weapon("player", 3, "mouse");
 		}
 		
 		if (keystate.KeyM == true) {
-			use_weapon("player", "mine", "stationary");
+			use_weapon("player", 4, "stationary");
 		}
 		
 		if (keystate.KeyP == true) {
@@ -90,7 +90,7 @@ function on_frame(sprites_list) {
 		
 		// If player is holding click
 		if (mouse_down == 1) {
-			use_weapon("player", "rock", "mouse");
+			use_weapon("player", 1, "mouse");
 		}
 	}
 	sounds["sans_music"].volume(sound_decay(calculate_distance("player", "sans")));

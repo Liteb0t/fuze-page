@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Fuze Game a2.7.3</title>
+    <title>Fuze Game a2.8.0</title>
     <meta name="description" content="Play the in-development online browser game loosely derived from diep.io">
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,fuze game,update,online,diep,page,fuze page">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,6 +28,7 @@
 			position: fixed;
 			width: 100%;
 			height: auto;
+            font-size: 18px;
 		}
 		
         #game-display {
@@ -36,7 +37,7 @@
 			src: url('/fonts/EversonMono.ttf') format('truetype');
 			font-family: Consolas;
 			font-family: evermono;*/
-            font-size: 14px;
+            font-size: 22px;
             top: 0;
             left: 0;
             height: 100%;
@@ -66,14 +67,18 @@
             border: 2px solid #000;
 			float: right;
         }
-		
-		.centred-window {
-			margin: 0 auto;
-			position: relative;
-			background-color: rgba(0, 0, 255, 0.50);
-			border: 2px solid black;
-			padding: 2px;
-		}
+
+        .centred-window {
+            margin: 0 auto;
+            position: relative;
+            background-color: rgba(0, 0, 255, 0.50);
+            border: 2px solid black;
+            padding: 2px;
+            top: 100px;
+            width: 400px;
+            height: 200px;
+            color: #fff;
+        }
 		
 		#pause_menu {
 			width: 500px;
@@ -112,9 +117,6 @@
 
 		#level_complete_screen {
 			z-index: 0;
-			top: 100px;
-			width: 400px;
-			height: 200px;
 		}
 
         #minimap {
@@ -141,6 +143,19 @@
 			right: 5px;
 			bottom: 5px;
 		}
+
+        #weapon_select_container {
+            width: 390px;
+            height: 120px;
+        }
+
+        .weapon_select {
+            float: left;
+            overflow: hidden;
+        }
+
+        #start_game_button {
+        }
 	
     </style>
 </head>
@@ -165,14 +180,14 @@
 	<button type="button" onclick="toggle_dark_theme()">Toggle dark theme</button>
 	<br />
 	</div>
-	<button type="button" id="btn_start_game" onclick="start_game()">Start game</button>
+	<button type="button" id="btn_open_level" onclick="open_level()">Start game</button>
 	</div>
-	<pre><div id="minimap">
+	<pre id="minimap">
         Minimap: Level not loaded
-	</div></pre>
+	</pre>
     <div id="controls" style="display: block">
 		<div>
-		Fuze game alpha 2.7.3<br>
+		Fuze game alpha 2.8.0<br>
 		</div>
 		<div id="fps">loading...</div>
 		<br />
@@ -181,13 +196,45 @@
 		<div id="objectives"></div>
     </div>
 	<div id="level_complete_screen" class="centred-window" style="display: none">
-	<div class="header">
-	Level complete!
+        <div class="header">
+	        Level complete!
+	    </div>
+	<button type="button" onclick="load_next_level();toggle_div('level_complete_screen')">Next level</button>
+	<button type="button" onclick="unpause_game();toggle_div('level_complete_screen')">Keep playing</button>
 	</div>
-	<button type="button" onclick="load_next_level()">Next level</button>
-	<button type="button" onclick="toggle_div('level_complete_screen')">Keep playing</button>
-	<button type="button" id="btn_start_game" onclick="start_game()">Start game</button>
-	</div>
+
+    <div id="weapon_select" class="centred-window" style="display: none">
+        <div class="header">
+            Choose your weapons
+        </div>
+        <div id="weapon_loadout">
+            Not loaded
+        </div>
+        <div id="weapon_select_container">
+            <div class="weapon_select">
+                WEAPON 1:<br />
+                <input type="radio" name="weapon_1" id="rb_rock" onclick="select_weapon(1,'rock')" />
+                <label for="rb_rock">Rock</label><br />
+                <input type="radio" name="weapon_1" id="rb_destroyer" onclick="select_weapon(1,'destroyer')" />
+                <label for="rb_destroyer">destroyer</label><br />
+                <input type="radio" name="weapon_1" id="rb_sniper" onclick="select_weapon(1,'sniper')" />
+                <label for="rb_sniper">sniper</label><br />
+            </div>
+            <div class="weapon_select">
+                WEAPON 2:<br />
+                <input type="radio" name="weapon_2" id="rb_rock" onclick="select_weapon(2,'rock')" />
+                <label for="rb_rock">Rock</label><br />
+                <input type="radio" name="weapon_2" id="rb_destroyer" onclick="select_weapon(2,'destroyer')" />
+                <label for="rb_destroyer">destroyer</label><br />
+                <input type="radio" name="weapon_2" id="rb_sniper" onclick="select_weapon(2,'sniper')" />
+                <label for="rb_sniper">sniper</label><br />
+            </div>
+        </div>
+        <div id="start_game_button">
+            <button type="button" id="btn_open_level" onclick="unpause_game();toggle_div('weapon_select')">Start game</button>
+        </div>
+    </div>
+
 	<div id="window_buttons">
 	<button type="button" id="btn_levels" onclick="toggle_div('pause_menu')">Pause menu</button>
 	<button type="button" id="btn_settings" onclick="toggle_div('controls')">Toggle panel</button>

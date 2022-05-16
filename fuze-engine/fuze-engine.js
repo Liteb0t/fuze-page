@@ -1,4 +1,4 @@
-﻿// Fuze engine a2.7.3
+﻿// Fuze engine a2.8.0
 
 // The HTML class that text will be rendered to
 // via document.getElementById(text_display).innerHTML(text_output)
@@ -138,7 +138,7 @@ function unpause_game() {
 	if (level == "null") {
 		load_level("fz_empty");
 	}
-	change_font_size(14);
+	change_font_size(22);
 	render = true
 	requestAnimationFrame(update);
 }
@@ -192,7 +192,9 @@ function load_next_level() {
 		load_level(levels_list[levels_list.indexOf(level.name) + 1]);
 	} else {
 		load_level(levels_list[0]);
-	}
+    }
+    unpause_game();
+    // toggle_div('pause_menu');
 }
 
 function calculate_weapon_speed(start_point, weapon, target) {
@@ -269,7 +271,20 @@ function randint(low_num, high_num) {
 	return Math.floor(Math.random() * (high_num - low_num + 1 ) + low_num);
 }
 
-function use_weapon(from_sprite, weapon_chosen, target) {
+function random_weapon(sprite) {
+    let output = randint(1, sprites_list[sprite].weapons.length);
+    console.log(sprite + " is using weapon number " + output)
+    return output;
+}
+
+function use_weapon(from_sprite, weapon_number, target) {
+    let weapon_chosen = weapon_number - 1;
+    if (weapon_chosen == -1) {
+        weapon_chosen = sprites_list[from_sprite].weapons[random_weapon(from_sprite)];
+    }
+    else {
+        weapon_chosen = sprites_list[from_sprite].weapons[weapon_number - 1];
+    }
 	if (!(typeof sprites_list[from_sprite] === 'undefined') &&  !(typeof weapons[weapon_chosen] === 'undefined')) {
 		if (sprites_list[from_sprite].cooldowns.indexOf(weapons[weapon_chosen].name) === -1) {
 			if (target === undefined) {
@@ -774,14 +789,14 @@ function do_ai() {
 						
 						sprites_list[sprite].y_speed += sprites_list[sprite].ai.speed;
 					}
-					
-					for (weapon in sprites_list[sprite].weapons) {
+					if (randint(0,100) > 50) {
+						use_weapon(sprite, random_weapon(sprite), sprites_list[target_sprite]);
+					}
+					// for (weapon in sprites_list[sprite].weapons) {
 						// console.log(sprites_list[sprite].weapons);
 						// console.log("sprite: " + sprite + "weapon: " + sprites_list[sprite].weapons[weapon]);
-						if (randint(0,100) > 50) {
-							use_weapon(sprite, sprites_list[sprite].weapons[weapon], sprites_list[target_sprite]);
-						}
-					}
+						
+					// }
 				}
 				
 				if (sprites_list[sprite].y_speed > 90) {sprites_list[sprite].y_speed = 90}
@@ -818,20 +833,34 @@ function change_font_size(font_size) {
 	font = {x_size : Math.ceil(font_size / 2), y_size: font_size};
 }
 
-function start_game() {
+function open_level() {
 	if (level == "null") {
 		load_level("fz_racecourse");
 	}
 	
-	unpause_game();
+	// unpause_game();
 	
 	if (!(document.getElementById("pause_menu").style.display == "none")) {
 		document.getElementById("pause_menu").style.display = "none";
 	}
 	if (!(document.getElementById("level_complete_screen").style.display == "none")) {
 		document.getElementById("level_complete_screen").style.display = "none";
-	}
+    }
+    document.getElementById("weapon_select").style.display = "block";
+    load_weapon_select_loadout()
 }
+
+// buttons in weapon select window
+function select_weapon(number,weapon) {
+    sprites_list["player"].weapons[number - 1] = weapon
+    console.log(weapon);
+}
+
+function load_weapon_select_loadout() {
+    document.getElementById("weapon_loadout").innerHTML = sprites_list["player"].weapons;
+}
+
+
 
 function load_level(level_id) {
     // level = { raw: loadFile('/level/' + level_name + '.txt'), full: [''] };
