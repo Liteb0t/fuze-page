@@ -1,7 +1,7 @@
 { 
 "name": "rock", 
 "damage": 13, 
-"penetration": 6,
+"health": 6,
 "speed": 60, 
 "cooldown": 18, 
 "delete_after": 80 }

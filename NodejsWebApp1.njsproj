@@ -34,9 +34,6 @@
   <ItemGroup>
     <Compile Include="fuze-engine\fuze-engine.js" />
     <Compile Include="fuze-engine\fuze-game-local.js" />
-    <Compile Include="level\fuze-engine-1.js" />
-    <Compile Include="level\fuze-engine-2.js" />
-    <Compile Include="level\fuze-game-local-2.js" />
     <Compile Include="libs\howler.core.min.js" />
     <Compile Include="libs\howler.js" />
     <Compile Include="server.js" />
@@ -114,11 +111,6 @@
     <Content Include="index.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="level\0-test.txt" />
-    <Content Include="level\1-racecourse.txt" />
-    <Content Include="level\2-village.txt" />
-    <Content Include="level\3-battleground.txt" />
-    <Content Include="level\4-shells.txt" />
     <Content Include="libs\howler.core.min.txt" />
     <Content Include="main-styles.css">
       <SubType>Code</SubType>
@@ -152,16 +144,6 @@
     </Content>
     <Content Include="package.json" />
     <Content Include="README.md" />
-    <Content Include="sprites\bobtank.txt" />
-    <Content Include="sprites\draft.txt" />
-    <Content Include="sprites\kyle.txt" />
-    <Content Include="sprites\mario.txt" />
-    <Content Include="sprites\monkey.txt" />
-    <Content Include="sprites\peter.txt" />
-    <Content Include="sprites\player.txt" />
-    <Content Include="sprites\sans.txt" />
-    <Content Include="sprites\snail.txt" />
-    <Content Include="sprites\stewie.txt" />
     <Content Include="styles.css" />
     <Content Include="styles_v3.css" />
     <Content Include="tricerasmash.html" />
@@ -178,11 +160,9 @@
     <Folder Include="fuze-engine\textures\maps\" />
     <Folder Include="downloads\" />
     <Folder Include="fuze-engine\weapons\" />
-    <Folder Include="level\" />
     <Folder Include="libs\" />
     <Folder Include="mario\" />
     <Folder Include="media\" />
-    <Folder Include="sprites\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

@@ -1,7 +1,7 @@
 { 
 "name": "mine", 
 "damage": 27, 
-"penetration": 11,
+"health": 11,
 "speed": 5, 
 "cooldown": 73, 
 "delete_after": 200 }

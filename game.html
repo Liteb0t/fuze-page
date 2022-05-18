@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Fuze Game a2.8.1</title>
+    <title>Fuze Game a2.8.2</title>
     <meta name="description" content="Play the in-development online browser game loosely derived from diep.io">
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,fuze game,update,online,diep,page,fuze page">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -96,8 +96,9 @@
 		
 		#pause_menu #level_list {
 			float: left;
-			height: 200px;
+			height: 205px;
 			width: 244px;
+            overflow-y: auto;
 		}
 		
 		#pause_menu #settings {
@@ -113,6 +114,7 @@
 			padding: 2px;
 			margin-top: 2px;
 			border: 1px solid #000;
+            overflow: hidden;
 		}
 
 		#level_complete_screen {
@@ -146,7 +148,7 @@
 
         #weapon_select_container {
             width: 390px;
-            height: 120px;
+            height: 136px;
         }
 
         .weapon_select {
@@ -155,6 +157,9 @@
             padding: 2px;
             border: 1px solid #000;
             margin: 2px;
+            width: 180px;
+            height: 128px;
+            overflow-y: auto;
         }
 
         #start_game_button {
@@ -190,9 +195,9 @@
 	</pre>
     <div id="controls" style="display: block">
 		<div>
-		Fuze game alpha 2.8.1<br>
+		Fuze game alpha 2.8.2<br>
 		</div>
-		<div id="fps">loading...</div>
+		<div id="fps">Loading...</div>
 		<br />
 		
 		OBJECTIVES:<br />
@@ -212,24 +217,14 @@
         </div>
         <div id="weapon_select_container">
             <div id="select_weapon_1" class="weapon_select">
-                WEAPON 1:<br />
-                E key / click<br />
-                <input type="radio" name="weapon_1" id="rb_rock" onclick="select_weapon(1,'rock')" />
-                <label for="rb_rock">Rock</label><br />
-                <input type="radio" name="weapon_1" id="rb_destroyer" onclick="select_weapon(1,'destroyer')" />
-                <label for="rb_destroyer">destroyer</label><br />
-                <input type="radio" name="weapon_1" id="rb_sniper" onclick="select_weapon(1,'sniper')" />
-                <label for="rb_sniper">sniper</label><br />
+                Primary weapon:<br />
+                E key / Left click<br />
+                Loading...
             </div>
             <div id="select_weapon_2" class="weapon_select">
-                WEAPON 2:<br />
-                R key<br />
-                <input type="radio" name="weapon_2" id="rb_rock" onclick="select_weapon(2,'rock')" />
-                <label for="rb_rock">Rock</label><br />
-                <input type="radio" name="weapon_2" id="rb_destroyer" onclick="select_weapon(2,'destroyer')" />
-                <label for="rb_destroyer">destroyer</label><br />
-                <input type="radio" name="weapon_2" id="rb_sniper" onclick="select_weapon(2,'sniper')" />
-                <label for="rb_sniper">sniper</label><br />
+                Secondary weapon:<br />
+                R key / Right click<br />
+                Loading...
             </div>
         </div>
         <div id="start_game_button">

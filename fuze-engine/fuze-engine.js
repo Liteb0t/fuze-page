@@ -1,4 +1,4 @@
-﻿// Fuze engine a2.8.1
+﻿// Fuze engine a2.8.2
 
 // The HTML class that text will be rendered to
 // via document.getElementById(text_display).innerHTML(text_output)
@@ -53,7 +53,8 @@ var filterStrength = 10;
 var frameTime = 0, lastLoop = new Date, thisLoop;
 
 var keys = { 'left_arrow' : 37,  'up_arrow' : 38,  'right_arrow' : 39,  'down_arrow' : 40}
-var mouse = { x_pos : parseInt(el.clientWidth / 2), y_pos: parseInt(el.clientHeight / 2)}
+var mouse = { x_pos: parseInt(el.clientWidth / 2), y_pos: parseInt(el.clientHeight / 2) }
+var mouse_buttons = 0;
 var keystate = {};
 
 var mouse_down = 0;
@@ -74,14 +75,20 @@ document.addEventListener("keyup", function (event) {
     delete keystate[event.code];
 });
 
-// runs the fuze-game custom code for a click event
-document.addEventListener('click', function (event) {
-
-    // dont use the onclick when in the menus
-    if (render == true) {
-        on_click(sprites_list);
-    }
+document.addEventListener('contextmenu', function (ev) {
+    ev.preventDefault();
+    return false;
 }, false);
+
+// Mouse buttons down
+document.addEventListener('mousedown', function (event) {
+    mouse_buttons = event.buttons;
+    console.log(mouse_buttons);
+})
+// Mouse buttons up
+document.addEventListener('mouseup', function (event) {
+    mouse_buttons = event.buttons;
+})
 
 // update variables for mouse pos which are used for aiming weapons
 document.addEventListener("mousemove", function (event) {
@@ -91,7 +98,7 @@ document.addEventListener("mousemove", function (event) {
 
 // show or hide a GUI window when a button is clicked
 function toggle_div(element_id) {
-    var x = document.getElementById(element_id);	
+    let x = document.getElementById(element_id);	
 	
     if (x.style.display === "none") {
 		x.style.display = "block";
@@ -105,6 +112,32 @@ function toggle_div(element_id) {
 		}
     }
 
+}
+
+function show_div(div_id) {
+    let x = document.getElementById(div_id);
+
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        if (element_id == "pause_menu") {
+            pause_game();
+        }
+    }
+}
+
+function hide_div(div_id) {
+    let x = document.getElementById(div_id);
+
+    if (x.style.display === "block") {
+        x.style.display = "none";
+        if (element_id == "pause_menu") {
+            unpause_game();
+        }
+    }
+}
+
+function deep_copy(object) {
+    return JSON.parse(JSON.stringify(object))
 }
 
 // when levels are imported, it updates the gui to list them
@@ -131,14 +164,14 @@ function update_weapons_chooser() {
         temp_add_weapons = temp_add_weapons + "<input type=\"radio\" name=\"weapon_1\" id=\"rb_" + weapon_id + "\" onclick=\"select_weapon(1, '" + weapon_id + "')\" />" +
             "<label for= \"rb_" + weapon_id + "\">" + weapon_id + "</label><br />";
     }
-    document.getElementById("select_weapon_1").innerHTML = "WEAPON 1:<br />E key / click <br />" + temp_add_weapons;
+    document.getElementById("select_weapon_1").innerHTML = "Primary weapon:<br />E key / Left click <br />" + temp_add_weapons;
 
     document.getElementById("select_weapon_2").innerHTML = "Loading...";
     for (weapon_id in weapons) {
         temp_add_weapons2 = temp_add_weapons2 + "<input type=\"radio\" name=\"weapon_2\" id=\"rb_" + weapon_id + "\" onclick=\"select_weapon(2, '" + weapon_id + "')\" />" +
             "<label for= \"rb_" + weapon_id + "\">" + weapon_id + "</label><br />";
     }
-    document.getElementById("select_weapon_2").innerHTML = "WEAPON 2:<br />R key<br />" + temp_add_weapons2;
+    document.getElementById("select_weapon_2").innerHTML = "Secondary weapon:<br />R key / Right click<br />" + temp_add_weapons2;
 }
 
 function select_level(level_id) {
@@ -197,7 +230,8 @@ function calculate_distance(sprite_1, sprite_2) {
 		} else {
 			diff_y = sprites_list[sprite_2].y_pos - sprites_list[sprite_1].y_pos;
 		}
-		
+        // console.log("diff x: " + diff_x + "\ndiff y: " + diff_y)
+
 		total_diff = (diff_x + diff_y) / 1.41
 	}
 	return total_diff
@@ -207,7 +241,7 @@ function mouse_lvl_pos() {
 	mouse_lvl = {};
 	mouse_lvl.x_pos = (mouse.x_pos / font.x_size) + start_xrender_from;
     mouse_lvl.y_pos = (mouse.y_pos / font.y_size) + start_yrender_from;
-    console.log(mouse_lvl.x_pos + ", " + mouse_lvl.y_pos + "\nXpos: " + sprites_list["player"].x_pos + "\nYpos: " + sprites_list["player"].x_pos);
+    console.log(mouse_lvl.x_pos + ", " + mouse_lvl.y_pos + "\nXpos: " + sprites_list["player"].x_pos + "\nYpos: " + sprites_list["player"].y_pos);
 	return mouse_lvl;
 }
 
@@ -262,9 +296,13 @@ function calculate_weapon_speed(start_point, weapon, target) {
 				diff_y = 0 - (start_point.y_pos - target.y_pos) * 2;
 			}
 
+            console.log("diff x: " + diff_x + "\ndiff y: " + diff_y)
 			// console.log(diff_x);
 			
-			let multiplier = (Math.abs(diff_x) + Math.abs(diff_y)) / 2;
+			// let multiplier = (Math.abs(diff_x) + Math.abs(diff_y)) / 2;
+
+            // pythagoras
+            let multiplier = (Math.sqrt((Math.abs(diff_x) * Math.abs(diff_x)) + (Math.abs(diff_y) * Math.abs(diff_y)))) / 2;
 			
 			output_speeds.x_speed = (weapon.speed / multiplier) * diff_x + start_point.x_speed;
 			output_speeds.y_speed = (weapon.speed / multiplier) * diff_y + start_point.y_speed;
@@ -312,54 +350,45 @@ function use_weapon(from_sprite, weapon_number, target) {
     else {
         weapon_chosen = sprites_list[from_sprite].weapons[weapon_number - 1];
     }
-	if (!(typeof sprites_list[from_sprite] === 'undefined') &&  !(typeof weapons[weapon_chosen] === 'undefined')) {
-		if (sprites_list[from_sprite].cooldowns[weapon_number - 1] == "empty") {
+    // console.log(from_sprite + "\n" + weapon_number);
+    if (!(typeof sprites_list[from_sprite] === 'undefined') && !(typeof weapons[weapon_chosen] === 'undefined')) {
+        // console.log("theyre both defined")
+        if (sprites_list[from_sprite].cooldowns[weapon_number - 1] == "empty") {
 			if (target === undefined) {
 				target = { x_pos: sprites_list[from_sprite].x_pos, y_pos: sprites_list[from_sprite].y_pos };
 			} 
 			else if (target == "mouse") {
 				target = mouse_lvl_pos();
-			}
+            }
+
+            copied_target = deep_copy(target);
+
+            copied_target.x_pos -= Math.floor(deep_copy(sprites[weapon_chosen].x_size) / 2);
+            copied_target.y_pos -= Math.floor(deep_copy(sprites[weapon_chosen].y_size) / 2);
+
             let start_point = {
-                x_pos: sprites_list[from_sprite].x_pos, y_pos: sprites_list[from_sprite].y_pos,
+                x_pos: sprites_list[from_sprite].x_pos + (Math.floor(sprites_list[from_sprite].x_size / 2) - Math.floor(sprites[weapon_chosen].x_size / 2)),
+                y_pos: sprites_list[from_sprite].y_pos + (Math.floor(sprites_list[from_sprite].y_size / 2) - Math.floor(sprites[weapon_chosen].y_size / 2)),
+                // x_pos_centered: sprites_list[from_sprite].x_pos + (Math.floor(sprites_list[from_sprite].x_size / 2) - Math.floor(sprites[weapon_chosen].x_size / 2)),
+                // y_pos_centered: sprites_list[from_sprite].y_pos + (Math.floor(sprites_list[from_sprite].y_size / 2) - Math.floor(sprites[weapon_chosen].y_size / 2)),
                 x_size: sprites_list[from_sprite].x_size, y_size: sprites_list[from_sprite].y_size,
                 x_speed: sprites_list[from_sprite].x_speed, y_speed: sprites_list[from_sprite].y_speed
             };
-            
-            start_point.x_pos += Math.floor(start_point.x_size / 2);
-            start_point.y_pos += Math.floor(start_point.y_size / 2);
-			
+            console.log(start_point);
             sprites_list[from_sprite].cooldowns[weapon_number - 1] = weapons[weapon_chosen].name;
 			create_timer(from_sprite + weapon_number, delete_cooldown, weapons[weapon_chosen].cooldown, {sprite : from_sprite, weapon: weapon_number - 1}, false);
-			let temp_x_pos = sprites_list[from_sprite].x_pos;
-			let temp_y_pos = sprites_list[from_sprite].y_pos;
 			
-			if (sprites_list[from_sprite].direction == 90) {
-				temp_x_pos += sprites_list[from_sprite].x_size + 5
-			} else {
-				temp_x_pos -= 5
-			}
-			
-			temp_y_pos += Math.floor(sprites_list[from_sprite].y_size / 2);
-			
-			let temp_bullet_speeds = calculate_weapon_speed(start_point, weapons[weapon_chosen], target);
-			
-			create_sprite( {name: weapons[weapon_chosen].name, x_pos : start_point.x_pos ,
-				y_pos : start_point.y_pos,
-				x_speed: temp_bullet_speeds.x_speed,
-				y_speed: temp_bullet_speeds.y_speed,
-				is_bullet: true,
-				show_nametag: false,
-				health: weapons[weapon_chosen].penetration,
-				damage: weapons[weapon_chosen].damage,
-				has_resistance: true,
-				lock_direction: true,
-				skin: "load",
-				team: sprites_list[from_sprite].team,
-				delete_after: weapons[weapon_chosen].delete_after
-				// ignore_sprites: [from_sprite]
-			})
-			// console.log(sprites_list[temp_name])
+            let temp_bullet_speeds = calculate_weapon_speed(start_point, weapons[weapon_chosen], copied_target);
+
+            new_create_sprite(weapons[weapon_chosen].name, {
+                x_speed: temp_bullet_speeds.x_speed,
+                y_speed: temp_bullet_speeds.y_speed,
+                x_pos: start_point.x_pos,
+                y_pos: start_point.y_pos,
+                team: sprites_list[from_sprite].team
+
+            })
+			// console.log("fired weapon")
 		}
 		else {
 			// console.log(sprites_list[from_sprite].cooldowns[sprites_list[from_sprite].cooldowns.indexOf(weapons[weapon_chosen].name)])
@@ -436,10 +465,6 @@ function is_dead(the_sprite) {
 		temp_result = false;
 	}
 	return temp_result
-}
-
-function add_objective(objective_name, the_conditional, the_message, conditional_args) {
-	objectives[objective_name] = {conditional: the_conditional, message: the_message, is_completed: false, conditional_args};
 }
 
 function reset_timer(timer) {
@@ -579,7 +604,8 @@ function create_sprite(args) {
 		if (typeof args.delete_after === 'undefined') { args.delete_after = -1; }
 		if (typeof args.starting_direction === 'undefined') { args.starting_direction = 90; args.direction = 90; } else {args.direction = args.starting_direction}
 		if (typeof args.has_resistance === 'undefined') { args.has_resistance = false; }
-		if (typeof args.nametag === 'undefined') { args.nametag = args.name + " " + args.health; }
+        if (typeof args.nametag === 'undefined') { args.nametag = args.name + " " + args.health; }
+        /*
         if (args.skin == 'load') {
             if (typeof loaded_textures[sprite_name] === 'undefined') {
                 sprite_skin = load_sprite_skin(sprite_name);
@@ -638,6 +664,7 @@ function create_sprite(args) {
 				args.skin.push(uniconvert['heavy'].repeat(args.x_size) );
 			}
 		}
+        */
 		sprites_list[args.name] = args;
 		let sprite = args.name;
 	}
@@ -645,6 +672,24 @@ function create_sprite(args) {
 		console.log("ERROR sprite already exists: ");
 		console.log(args.name);
 	}
+}
+
+// copies a sprite from memory to the game, with custom options
+function new_create_sprite(name, args) {
+    let temp_original_args = sprites[name];
+    let temp_name = name;
+    if (!(typeof sprites_list[name] === 'undefined')) {
+        temp_name = assign_name(name);
+    }
+    let sprite_to_deepcopy = {
+        ...sprites["default_sprite"],
+        ...temp_original_args,
+        ...args
+    }
+    console.log(sprite_to_deepcopy);
+    sprites_list[temp_name] = JSON.parse(JSON.stringify(sprite_to_deepcopy));
+    sprites_list[temp_name].nametag = name + " " + sprites_list[temp_name].health;
+    return sprites_list[temp_name]
 }
 
 function delete_all_sprites() {
@@ -715,7 +760,7 @@ function load_sprite_skin(file_name) {
 		}
     }
 	console.log(output_text);
-	return { skin : output_text, x_size: output_text[0].length, y_size: output_text.length };
+	return { data : output_text, x_size: output_text[0].length, y_size: output_text.length };
 }
 
 function anger_ai(from_sprite,target_sprite) {
@@ -987,10 +1032,11 @@ function render_screen( args ) {
 					let temp_temp_char = "'";
 					// temp_char = uniconvert["heavy"];
 					
-					if (sprites_list[sprite].direction == 90) {
-						temp_temp_char = sprites_list[sprite].skin[y - sprites_list[sprite].y_pos].charAt(x - sprites_list[sprite].x_pos);
-					} else {
-						temp_temp_char = sprites_list[sprite].skin[y - sprites_list[sprite].y_pos].charAt(sprites_list[sprite].x_size + sprites_list[sprite].x_pos - x - 1);	
+                    if (sprites_list[sprite].direction == 270) {
+                        temp_temp_char = sprites_list[sprite].skin.data[y - sprites_list[sprite].y_pos].charAt(sprites_list[sprite].x_size + sprites_list[sprite].x_pos - x - 1);
+                    }
+                    else {
+                        temp_temp_char = sprites_list[sprite].skin.data[y - sprites_list[sprite].y_pos].charAt(x - sprites_list[sprite].x_pos);
 					}
 					if (temp_temp_char != "'") {
 						temp_char = temp_temp_char;
@@ -1213,19 +1259,13 @@ function update_sprites(sprites_list) {
 }
 
 function respawn_player() {
-	delete sprites_list["player"];
-	create_sprite({ name: "player",
-	x_pos : level.spawn_location.x_pos,
-	y_pos : level.spawn_location.y_pos,
-	x_speed: 0,
-	y_speed: 0,
-	type: "player",
-	show_nametag: true,
-	minimap_character: "P",
-	move_towards: true,
-    has_resistance: true,
-    weapons: sprites["player"].weapons,
-	skin: "snail"});
+    delete sprites_list["player"];
+
+    new_create_sprite("player", {
+        x_pos: level.spawn_location.x_pos,
+        y_pos: level.spawn_location.y_pos
+    });
+
 	document.getElementById("pause_menu").style.display = "none";
 	unpause_game();
 }
@@ -1268,8 +1308,8 @@ function manage_timers(timers) {
 	}
 }
 
-function check_if_cb_checked(chbox) {
-	return document.getElementById("cb_pov").checked
+function check_if_cb_checked(ch_box) {
+	return document.getElementById(ch_box).checked
 }
 
 function clear_deleted_sprites() {

@@ -1,15 +1,25 @@
-{"name": "invader",
-"x_pos" : 500,
-"y_pos" : 160,
-"x_speed": 0,
-"y_speed": 0,
-"health": 50,
-"type": "enemy",
-"team": "enemies",
-"use_ai": true,
-"weapons": ["sniper"],
-"ai": {"type": "goblin", "speed": 13, "targets": ["player"]},
-"has_resistance": true,
-"lock_direction": false,
-"skin": "draft",
-"show_nametag": true}
+{
+  "name": "invader",
+  "x_pos": 500,
+  "y_pos": 160,
+  "x_speed": 0,
+  "y_speed": 0,
+  "health": 50,
+  "type": "enemy",
+  "team": "enemies",
+  "use_ai": true,
+  "weapons": [ "sniper" ],
+  "ai": {
+    "type": "goblin",
+    "speed": 13,
+    "targets": [ "player" ]
+  },
+  "has_resistance": true,
+  "lock_direction": false,
+  "skin": {
+
+    "stored": "txt_file",
+    "data": "draft"
+  },
+  "show_nametag": true
+}

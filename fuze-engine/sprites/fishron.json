@@ -1,14 +1,24 @@
-{"name": "fishron",
-"x_pos" : 200,
-"y_pos" : 200,
-"x_speed": 0,
-"y_speed": 0,
-"health": 5,
-"type": "enemy",
-"team": "enemies",
-"use_ai": true,
-"ai": {"type": "goblin", "speed": 20, "targets": ["player"]},
-"lock_direction": true,
-"skin": "fish",
-"show_nametag": true,
-"has_resistance" : true}
+{
+  "name": "fishron",
+  "x_pos": 200,
+  "y_pos": 200,
+  "x_speed": 0,
+  "y_speed": 0,
+  "health": 5,
+  "type": "enemy",
+  "team": "enemies",
+  "use_ai": true,
+  "ai": {
+    "type": "goblin",
+    "speed": 20,
+    "targets": [ "player" ]
+  },
+  "lock_direction": true,
+  "skin": {
+
+    "stored": "txt_file",
+    "data": "fish"
+  },
+  "show_nametag": true,
+  "has_resistance": true
+}

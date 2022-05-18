@@ -1,6 +1,38 @@
-﻿// This isnt part of fuze engine. it just stores and processes the properties of the player and game
-// On multiplayer this file will be modified and on the server-side with some form of anti-cheat
-// alpha 2.8.1
+﻿// customisable part of fuze engine
+// alpha 2.8.2
+
+var default_sprite = {
+    "name": "default",
+    "x_pos": -10,
+    "y_pos": -10,
+    "x_pile": 0,
+    "y_pile": 0,
+    "x_speed": 0,
+    "y_speed": 0,
+    "type": "enemy",
+    "team": "enemies",
+    "health": 120,
+    "damage": 5,
+    "is_bullet": false,
+    "lock_direction": false,
+    "cooldowns": [],
+    "show_nametag": true,
+    "minimap_character": "?",
+    "move_towards": true,
+    "weapons": [],
+    "delete_after": -1,
+    "use_ai": false,
+    "ai": {
+        "speed": 10,
+        "targets": []
+    },
+    "nametag": "default",
+    "has_resistance": true,
+    "skin": {
+        "stored": "within_sprite",
+        "data": "#####\n#####\n#####\n#####\n"
+    }
+}
 
 // define weapons
 weapons = load_data("/fuze-engine/weapons/includes.txt");
@@ -20,14 +52,39 @@ for (a_level in levels) {
 	levels_list.push(a_level);
 }
 
+// load sprites into memory
+// these are later deepcopied into sprites_list which are in-game sprites
 sprites = load_data("/fuze-engine/sprites/includes.txt");
 
-/*
-// placeholder load sprites for level
+// Load the textures into memory as well
 for (the_sprite in sprites) {
-	create_sprite(JSON.parse(JSON.stringify(sprites[the_sprite])));
+    let temp_skin_data = {};
+    if (sprites[the_sprite].skin.stored == "txt_file") {
+        temp_skin_data = load_sprite_skin(sprites[the_sprite].skin.data)
+        sprites[the_sprite].skin.data = temp_skin_data.data;
+        sprites[the_sprite].x_size = temp_skin_data.x_size;
+        sprites[the_sprite].y_size = temp_skin_data.y_size;
+        sprites[the_sprite].skin.stored = "within_sprite";
+    }
 }
-*/
+for (weapon in weapons) {
+    sprites[weapons[weapon].name] = {
+        ...default_sprite,
+        ...{
+            "skin": { "stored": "within_sprite", "data": load_sprite_skin(weapons[weapon].name).data },
+            "is_bullet": true,
+            "lock_direction": true,
+            "move_towards": false,
+            "show_nametag": false,
+            "delete_after": weapons[weapon].delete_after,
+            "damage": weapons[weapon].damage,
+            "health": weapons[weapon].health,
+            "x_size": load_sprite_skin(weapons[weapon].name).x_size,
+            "y_size": load_sprite_skin(weapons[weapon].name).y_size
+        }
+    }
+    console.log(sprites[weapons[weapon].name])
+}
 
 var player_speed = 3;
 
@@ -40,8 +97,6 @@ play_audio("background_music", "phrygian.wav", {loop: true, volume: 0.3});
 
 create_timer("minimap_update", update_minimap, 30, 'undefined', true);
 create_timer("objectives_update", update_objectives_display, 30, 'undefined', true);
-
-add_objective("kill_sans", is_dead, "Kill sans", "sans");
 
 function on_frame(sprites_list) {
 	// insert functions here
@@ -87,20 +142,18 @@ function on_frame(sprites_list) {
 		}
 		
 		if (keystate.KeyO == true) {
-		 	load_sprite("invader", {x_pos: randint(0,level.width), y_pos: randint(0,level.height)});
+            new_create_sprite("invader", { x_pos: mouse.x_pos, y_pos: mouse.y_pos});
 		}
 		
-		// If player is holding click
-		if (mouse_down == 1) {
-			use_weapon("player", 1, "mouse");
-		}
+        // If player is holding left click
+        if (mouse_buttons == 1 || mouse_buttons == 3) {
+            use_weapon("player", 1, "mouse");
+        }
+        // If player is holding right click
+        if (mouse_buttons == 2 || mouse_buttons == 3) {
+            use_weapon("player", 2, "mouse");
+        }
 	}
 	sounds["sans_music"].volume(sound_decay(calculate_distance("player", "sans")));
 	sounds["peter_sounds"].volume(sound_decay(calculate_distance("player", "peter")));
-}
-
-function on_click(sprites_list) {
-	
-	use_weapon("player", "rock", "mouse");
-	
 }

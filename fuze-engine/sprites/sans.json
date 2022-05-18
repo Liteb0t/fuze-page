@@ -1,17 +1,27 @@
-{ 
-"name": "sans",
-"x_pos" : 420, 
-"y_pos" : 73 , 
-"x_speed": -8, 
-"y_speed": -3,
-"health": 200,
-"type": "enemy", 
-"lock_direction": false,
-"use_ai": true,
-"move_towards": true,
-"ai": {"type": "sans", "speed": 39, "targets": ["player"]},
-"show_nametag": true,
-"team": "enemies",
-"weapons": ["rock", "destroyer", "sniper"],
-"minimap_character": "💀",
-"skin": "load","has_resistance" : true}
+{
+  "name": "sans",
+  "x_pos": 420,
+  "y_pos": 73,
+  "x_speed": -8,
+  "y_speed": -3,
+  "health": 200,
+  "type": "enemy",
+  "lock_direction": false,
+  "use_ai": true,
+  "move_towards": true,
+  "ai": {
+    "type": "sans",
+    "speed": 39,
+    "targets": [ "player" ]
+  },
+  "show_nametag": true,
+  "team": "enemies",
+  "weapons": [ "rock", "destroyer", "sniper" ],
+  "minimap_character": "💀",
+  "skin": {
+
+    "stored": "txt_file",
+    "data": "sans"
+  },
+  "has_resistance": true
+}
