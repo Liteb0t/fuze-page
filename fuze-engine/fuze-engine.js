@@ -1,4 +1,4 @@
-﻿// Fuze engine a2.8.2
+﻿// Fuze engine a2.9.0
 
 // The HTML class that text will be rendered to
 // via document.getElementById(text_display).innerHTML(text_output)
@@ -22,8 +22,10 @@ var is_empty;
 var sprites_list = { };
 var sprites = {};
 var weapons = {};
+var default_level = {};
 var loaded_textures = {};
 var collided_x = false;
+var directional_shooting = false;
 var resistance = 0.25;
 var resistance_ramp = 0.0001;
 var bounciness = 0.5;
@@ -42,9 +44,10 @@ var minimap_update_interval = 30; // in FRAMES
 var damage_update_timer = 10;
 var timers = {};
 var minimap = { render: "", rows: [] }
-var uniconvert = { '#': '\u2588', '\'': ' ', ' ':'\u2591', 'checker' : '\u259a', 'medium': '\u2592', 'heavy': '\u2593', 'skull': '💀', 'monkey' : '🐒', 'checkbox_empty' : '\u2610','checkbox_tick' : '\u2611','checkbox_cross' : '\u2612', };
+var uniconvert = { '#': '\u2588', '\'': ' ', ' ':'\u2591', 'checker' : '\u259a', 'medium': '\u2592', 'heavy': '\u2593','d': '\u2593', 'skull': '💀', 'monkey' : '🐒', 'checkbox_empty' : '\u2610','checkbox_tick' : '\u2611','checkbox_cross' : '\u2612', };
 var double_length_chars = { '💀': 'skull', '🐒': 'monkey' };
 var sounds = {}
+var walls = [ "\u2588", '\u2593' ];
 var viewport = {x_pos : 0, y_pos : 0,following_sprite : true, sprite : "player"}
 var uniconvert_keys = Object.keys(uniconvert);
 const fps = 30;
@@ -83,7 +86,7 @@ document.addEventListener('contextmenu', function (ev) {
 // Mouse buttons down
 document.addEventListener('mousedown', function (event) {
     mouse_buttons = event.buttons;
-    console.log(mouse_buttons);
+    // console.log(mouse_buttons);
 })
 // Mouse buttons up
 document.addEventListener('mouseup', function (event) {
@@ -119,7 +122,7 @@ function show_div(div_id) {
 
     if (x.style.display === "none") {
         x.style.display = "block";
-        if (element_id == "pause_menu") {
+        if (div_id == "pause_menu") {
             pause_game();
         }
     }
@@ -130,7 +133,7 @@ function hide_div(div_id) {
 
     if (x.style.display === "block") {
         x.style.display = "none";
-        if (element_id == "pause_menu") {
+        if (div_id == "pause_menu") {
             unpause_game();
         }
     }
@@ -241,7 +244,7 @@ function mouse_lvl_pos() {
 	mouse_lvl = {};
 	mouse_lvl.x_pos = (mouse.x_pos / font.x_size) + start_xrender_from;
     mouse_lvl.y_pos = (mouse.y_pos / font.y_size) + start_yrender_from;
-    console.log(mouse_lvl.x_pos + ", " + mouse_lvl.y_pos + "\nXpos: " + sprites_list["player"].x_pos + "\nYpos: " + sprites_list["player"].y_pos);
+    // console.log(mouse_lvl.x_pos + ", " + mouse_lvl.y_pos + "\nXpos: " + sprites_list["player"].x_pos + "\nYpos: " + sprites_list["player"].y_pos);
 	return mouse_lvl;
 }
 
@@ -254,6 +257,8 @@ function load_next_level() {
     if (typeof sprites_list["player"] === 'undefined') {
         respawn_player();
     }
+	hide_div('next_level_button');
+	hide_div('level_complete_screen');
     unpause_game();
     // toggle_div('pause_menu');
 }
@@ -277,8 +282,8 @@ function calculate_weapon_speed(start_point, weapon, target) {
 			output_speeds.x_speed = output_speeds.x_speed - weapon.speed
 		} else {}
 		*/
-		if (target == "stationary") {
-			console.log("mine placed?");
+		if (weapon.speed == -1) {
+			output_speeds = {x_speed: 0, y_speed: 0}
 		} 
 		else {
 			if (target == "mouse") {
@@ -296,7 +301,7 @@ function calculate_weapon_speed(start_point, weapon, target) {
 				diff_y = 0 - (start_point.y_pos - target.y_pos) * 2;
 			}
 
-            console.log("diff x: " + diff_x + "\ndiff y: " + diff_y)
+            // console.log("diff x: " + diff_x + "\ndiff y: " + diff_y)
 			// console.log(diff_x);
 			
 			// let multiplier = (Math.abs(diff_x) + Math.abs(diff_y)) / 2;
@@ -338,7 +343,7 @@ function randint(low_num, high_num) {
 
 function random_weapon(sprite) {
     let output = randint(1, sprites_list[sprite].weapons.length);
-    console.log(sprite + " is using weapon number " + output)
+    // console.log(sprite + " is using weapon number " + output)
     return output;
 }
 
@@ -354,12 +359,23 @@ function use_weapon(from_sprite, weapon_number, target) {
     if (!(typeof sprites_list[from_sprite] === 'undefined') && !(typeof weapons[weapon_chosen] === 'undefined')) {
         // console.log("theyre both defined")
         if (sprites_list[from_sprite].cooldowns[weapon_number - 1] == "empty") {
-			if (target === undefined) {
-				target = { x_pos: sprites_list[from_sprite].x_pos, y_pos: sprites_list[from_sprite].y_pos };
-			} 
-			else if (target == "mouse") {
-				target = mouse_lvl_pos();
-            }
+			if (from_sprite == "player" && check_if_cb_checked("cb_directional_shooting") == true) {
+				if (sprites_list[from_sprite].direction == 90) {
+					target = { x_pos: sprites_list[from_sprite].x_pos + 100, y_pos: sprites_list[from_sprite].y_pos };
+				}
+				else {
+					target = { x_pos: sprites_list[from_sprite].x_pos - 100, y_pos: sprites_list[from_sprite].y_pos };
+				}
+			}
+			else {
+				if (target === undefined) {
+					target = { x_pos: sprites_list[from_sprite].x_pos, y_pos: sprites_list[from_sprite].y_pos };
+				} 
+				else if (target == "mouse") {
+					target = mouse_lvl_pos();
+				}
+			}
+			
 
             copied_target = deep_copy(target);
 
@@ -374,19 +390,18 @@ function use_weapon(from_sprite, weapon_number, target) {
                 x_size: sprites_list[from_sprite].x_size, y_size: sprites_list[from_sprite].y_size,
                 x_speed: sprites_list[from_sprite].x_speed, y_speed: sprites_list[from_sprite].y_speed
             };
-            console.log(start_point);
+            // console.log(start_point);
             sprites_list[from_sprite].cooldowns[weapon_number - 1] = weapons[weapon_chosen].name;
 			create_timer(from_sprite + weapon_number, delete_cooldown, weapons[weapon_chosen].cooldown, {sprite : from_sprite, weapon: weapon_number - 1}, false);
 			
             let temp_bullet_speeds = calculate_weapon_speed(start_point, weapons[weapon_chosen], copied_target);
 
-            new_create_sprite(weapons[weapon_chosen].name, {
+            create_sprite(weapons[weapon_chosen].name, {
                 x_speed: temp_bullet_speeds.x_speed,
                 y_speed: temp_bullet_speeds.y_speed,
                 x_pos: start_point.x_pos,
                 y_pos: start_point.y_pos,
                 team: sprites_list[from_sprite].team
-
             })
 			// console.log("fired weapon")
 		}
@@ -456,6 +471,7 @@ function check_objectives() {
 function level_completed() {
 	pause_game();
     toggle_div('level_complete_screen');
+	show_div('next_level_button');
     level.is_completed = true;
 }
 
@@ -492,17 +508,6 @@ function assign_name(init_name) {
 	return  init_name + "_" + iterations.toString()
 	*/
 	return init_name + '_' + randint(1,32767)
-}
-
-function direction_of_sprite(sprite) {
-	output_direction = 90
-	if (!(typeof sprites_list[sprite] === 'undefined')) {
-		if (sprites_list[sprite].x_speed >= 0) {
-			output_direction = 90;
-		} else {
-			output_direction = 270;
-		}
-	}
 }
 
 function update_minimap() {
@@ -577,137 +582,25 @@ function find_sprite_collisions(init_sprite) {
 	return collided_with
 }
 
-function create_sprite(args) {
-	// Check if object name already exists
-	var sprite_name = args.name;
-	if (!(Object.keys(sprites_list).indexOf(args.name) === -1 )) {args.name = assign_name(args.name.substring(0,10))}
-	if (Object.keys(sprites_list).indexOf(args.name) === -1 ) {
-		var sprite_skin = args.skin;
-		if (typeof args.x_speed === 'undefined') { args.x_speed = 0; }
-		if (typeof args.y_speed === 'undefined') { args.y_speed = 0; }
-		if (typeof args.x_pile === 'undefined') { args.x_pile = 0; }
-		if (typeof args.y_pile === 'undefined') { args.y_pile = 0; }
-		if (typeof args.team === 'undefined') { args.team = sprite_name; }
-		if (typeof args.is_bullet === 'undefined') { args.is_bullet = false; }
-		if (typeof args.move_towards === 'undefined') { args.move_towards = false; }
-		if (typeof args.show_nametag === 'undefined') { args.show_nametag = true; }
-		if (typeof args.use_ai === 'undefined') { args.use_ai = false; }
-		if (typeof args.ai_phase === 'undefined') { args.ai_phase = "wander"; }
-		if (typeof args.health === 'undefined') { args.health = 100; }
-		if (typeof args.invincible === 'undefined') { args.invincible = false; }
-		if (typeof args.damage === 'undefined') { args.damage = 5; }
-		if (typeof args.weapons === 'undefined') { args.weapons = []; }
-		if (typeof args.ai === 'undefined') { args.ai = { speed: 1, targets: ["nobody"]}; }
-		if (typeof args.lock_direction === 'undefined') { args.lock_direction = false; }
-		if (typeof args.minimap_character === 'undefined') { args.minimap_character = "?"; }
-        if (typeof args.cooldowns === 'undefined') { args.cooldowns = ["empty", "empty", "empty", "empty"]; }
-		if (typeof args.delete_after === 'undefined') { args.delete_after = -1; }
-		if (typeof args.starting_direction === 'undefined') { args.starting_direction = 90; args.direction = 90; } else {args.direction = args.starting_direction}
-		if (typeof args.has_resistance === 'undefined') { args.has_resistance = false; }
-        if (typeof args.nametag === 'undefined') { args.nametag = args.name + " " + args.health; }
-        /*
-        if (args.skin == 'load') {
-            if (typeof loaded_textures[sprite_name] === 'undefined') {
-                sprite_skin = load_sprite_skin(sprite_name);
-            } else {
-                sprite_skin = loaded_textures[sprite_name];
-            }
-			args.skin = sprite_skin.skin;
-			if (typeof args.skin === 'undefined') {
-				console.log("failed loading skin for " + sprite_name)
-					
-				args.skin = [];
-				
-				
-				if (typeof args.x_size === 'undefined') {
-					args.x_size = 3
-				}
-			
-				if (typeof args.y_size === 'undefined') {
-					args.y_size = 2;
-				}
-				for (x = 0; x < args.y_size; x++) {
-					args.skin.push(uniconvert['heavy'].repeat(args.x_size) );
-				}
-			} else {
-				if (typeof args.x_size === 'undefined') { args.x_size = sprite_skin.x_size; }
-				if (typeof args.y_size === 'undefined') { args.y_size = sprite_skin.y_size; }
-                loaded_textures[sprite_name] = sprite_skin;
-			}
-		}
-		
-        else if (!(typeof args.skin === 'undefined')) {
-            if (typeof loaded_textures[args.skin] === "undefined") {
-                sprite_skin = load_sprite_skin(args.skin);
-            }
-            else {
-                sprite_skin = loaded_textures[args.skin]
-            }
-			if (!(typeof sprite_skin === "undefined")) {
-				args.skin = sprite_skin.skin;
-                loaded_textures[args.skin] = sprite_skin;
-			}
-			if (typeof args.x_size === 'undefined') { args.x_size = sprite_skin.x_size; }
-			if (typeof args.y_size === 'undefined') { args.y_size = sprite_skin.y_size; }
-		}
-		
-		else {
-				args.skin = [];
-			if (typeof args.x_size === 'undefined') {
-				args.x_size = 3
-			}
-			
-			if (typeof args.y_size === 'undefined') {
-				args.y_size = 2;
-			}
-			for (x = 0; x < args.y_size; x++) {
-				args.skin.push(uniconvert['heavy'].repeat(args.x_size) );
-			}
-		}
-        */
-		sprites_list[args.name] = args;
-		let sprite = args.name;
-	}
-	else {
-		console.log("ERROR sprite already exists: ");
-		console.log(args.name);
-	}
-}
-
 // copies a sprite from memory to the game, with custom options
-function new_create_sprite(name, args) {
+function create_sprite(name, args) {
     let temp_original_args = sprites[name];
     let temp_name = name;
     if (!(typeof sprites_list[name] === 'undefined')) {
         temp_name = assign_name(name);
     }
+	if (args.x_pos == "random") {args.x_pos = randint(20,level.width - 20)};
+	if (args.y_pos == "random") {args.y_pos = randint(20,level.height - 20)};
+	
     let sprite_to_deepcopy = {
         ...sprites["default_sprite"],
         ...temp_original_args,
         ...args
     }
-    console.log(sprite_to_deepcopy);
+    // console.log(sprite_to_deepcopy);
     sprites_list[temp_name] = JSON.parse(JSON.stringify(sprite_to_deepcopy));
     sprites_list[temp_name].nametag = name + " " + sprites_list[temp_name].health;
     return sprites_list[temp_name]
-}
-
-function delete_all_sprites() {
-	
-}
-
-// load sprite from memory rather than using the filesystem
-function load_sprite(sprite_id, args) {
-	let temp_sprite_name = assign_name(sprite_id);
-	let temp_sprite_args = JSON.parse(JSON.stringify(sprites[sprite_id]));
-	for (parameter in args) {
-		console.log("parameter: " + parameter);
-		console.log("args.parameter: " + args.parameter);
-		console.log("args[parameter]: " + args[parameter]);
-		temp_sprite_args[parameter] = args[parameter];
-	}
-	console.log(temp_sprite_args);
-	create_sprite(temp_sprite_args);
 }
 
 function load_data(includes_file) {
@@ -733,6 +626,10 @@ function loadFile(filePath) {
     }
 	console.log(result);
     return result;
+}
+
+String.prototype.replaceAt = function(index, replacement) {
+    return this.substring(0, index) + replacement + this.substring(index + replacement.length);
 }
 
 function escapeRegExp(string) {
@@ -864,19 +761,6 @@ function do_ai() {
 	}
 }
 
-function ui_create_sprite() {
-	let temp_xpos = parseInt(document.getElementById("sprite-xpos").value);
-	let temp_ypos = parseInt(document.getElementById("sprite-ypos").value);
-	let temp_xsize = parseInt(document.getElementById("sprite-xsize").value);
-	let temp_ysize = parseInt(document.getElementById("sprite-ysize").value);
-	
-	create_sprite(document.getElementById("sprite-name").value, {
-		x_pos : temp_xpos ,
-		y_pos : temp_ypos ,
-		x_size : temp_xsize ,
-		y_size : temp_ysize });
-}
-
 function apply_level(level_source) {
 	let level_textbox_text = loadFile(level_path + level_source + '.txt');
 	document.getElementById('level_textbox').value = level_textbox_text;
@@ -919,7 +803,8 @@ function load_weapon_select_loadout() {
 
 function load_level(level_id) {
     // level = { raw: loadFile('/level/' + level_name + '.txt'), full: [''] };
-	level = levels[level_id];
+	level = deep_copy({...default_level,
+	...levels[level_id]});
 	
 	level.full = [''];
 	level.rows = [''];
@@ -979,10 +864,17 @@ function load_level(level_id) {
 	viewport.y_pos = Math.floor(level.height / 2);
 
     sprites_list = {};
-    for (the_npc in level.npc_list) {
-        create_sprite(JSON.parse(JSON.stringify(sprites[level.npc_list[the_npc]])));
+    for (entity in level.entities) {
+		for (counter = 0; counter < level.entities[entity].count; counter++) {
+			create_sprite(level.entities[entity].name, level.entities[entity].custom_properties);
+		}
     }
-    create_sprite(JSON.parse(JSON.stringify(sprites["player"])));
+	
+	for (spawner in level.spawners) {
+		level.spawners[spawner].frames_until_spawn = level.spawners[spawner].interval;
+	}
+	
+    create_sprite("player", level.spawn_location);
 
     update_objectives_display();
 
@@ -994,12 +886,9 @@ function load_level(level_id) {
     // if (render == false) { requestAnimationFrame(update); render = true; }
 }
 
-function render_screen( args ) {
-	if (typeof args.screen_width === 'undefined') { var screen_width = 60 } else { var screen_width = args.screen_width }
-	if (typeof args.screen_height === 'undefined') { var screen_height = 40 } else { var screen_height = args.screen_height }
-	
-	if (typeof args.sprites === 'undefined') { var sprites= {} } else { var sprites = args.sprites }
-	
+function render_screen( ) {
+	screen_width = parseInt(el.clientWidth / font.x_size);
+	screen_height = parseInt(el.clientHeight / font.y_size);
 	
 	var half_height = Math.floor(screen_height / 2);
     var half_width = Math.floor(screen_width / 2);
@@ -1013,7 +902,7 @@ function render_screen( args ) {
 	start_yrender_from = viewport.y_pos - half_height;
 	
 	
-	if (document.getElementById('cb_pov').checked) {
+	if (check_if_cb_checked('cb_pov') == true) {
 		if (start_xrender_from < 0) {start_xrender_from = 0}
 		if (start_yrender_from < 0) {start_yrender_from = 0}
 		if (start_xrender_from + screen_width > level.width) { start_xrender_from =  level.width - screen_width}
@@ -1073,6 +962,35 @@ function render_screen( args ) {
 	}
 	
 	return text_output
+}
+
+function do_wall_damage(arg_sprite) {
+	let temp_sprite = deep_copy(sprites_list[arg_sprite]);
+	
+	let scope = {
+		start_x: temp_sprite.x_pos - 1,
+		start_y: temp_sprite.y_pos - 1,
+		end_x: temp_sprite.x_pos + temp_sprite.x_size + 1,
+		end_y: temp_sprite.y_pos + temp_sprite.y_size + 1
+	}
+	
+	// set damage area within level to avoid error
+	if (scope.start_x < 0) {scope.start_x = 0}
+	if (scope.start_y < 0) {scope.start_y = 0}
+	if (scope.start_x > level.width) {scope.start_x = level.width}
+	if (scope.start_y > level.height) {scope.start_y = level.height}
+	
+	// console.log(scope);
+	
+	for (x = scope.start_x; x < scope.end_x; x++) {
+		for (y = scope.start_y; y < scope.end_y; y++) {
+			if (level.full[y].charAt(x) == uniconvert["d"]) {
+				
+				// break destructible wall character
+				level.full[y] = level.full[y].replaceAt(x, " ");
+			}
+		}
+	}
 }
 
 function update_sprites(sprites_list) {
@@ -1169,36 +1087,40 @@ function update_sprites(sprites_list) {
 			
 			// y-axis collisions
 			// top
-			if ((level.full[sprites_list[sprite].y_pos - 1].charAt(sprites_list[sprite].x_pos) == '\u2588') ||
-				(level.full[sprites_list[sprite].y_pos - 1].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size - 2) == '\u2588')) {
+			if (!(typeof walls[walls.indexOf(level.full[sprites_list[sprite].y_pos - 1].charAt(sprites_list[sprite].x_pos))] === "undefined") ||
+				!(typeof walls[walls.indexOf(level.full[sprites_list[sprite].y_pos - 1].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size - 2))] === 'undefined')) {
 				
 				bounced_up = true;
 			} 
 			
 			// left
-			if (level.full[sprites_list[sprite].y_pos].charAt(sprites_list[sprite].x_pos - 1) == '\u2588' ||
-				level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size - 1].charAt(sprites_list[sprite].x_pos - 1) == '\u2588') {
+			if (!(typeof walls[walls.indexOf(level.full[sprites_list[sprite].y_pos].charAt(sprites_list[sprite].x_pos - 1))] === 'undefined') ||
+				!(typeof walls[walls.indexOf(level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size - 1].charAt(sprites_list[sprite].x_pos - 1))] === 'undefined')) {
 				
 				bounced_left = true;
 				
 			} 
 			
 			// right
-			if (level.full[sprites_list[sprite].y_pos].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size) == '\u2588' ||
-				level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size - 1].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size) == '\u2588') {
+			if (!(typeof walls[walls.indexOf(level.full[sprites_list[sprite].y_pos].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size))] === 'undefined') ||
+				!(typeof walls[walls.indexOf(level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size - 1].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size))] === 'undefined')) {
 				
 				bounced_right = true;
 			}
 			
 			// bottom
-			if (level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size].charAt(sprites_list[sprite].x_pos) == '\u2588' ||
-				level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size - 2) == '\u2588') {
+			if (!(typeof walls[walls.indexOf(level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size].charAt(sprites_list[sprite].x_pos))] === 'undefined') ||
+				!(typeof walls[walls.indexOf(level.full[sprites_list[sprite].y_pos + sprites_list[sprite].y_size].charAt(sprites_list[sprite].x_pos + sprites_list[sprite].x_size - 2))] === 'undefined')) {
 				
 				bounced_down = true;
             }
+			
+			 
+			
             if (bounced_left && bounced_right && bounced_up && bounced_down) {
                 // pass
-            } else {
+            }
+			else {
 				if (bounced_left) {
 					if (sprites_list[sprite].x_pile < 0) {
 						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * collision_loss;
@@ -1233,7 +1155,11 @@ function update_sprites(sprites_list) {
 				}
             }
 		
-			
+			if (bounced_left || bounced_right || bounced_up || bounced_down) {
+				if (sprites_list[sprite].can_damage_walls == true) {
+					do_wall_damage(sprite);
+				}
+			}
 
             if (sprites_list[sprite].lock_direction == false) {
 
@@ -1261,12 +1187,13 @@ function update_sprites(sprites_list) {
 function respawn_player() {
     delete sprites_list["player"];
 
-    new_create_sprite("player", {
+    create_sprite("player", {
         x_pos: level.spawn_location.x_pos,
         y_pos: level.spawn_location.y_pos
     });
 
 	document.getElementById("pause_menu").style.display = "none";
+	hide_div("respawn_window");
 	unpause_game();
 }
 
@@ -1319,8 +1246,28 @@ function clear_deleted_sprites() {
 		} else {
 		// console.log("deleting "+sprites_to_delete[sprite])
 		// console.log(">>> "+ sprites_list[sprites_to_delete[sprite]])
-		delete sprites_list[sprites_to_delete[sprite]];
+		if (sprites_to_delete[sprite] == "player") {
+			delete sprites_list[sprites_to_delete[sprite]];
+			document.getElementById(text_display).innerHTML = render_screen();
+			requestAnimationFrame(update);
+			show_div("respawn_window");
+			pause_game();
+		}
+		else {
+			delete sprites_list[sprites_to_delete[sprite]];
+		}
 	}}
+}
+
+function update_level_spawns() {
+	for (spawner in level.spawners) {
+		level.spawners[spawner].frames_until_spawn -= 1;
+		if (level.spawners[spawner].frames_until_spawn < 0) {
+			create_sprite(level.spawners[spawner].name, level.spawners[spawner].args);
+			level.spawners[spawner].frames_until_spawn = level.spawners[spawner].interval;
+			console.log("spawned an " + level.spawners[spawner].name);
+		}
+	}
 }
 
 var lastFrameTime = 0;  // the last frame time
@@ -1331,17 +1278,6 @@ function update(time) {
     }
     lastFrameTime = time; // remember the time of the rendered frame
 	
-	/*
-	if (check_if_cb_checked("cb_pov") == true) {
-		if (start_yrender_from < 0) { start_yrender_from = 0; }
-		else 
-		if (start_yrender_from > level.full.length - screen_height) { start_yrender_from = level.full.length - screen_height }
-	
-		if (start_xrender_from < 0) { start_xrender_from = 0; } 
-		else 
-		if (start_xrender_from > level.full[0].length - screen_width) { start_xrender_from = level.full[0].length - screen_width }
-    }
-	*/
 	
 	sprites_to_delete = [];
 	
@@ -1360,9 +1296,11 @@ function update(time) {
 	screen_width = parseInt(el.clientWidth / font.x_size);
 	screen_height = parseInt(el.clientHeight / font.y_size);
 	
-	text_output = render_screen( {screen_width: screen_width, screen_height: screen_height} )
+	text_output = render_screen( )
 	
 	update_sprites(sprites_list);
+	
+	update_level_spawns();
 	
 	// update_minimap();
 	

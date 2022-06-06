@@ -2,3 +2,5 @@
 /weapons/destroyer.json
 /weapons/sniper.json
 /weapons/mine.json
+/weapons/bubble.json
+/weapons/drill.json

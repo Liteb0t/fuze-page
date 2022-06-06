@@ -1,44 +1,27 @@
 {
   "map": "load",
   "spawn_location": {
-    "x_pos": 200,
-    "y_pos": 100
+    "x_pos": 680,
+    "y_pos": 170
   },
   "entities": [
     {
-      "name": "mario",
-	  "count": 10,
-      "custom_properties": {
-        "x_pos": 73,
-        "y_pos": 30,
-		"health": 40
-      }
-    },
-    {
-      "name": "sans",
-	  "count": 1,
-      "custom_properties": {
-        "x_pos": "random",
-        "y_pos": "random"
-      }
-    },
-    {
-      "name": "invader",
+      "name": "fishron",
 	  "count": 5,
       "custom_properties": {
         "x_pos": "random",
         "y_pos": "random"
       }
     },
-    {
-      "name": "peter",
-	  "count": 1,
+	{
+      "name": "shark",
+	  "count": 5,
       "custom_properties": {
-        "x_pos": 100,
-        "y_pos": 200
+        "x_pos": "random",
+        "y_pos": "random"
       }
     },
-    {
+	{
       "name": "impostor",
 	  "count": 1,
       "custom_properties": {
@@ -51,15 +34,27 @@
     "x_scale": 18,
     "y_scale": 12
   },
+  "spawners": [{
+	  "name": "fishron",
+	  "interval": 300,
+	  "args": {
+		"x_pos": "random",
+		"y_pos": "random"
+	  }
+  },
+  {
+	  "name": "shark",
+	  "interval": 600,
+	  "args": {
+		"x_pos": "random",
+		"y_pos": "random"
+	  }
+  }],
   "objectives": [
     {
       "type": "eliminate",
-      "target": "peter",
-      "is_completed": false
-    },
-    {
-      "type": "eliminate",
-      "target": "mario",
+      "target": "impostor",
       "is_completed": false
     }
-  ]}
+  ]
+}

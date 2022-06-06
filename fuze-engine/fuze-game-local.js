@@ -1,5 +1,5 @@
 ﻿// customisable part of fuze engine
-// alpha 2.8.2
+// alpha 2.9.0
 
 var default_sprite = {
     "name": "default",
@@ -15,6 +15,7 @@ var default_sprite = {
     "damage": 5,
     "is_bullet": false,
     "lock_direction": false,
+	"can_damage_walls": false,
     "cooldowns": [],
     "show_nametag": true,
     "minimap_character": "?",
@@ -32,6 +33,21 @@ var default_sprite = {
         "stored": "within_sprite",
         "data": "#####\n#####\n#####\n#####\n"
     }
+}
+
+default_level = {
+  "map": "'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n'''''''''''''''''''''''''''''''''''''''''''\\n",
+  "spawn_location": {
+    "x_pos": 200,
+    "y_pos": 100
+  },
+  "npc_list": [],
+  "scale": {
+    "x_scale": 18,
+    "y_scale": 12
+  },
+  "spawners": [],
+  "objectives": []
 }
 
 // define weapons
@@ -77,11 +93,10 @@ for (weapon in weapons) {
             "move_towards": false,
             "show_nametag": false,
             "delete_after": weapons[weapon].delete_after,
-            "damage": weapons[weapon].damage,
-            "health": weapons[weapon].health,
             "x_size": load_sprite_skin(weapons[weapon].name).x_size,
             "y_size": load_sprite_skin(weapons[weapon].name).y_size
-        }
+        },
+		...weapons[weapon].properties
     }
     console.log(sprites[weapons[weapon].name])
 }
@@ -142,16 +157,26 @@ function on_frame(sprites_list) {
 		}
 		
 		if (keystate.KeyO == true) {
-            new_create_sprite("invader", { x_pos: mouse.x_pos, y_pos: mouse.y_pos});
+            create_sprite("invader", { x_pos: mouse.x_pos, y_pos: mouse.y_pos});
 		}
 		
         // If player is holding left click
         if (mouse_buttons == 1 || mouse_buttons == 3) {
-            use_weapon("player", 1, "mouse");
+			if (check_if_cb_checked("cb_directional_shooting") == true) {
+				use_weapon("player", 1, "direction");
+			}
+			else {
+				use_weapon("player", 1, "mouse");
+			}
         }
         // If player is holding right click
         if (mouse_buttons == 2 || mouse_buttons == 3) {
-            use_weapon("player", 2, "mouse");
+			if (check_if_cb_checked("cb_directional_shooting") == true) {
+				use_weapon("player", 2, "direction");
+			}
+			else {
+				use_weapon("player", 2, "mouse");
+			}
         }
 	}
 	sounds["sans_music"].volume(sound_decay(calculate_distance("player", "sans")));

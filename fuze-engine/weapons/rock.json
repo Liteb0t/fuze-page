@@ -1,7 +1,9 @@
 { 
-"name": "rock", 
-"damage": 13, 
-"health": 6,
+"name": "rock",
 "speed": 60, 
 "cooldown": 18, 
-"delete_after": 80 }
+"delete_after": 80,
+"properties": { 
+"damage": 13, 
+"health": 6}
+}

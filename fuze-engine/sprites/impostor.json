@@ -8,6 +8,7 @@
   "team": "enemies",
   "use_ai": true,
   "move_towards": true,
+  "minimap_character": "I",
   "weapons": [ "destroyer" ],
   "ai": {
     "type": "sans",

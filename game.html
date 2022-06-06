@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Fuze Game a2.8.2</title>
+    <title>Fuze Game a2.9.0</title>
     <meta name="description" content="Play the in-development online browser game loosely derived from diep.io">
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,fuze game,update,online,diep,page,fuze page">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
-    <link rel="icon" href="window-icon.png" type="image/png">
+    <link rel="icon" href="media/favicon.png" type="image/png">
     <style>
         @font-face {
 			
@@ -57,15 +57,18 @@
 		}
 		
         #controls {
-			color: #000;
+			color: #FFF;
             position: fixed;
             padding: 2px;
             top: 2px;
             right: 2px;
+			background-color: rgba(100, 100, 100, 0.30);
+			font-weight: bold;
             min-height: 200px;
             width: 200px;
             border: 2px solid #000;
 			float: right;
+			text-shadow: #000 0px 0 2px;
         }
 
         .centred-window {
@@ -164,6 +167,10 @@
 
         #start_game_button {
         }
+		
+		#objectives {
+			height: 96px;
+		}
 	
     </style>
 </head>
@@ -183,6 +190,8 @@
 	CTRL + scroll to zoom, zoom in if it lags<br>
 	<div><input type="checkbox" id="cb_pov">POV within map?</div>
 	<br />
+	<input type="checkbox" id="cb_directional_shooting">Shoot without mouse
+	<br />
 	<button type="button" onclick='respawn_player()'>Respawn</button>
 	<br />
 	<button type="button" onclick="toggle_dark_theme()">Toggle dark theme</button>
@@ -195,20 +204,21 @@
 	</pre>
     <div id="controls" style="display: block">
 		<div>
-		Fuze game alpha 2.8.2<br>
+		Fuze game alpha 2.9.0<br>
 		</div>
 		<div id="fps">Loading...</div>
 		<br />
-		
+		<button id="next_level_button" style="display:none" type="button" onclick="load_next_level()">Next level</button>
 		OBJECTIVES:<br />
 		<div id="objectives"></div>
+		
     </div>
 	<div id="level_complete_screen" class="centred-window" style="display: none">
         <div class="header">
 	        Level complete!
 	    </div>
-	<button type="button" onclick="load_next_level();toggle_div('level_complete_screen')">Next level</button>
-	<button type="button" onclick="unpause_game();toggle_div('level_complete_screen')">Keep playing</button>
+	<button type="button" onclick="load_next_level()">Next level</button>
+	<button type="button" onclick="unpause_game();hide_div('level_complete_screen')">Keep playing</button>
 	</div>
 
     <div id="weapon_select" class="centred-window" style="display: none">
@@ -232,9 +242,16 @@
         </div>
     </div>
 
+	<div id="respawn_window" class="centred-window" style="display: none">
+		<div class="header">
+			You have died!
+		</div>
+		<button type="button" onclick='respawn_player()'>Respawn</button><br>
+	</div>
+
 	<div id="window_buttons">
 	<button type="button" id="btn_levels" onclick="toggle_div('pause_menu')">Pause menu</button>
-	<button type="button" id="btn_settings" onclick="toggle_div('controls')">Toggle panel</button>
+	<button type="button" id="btn_settings" onclick="toggle_div('minimap')">Toggle minimap</button>
 	</div>
     
     <!--fuze-engine processes the interactions between objects and renders the text, while game-local creates, edits, and deletes objects-->

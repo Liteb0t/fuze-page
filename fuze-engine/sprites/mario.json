@@ -8,11 +8,12 @@
   "type": "enemy",
   "team": "enemies",
   "lock_direction": true,
+  "minimap_character": "M",
   "use_ai": true,
-  "weapons": [ "destroyer", "mine" ],
+  "weapons": [ "rock" ],
   "ai": {
     "type": "goblin",
-    "speed": 30,
+    "speed": 25,
     "targets": [ "player" ]
   },
   "show_nametag": true,

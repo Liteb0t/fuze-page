@@ -1,0 +1,11 @@
+{
+  "name": "drill",
+  "speed": 50,
+  "cooldown": 7,
+  "delete_after": 10,
+  "properties": {
+	"can_damage_walls": true,
+	"damage": 6,
+	"health": 6
+	}
+}

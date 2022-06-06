@@ -1,7 +1,9 @@
 { 
-"name": "mine", 
-"damage": 27, 
-"health": 11,
-"speed": 5, 
+"name": "mine",
+"speed": -1, 
 "cooldown": 73, 
-"delete_after": 200 }
+"delete_after": 200,
+"properties": { 
+"damage": 27, 
+"health": 11
+}}

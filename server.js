@@ -5,15 +5,19 @@ var path = require('path');
 server = http.createServer(function (req, res) {
     console.log('request ', req.url);
 
-    var filePath = '.' + req.url;
-    if (filePath == './') {
-        filePath = './index.html';
+    var file_path = '.' + req.url;
+    if (file_path == './') {
+        file_path = './index.html';
     }
 
-    var extname = String(path.extname(filePath)).toLowerCase();
+    var extname = String(path.extname(file_path)).toLowerCase();
+    
+    if (file_path.lastIndexOf('/') == file_path.length - 1) {
+        file_path = file_path.slice(0, -1);
+    }
     if (extname == '') {
         extname = '.html';
-        filePath = filePath + '.html';
+        file_path = file_path + '.html';
     }
     var mimeTypes = {
         '.txt': 'text/plain',
@@ -37,7 +41,7 @@ server = http.createServer(function (req, res) {
 
     var contentType = mimeTypes[extname] || 'application/octet-stream';
 
-    fs.readFile(filePath, function (error, content) {
+    fs.readFile(file_path, function (error, content) {
         if (error) {
             if (error.code == 'ENOENT') {
                 fs.readFile('./error.html', function (error, content) {

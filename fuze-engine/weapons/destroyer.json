@@ -1,8 +1,11 @@
 {
   "name": "destroyer",
-  "damage": 11,
-  "health": 30,
   "speed": 28,
   "cooldown": 40,
-  "delete_after": 70
+  "delete_after": 70,
+  "properties": {
+	"can_damage_walls": true,
+	"damage": 11,
+	"health": 30
+	}
 }

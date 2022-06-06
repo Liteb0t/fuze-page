@@ -7,6 +7,7 @@
   "health": 5,
   "type": "enemy",
   "team": "enemies",
+  "minimap_character": "f",
   "use_ai": true,
   "ai": {
     "type": "goblin",

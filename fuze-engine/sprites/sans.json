@@ -19,7 +19,6 @@
   "weapons": [ "rock", "destroyer", "sniper" ],
   "minimap_character": "💀",
   "skin": {
-
     "stored": "txt_file",
     "data": "sans"
   },

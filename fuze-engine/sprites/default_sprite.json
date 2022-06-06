@@ -10,7 +10,7 @@
   "team": "enemies",
   "health": 120,
   "damage": 5,
-  "direction":  90,
+  "direction": 90,
   "is_bullet": false,
   "lock_direction": false,
   "cooldowns": [ "empty", "empty", "empty", "empty" ],
@@ -18,8 +18,9 @@
   "minimap_character": "?",
   "move_towards": true,
   "weapons": [],
+  "can_damage_walls": false,
   "delete_after": -1,
-  "use_ai":  false,
+  "use_ai": false,
   "ai": {
     "speed": 10,
     "targets": []

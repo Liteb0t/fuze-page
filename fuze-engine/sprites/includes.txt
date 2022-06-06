@@ -6,3 +6,4 @@
 /sprites/invader.json
 /sprites/impostor.json
 /sprites/default_sprite.json
+/sprites/shark.json

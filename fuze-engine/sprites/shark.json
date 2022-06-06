@@ -1,26 +1,26 @@
 {
-  "name": "invader",
-  "x_pos": 500,
-  "y_pos": 160,
+  "name": "shark",
+  "x_pos": 200,
+  "y_pos": 200,
   "x_speed": 0,
   "y_speed": 0,
-  "health": 50,
+  "health": 40,
+  "damage": 10,
   "type": "enemy",
   "team": "enemies",
-  "minimap_character": "i",
+  "minimap_character": "S",
   "use_ai": true,
-  "weapons": [ "sniper" ],
+  "weapons": [ "bubble" ],
   "ai": {
     "type": "goblin",
-    "speed": 13,
+    "speed": 25,
     "targets": [ "player" ]
   },
-  "has_resistance": true,
   "lock_direction": false,
   "skin": {
-
     "stored": "txt_file",
-    "data": "draft"
+    "data": "shark"
   },
-  "show_nametag": true
+  "show_nametag": true,
+  "has_resistance": true
 }
