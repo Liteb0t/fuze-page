@@ -1,5 +1,5 @@
 ﻿// customisable part of fuze engine
-// alpha 2.9.0
+// alpha 2.9.1
 
 var default_sprite = {
     "name": "default",

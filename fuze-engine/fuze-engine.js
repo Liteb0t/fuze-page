@@ -1,4 +1,4 @@
-﻿// Fuze engine a2.9.0
+﻿// Fuze engine a2.9.1
 
 // The HTML class that text will be rendered to
 // via document.getElementById(text_display).innerHTML(text_output)
@@ -26,10 +26,9 @@ var default_level = {};
 var loaded_textures = {};
 var collided_x = false;
 var directional_shooting = false;
-var resistance = 0.25;
+var resistance = 1;
 var resistance_ramp = 0.0001;
 var bounciness = 0.5;
-var collision_loss = 0.3;
 var sprites_to_delete = [];
 var collided_y = false;
 var font = {x_size : 7, y_size: 14}
@@ -43,10 +42,11 @@ var objectives = {};
 var minimap_update_interval = 30; // in FRAMES
 var damage_update_timer = 10;
 var timers = {};
-var minimap = { render: "", rows: [] }
+var minimap = { render: "", rows: [], is_enabled: true }
 var uniconvert = { '#': '\u2588', '\'': ' ', ' ':'\u2591', 'checker' : '\u259a', 'medium': '\u2592', 'heavy': '\u2593','d': '\u2593', 'skull': '💀', 'monkey' : '🐒', 'checkbox_empty' : '\u2610','checkbox_tick' : '\u2611','checkbox_cross' : '\u2612', };
 var double_length_chars = { '💀': 'skull', '🐒': 'monkey' };
 var sounds = {}
+var nearby_sprites = [];
 var walls = [ "\u2588", '\u2593' ];
 var viewport = {x_pos : 0, y_pos : 0,following_sprite : true, sprite : "player"}
 var uniconvert_keys = Object.keys(uniconvert);
@@ -59,6 +59,13 @@ var keys = { 'left_arrow' : 37,  'up_arrow' : 38,  'right_arrow' : 39,  'down_ar
 var mouse = { x_pos: parseInt(el.clientWidth / 2), y_pos: parseInt(el.clientHeight / 2) }
 var mouse_buttons = 0;
 var keystate = {};
+
+var soft_entity_limit = 20;
+
+// default 50000. higher number means game is more zoomed out, but laggier
+var auto_zoom_constant = 73;
+
+var view_distance_buffer = 30;
 
 var mouse_down = 0;
 
@@ -98,6 +105,13 @@ document.addEventListener("mousemove", function (event) {
     mouse.x_pos = event.clientX;
     mouse.y_pos = event.clientY;
 })
+
+// zoom the game according to window size, so the view distance is the same
+window.addEventListener('resize', auto_zoom);
+
+if (Math.sqrt(el.clientWidth * el.clientHeight) < 800) {
+	minimap.is_enabled = false;
+}
 
 // show or hide a GUI window when a button is clicked
 function toggle_div(element_id) {
@@ -198,9 +212,12 @@ function unpause_game() {
 	if (level == "null") {
 		load_level("fz_empty");
 	}
-	change_font_size(22);
 	render = true
 	requestAnimationFrame(update);
+}
+
+function zoom(zoom_amount) {
+	change_font_size(font.y_size + zoom_amount);
 }
 
 function toggle_dark_theme() {
@@ -259,8 +276,25 @@ function load_next_level() {
     }
 	hide_div('next_level_button');
 	hide_div('level_complete_screen');
+	auto_zoom();
     unpause_game();
     // toggle_div('pause_menu');
+}
+
+function auto_zoom() {
+	let temp_font_size = (Math.sqrt(el.clientWidth * el.clientHeight) / auto_zoom_constant);
+	console.log("auto zoom: " + temp_font_size);
+	if (temp_font_size < 4) {temp_font_size = 4}
+	change_font_size(temp_font_size);
+}
+
+function start_game() {
+	auto_zoom();
+	unpause_game();
+	toggle_div('weapon_select');
+	if (minimap.is_enabled == true) {
+		show_div("minimap")
+	}
 }
 
 function calculate_weapon_speed(start_point, weapon, target) {
@@ -599,7 +633,10 @@ function create_sprite(name, args) {
     }
     // console.log(sprite_to_deepcopy);
     sprites_list[temp_name] = JSON.parse(JSON.stringify(sprite_to_deepcopy));
+	sprites_list[temp_name].display_name = name;
     sprites_list[temp_name].nametag = name + " " + sprites_list[temp_name].health;
+	
+	update_nearby_sprites(temp_name);
     return sprites_list[temp_name]
 }
 
@@ -768,7 +805,7 @@ function apply_level(level_source) {
 
 function change_font_size(font_size) {
 	document.getElementById("game-display").style.fontSize = font_size + "px";
-	font = {x_size : Math.ceil(font_size / 2), y_size: font_size};
+	font = {x_size : font_size / 2, y_size: font_size};
 }
 
 function open_level() {
@@ -879,14 +916,14 @@ function load_level(level_id) {
     update_objectives_display();
 
 	change_font_size(4);
-	document.getElementById(text_display).innerHTML = render_screen( {screen_width: parseInt(el.clientWidth / font.x_size), screen_height: parseInt(el.clientHeight / font.y_size)} )
+	document.getElementById(text_display).innerHTML = render_screen( "all" )
 	
 	// requestAnimationFrame(update);
     // start rendering
     // if (render == false) { requestAnimationFrame(update); render = true; }
 }
 
-function render_screen( ) {
+function render_screen(view_scope) {
 	screen_width = parseInt(el.clientWidth / font.x_size);
 	screen_height = parseInt(el.clientHeight / font.y_size);
 	
@@ -901,6 +938,12 @@ function render_screen( ) {
     start_xrender_from = viewport.x_pos - half_width;
 	start_yrender_from = viewport.y_pos - half_height;
 	
+	let sprites_to_render = [];
+	
+	if (view_scope == "player") { sprites_to_render = nearby_sprites }
+	else { sprites_to_render = Object.keys(sprites_list) }  
+	
+	// console.log(sprites_to_render)
 	
 	if (check_if_cb_checked('cb_pov') == true) {
 		if (start_xrender_from < 0) {start_xrender_from = 0}
@@ -908,6 +951,86 @@ function render_screen( ) {
 		if (start_xrender_from + screen_width > level.width) { start_xrender_from =  level.width - screen_width}
 		if (start_yrender_from + screen_height > level.height) { start_yrender_from =  level.height - screen_height}
 	} 
+	
+    for (y = start_yrender_from; y < start_yrender_from + screen_height; y++) {
+		
+		for (x = start_xrender_from; x < start_xrender_from + screen_width ; x++ ) {
+			temp_char = "'";				// let temp_layer = -1;
+			// is_empty = false;
+			for (sprite in sprites_to_render) {
+				if (!(typeof sprites_list[sprites_to_render[sprite]] === 'undefined')) {
+					if ( y >= sprites_list[sprites_to_render[sprite]].y_pos && y < sprites_list[sprites_to_render[sprite]].y_pos + sprites_list[sprites_to_render[sprite]].y_size &&
+					x >= sprites_list[sprites_to_render[sprite]].x_pos && x < sprites_list[sprites_to_render[sprite]].x_pos + sprites_list[sprites_to_render[sprite]].x_size ) {
+						let temp_temp_char = "'";
+						// temp_char = uniconvert["heavy"];
+						
+						if (sprites_list[sprites_to_render[sprite]].direction == 270) {
+							temp_temp_char = sprites_list[sprites_to_render[sprite]].skin.data[y - sprites_list[sprites_to_render[sprite]].y_pos].charAt(sprites_list[sprites_to_render[sprite]].x_size + sprites_list[sprites_to_render[sprite]].x_pos - x - 1);
+						}
+						else {
+							temp_temp_char = sprites_list[sprites_to_render[sprite]].skin.data[y - sprites_list[sprites_to_render[sprite]].y_pos].charAt(x - sprites_list[sprites_to_render[sprite]].x_pos);
+						}
+						if (temp_temp_char != "'") {
+							temp_char = temp_temp_char;
+							break;
+						}
+						// console.log(temp_char)
+						
+					} else if (sprites_list[sprites_to_render[sprite]].show_nametag == true &&
+						y == sprites_list[sprites_to_render[sprite]].y_pos + sprites_list[sprites_to_render[sprite]].y_size + 1 &&
+						x >= sprites_list[sprites_to_render[sprite]].x_pos + Math.trunc((sprites_list[sprites_to_render[sprite]].x_size / 2) - (sprites_list[sprites_to_render[sprite]].nametag.length / 2)) && x < sprites_list[sprites_to_render[sprite]].x_pos + sprites_list[sprites_to_render[sprite]].nametag.length + Math.trunc((sprites_list[sprites_to_render[sprite]].x_size / 2) - (sprites_list[sprites_to_render[sprite]].nametag.length / 2))) {
+						// console.log(x + sprites_list[sprites_to_render[sprite]].x_pos - start_xrender_from);
+						temp_char = sprites_list[sprites_to_render[sprite]].nametag.charAt(x - (sprites_list[sprites_to_render[sprite]].x_pos + Math.trunc((sprites_list[sprites_to_render[sprite]].x_size / 2) - (sprites_list[sprites_to_render[sprite]].nametag.length / 2))));
+						break;
+					}
+				}
+			}
+			//if ( (y >= sprites_list["morio"]["y_pos"]) && (y < sprites_list["morio"]["y_pos"] + sprites_list["morio"]["y_size"]) && (x >= sprites_list["morio"]["x_pos"]) && (x < sprites_list["morio"]["x_pos"] + sprites_list["morio"]["x_size"]) ) {
+					
+			//	temp_char = uniconvert["heavy"];
+		
+			if (temp_char == "'") {
+				if ( y >= 0 && y < level.full.length &&  x >= 0 && x < level.full[0].length) {
+					
+					temp_char = level.full[y].charAt(x);
+				} else {
+					temp_char = uniconvert[" "];
+				} 
+			}
+			text_output += temp_char;
+		}
+	
+		// listy_text_output.push(text_output);
+		text_output += '\r\n';
+		// now render the sprites on top
+	}
+	
+	return text_output
+}
+
+function new_render_screen() {
+	screen_width = parseInt(el.clientWidth / font.x_size);
+	screen_height = parseInt(el.clientHeight / font.y_size);
+	
+	let half_height = Math.floor(screen_height / 2);
+    let half_width = Math.floor(screen_width / 2);
+	
+	let text_output = '';
+	
+	// start_yrender_from = sprites_list["player"].y_pos - half_height;
+    // start_xrender_from = sprites_list["player"].x_pos - half_width;
+	
+    start_xrender_from = viewport.x_pos - half_width;
+	start_yrender_from = viewport.y_pos - half_height;
+	
+	/*
+	if (check_if_cb_checked('cb_pov') == true) {
+		if (start_xrender_from < 0) {start_xrender_from = 0}
+		if (start_yrender_from < 0) {start_yrender_from = 0}
+		if (start_xrender_from + screen_width > level.width) { start_xrender_from =  level.width - screen_width}
+		if (start_yrender_from + screen_height > level.height) { start_yrender_from =  level.height - screen_height}
+	}
+	*/
 	
     for (y = start_yrender_from; y < start_yrender_from + screen_height; y++) {
 		
@@ -993,6 +1116,32 @@ function do_wall_damage(arg_sprite) {
 	}
 }
 
+function update_nearby_sprites(what_sprite) {
+	if (what_sprite == "all") {
+		nearby_sprites = [];
+		for (sprite in sprites_list) {
+			if (
+			sprites_list[sprite].x_pos > start_xrender_from - view_distance_buffer && 
+			sprites_list[sprite].x_pos < start_xrender_from + screen_width + view_distance_buffer && 
+			sprites_list[sprite].y_pos > start_yrender_from - view_distance_buffer && 
+			sprites_list[sprite].y_pos < start_yrender_from + screen_height + view_distance_buffer 
+			) {
+				nearby_sprites.push(sprite);
+			}
+		}
+	} else if (!(typeof sprites_list[what_sprite] === 'undefined')) {
+		if (
+			sprites_list[what_sprite].x_pos > start_xrender_from - view_distance_buffer && 
+			sprites_list[what_sprite].x_pos < start_xrender_from + screen_width + view_distance_buffer && 
+			sprites_list[what_sprite].y_pos > start_yrender_from - view_distance_buffer && 
+			sprites_list[what_sprite].y_pos < start_yrender_from + screen_height + view_distance_buffer 
+			) {
+				nearby_sprites.push(what_sprite);
+			}
+	}
+	console.log("nearby_sprites: " + nearby_sprites);
+}
+
 function update_sprites(sprites_list) {
 	// damage_update_timer += 1;
 	
@@ -1051,7 +1200,9 @@ function update_sprites(sprites_list) {
 					// sprites_list[sprite_collisions[collided_sprite]].health -= sprites_list[sprite].damage;
 					// console.log(sprite + " damaged by " + sprite_collisions[collided_sprite].nametag)
 				}
-				sprites_list[sprite].nametag = sprite + " " + sprites_list[sprite].health;
+				if (sprites_list[sprite].show_nametag == true) {
+					sprites_list[sprite].nametag = sprites_list[sprite].display_name + " " + sprites_list[sprite].health;
+				}
 				if (sprites_list[sprite].health < 0) {
 					delete_sprite(sprite);
 					check_objectives();
@@ -1123,34 +1274,34 @@ function update_sprites(sprites_list) {
 			else {
 				if (bounced_left) {
 					if (sprites_list[sprite].x_pile < 0) {
-						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * collision_loss;
+						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * bounciness;
 					}
 					if (sprites_list[sprite].x_speed < 0) {
-						sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * collision_loss;
+						sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * bounciness;
 					}
 				}
 				if (bounced_right) {
 					if (sprites_list[sprite].x_pile > 0) {
-						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * collision_loss;
+						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * bounciness;
 					}
 					if (sprites_list[sprite].x_speed > 0) {
-						sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * collision_loss;
+						sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * bounciness;
 					}
 				}
 				if (bounced_up) {
 					if (sprites_list[sprite].y_pile < 0) {
-						sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * collision_loss;
+						sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * bounciness;
 					}
 					if (sprites_list[sprite].y_speed < 0) {
-						sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * collision_loss;
+						sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * bounciness;
 					}
 				}
 				if (bounced_down) {
 					if (sprites_list[sprite].y_pile > 0) {
-						sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * collision_loss;
+						sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * bounciness;
 					}
 					if (sprites_list[sprite].y_speed > 0) {
-						sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * collision_loss;
+						sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * bounciness;
 					}
 				}
             }
@@ -1263,9 +1414,13 @@ function update_level_spawns() {
 	for (spawner in level.spawners) {
 		level.spawners[spawner].frames_until_spawn -= 1;
 		if (level.spawners[spawner].frames_until_spawn < 0) {
-			create_sprite(level.spawners[spawner].name, level.spawners[spawner].args);
+			
+			// dont spawn a sprite if it passes soft entity limit
+			if (Object.keys(sprites_list).length <= soft_entity_limit) {
+				create_sprite(level.spawners[spawner].name, level.spawners[spawner].args);
+				console.log("spawned an " + level.spawners[spawner].name);
+			}
 			level.spawners[spawner].frames_until_spawn = level.spawners[spawner].interval;
-			console.log("spawned an " + level.spawners[spawner].name);
 		}
 	}
 }
@@ -1277,7 +1432,6 @@ function update(time) {
         return; // return as there is nothing to do
     }
     lastFrameTime = time; // remember the time of the rendered frame
-	
 	
 	sprites_to_delete = [];
 	
@@ -1296,7 +1450,7 @@ function update(time) {
 	screen_width = parseInt(el.clientWidth / font.x_size);
 	screen_height = parseInt(el.clientHeight / font.y_size);
 	
-	text_output = render_screen( )
+	text_output = render_screen("player");
 	
 	update_sprites(sprites_list);
 	
@@ -1314,12 +1468,15 @@ function update(time) {
 		requestAnimationFrame(update);
 	}
 	
+	if (check_if_cb_checked("cb_show_mouse_pos") == true) {update_text("mouse_coords_display", Math.floor(mouse_lvl_pos().x_pos) + ", " + Math.floor(mouse_lvl_pos().y_pos))}
+	
 	var thisFrameTime = (thisLoop=new Date) - lastLoop;
 	frameTime+= (thisFrameTime - frameTime) / filterStrength;
 	lastLoop = thisLoop;
 }
 
 create_timer("do_ai", do_ai, 30, 'undefined', true);
+create_timer("update_nearby_sprites", update_nearby_sprites, 23, 'all', true);
 create_timer("check_objectives", check_objectives,30,'undefined',true)
 
 // Report the fps only every second, so no lagg

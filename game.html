@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Fuze Game a2.9.0</title>
+    <title>Fuze Game a2.9.1</title>
     <meta name="description" content="Play the in-development online browser game loosely derived from diep.io">
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,fuze game,update,online,diep,page,fuze page">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -184,19 +184,21 @@
 	<div id="level_list">
 	Loading...
 	</div>
-	<div id="settings">
-	WASD to move<br>
-	E or left click to shoot<br>
-	CTRL + scroll to zoom, zoom in if it lags<br>
-	<div><input type="checkbox" id="cb_pov">POV within map?</div>
-	<br />
-	<input type="checkbox" id="cb_directional_shooting">Shoot without mouse
-	<br />
-	<button type="button" onclick='respawn_player()'>Respawn</button>
-	<br />
-	<button type="button" onclick="toggle_dark_theme()">Toggle dark theme</button>
-	<br />
-	</div>
+    <div id="settings">
+        WASD to move<br>
+        E or left click to shoot<br>
+        CTRL + scroll to zoom, zoom in if it lags<br>
+        <input type="checkbox" id="cb_pov">POV within map?
+        <br />
+        <input type="checkbox" id="cb_directional_shooting">Shoot without mouse
+        <br />
+        <input type="checkbox" id="cb_show_mouse_pos">Show mouse coords
+        <br />
+        <button type="button" onclick='respawn_player()'>Respawn</button>
+        <br />
+        <button type="button" onclick="toggle_dark_theme()">Toggle dark theme</button>
+        <br />
+    </div>
 	<button type="button" id="btn_open_level" onclick="open_level()">Start game</button>
 	</div>
 	<pre id="minimap">
@@ -204,14 +206,14 @@
 	</pre>
     <div id="controls" style="display: block">
 		<div>
-		Fuze game alpha 2.9.0<br>
+		Fuze game alpha 2.9.1<br>
 		</div>
 		<div id="fps">Loading...</div>
 		<br />
 		<button id="next_level_button" style="display:none" type="button" onclick="load_next_level()">Next level</button>
 		OBJECTIVES:<br />
 		<div id="objectives"></div>
-		
+		<div id="mouse_coords_display"></div>
     </div>
 	<div id="level_complete_screen" class="centred-window" style="display: none">
         <div class="header">
@@ -238,7 +240,7 @@
             </div>
         </div>
         <div id="start_game_button">
-            <button type="button" id="btn_open_level" onclick="unpause_game();toggle_div('weapon_select')">Start game</button>
+            <button type="button" id="btn_open_level" onclick="start_game()">Start game</button>
         </div>
     </div>
 
