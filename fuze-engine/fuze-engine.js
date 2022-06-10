@@ -1,4 +1,4 @@
-﻿// Fuze engine a2.9.1
+﻿// Fuze engine a2.9.2
 
 // The HTML class that text will be rendered to
 // via document.getElementById(text_display).innerHTML(text_output)
@@ -26,9 +26,7 @@ var default_level = {};
 var loaded_textures = {};
 var collided_x = false;
 var directional_shooting = false;
-var resistance = 1;
 var resistance_ramp = 0.0001;
-var bounciness = 0.5;
 var sprites_to_delete = [];
 var collided_y = false;
 var font = {x_size : 7, y_size: 14}
@@ -55,6 +53,12 @@ const frame_time = (1000 / 60) * (60 / fps) - (1000 / 60) * 0.5;
 var filterStrength = 10;
 var frameTime = 0, lastLoop = new Date, thisLoop;
 
+// optimiser settings
+var enable_optimiser = true;
+var view_distance_buffer = 25;
+var update_nearby_interval = 15;
+
+// input declarations
 var keys = { 'left_arrow' : 37,  'up_arrow' : 38,  'right_arrow' : 39,  'down_arrow' : 40}
 var mouse = { x_pos: parseInt(el.clientWidth / 2), y_pos: parseInt(el.clientHeight / 2) }
 var mouse_buttons = 0;
@@ -64,8 +68,6 @@ var soft_entity_limit = 20;
 
 // default 50000. higher number means game is more zoomed out, but laggier
 var auto_zoom_constant = 73;
-
-var view_distance_buffer = 30;
 
 var mouse_down = 0;
 
@@ -275,9 +277,12 @@ function load_next_level() {
         respawn_player();
     }
 	hide_div('next_level_button');
-	hide_div('level_complete_screen');
-	auto_zoom();
-    unpause_game();
+    hide_div('level_complete_screen');
+    show_div('weapon_select');
+    auto_zoom();
+    update_viewport();
+    // render_screen("player");
+    update(0);
     // toggle_div('pause_menu');
 }
 
@@ -289,9 +294,11 @@ function auto_zoom() {
 }
 
 function start_game() {
-	auto_zoom();
-	unpause_game();
+    unpause_game();
+    update_nearby_sprites("all");
+    update_minimap();
 	toggle_div('weapon_select');
+	auto_zoom();
 	if (minimap.is_enabled == true) {
 		show_div("minimap")
 	}
@@ -823,7 +830,7 @@ function open_level() {
 	if (!(document.getElementById("level_complete_screen").style.display == "none")) {
 		document.getElementById("level_complete_screen").style.display = "none";
     }
-    document.getElementById("weapon_select").style.display = "block";
+    show_div("weapon_select");
     load_weapon_select_loadout()
 }
 
@@ -927,20 +934,17 @@ function render_screen(view_scope) {
 	screen_width = parseInt(el.clientWidth / font.x_size);
 	screen_height = parseInt(el.clientHeight / font.y_size);
 	
-	var half_height = Math.floor(screen_height / 2);
-    var half_width = Math.floor(screen_width / 2);
-	
 	var text_output = '';
 	
 	// start_yrender_from = sprites_list["player"].y_pos - half_height;
     // start_xrender_from = sprites_list["player"].x_pos - half_width;
 	
-    start_xrender_from = viewport.x_pos - half_width;
-	start_yrender_from = viewport.y_pos - half_height;
+    start_xrender_from = viewport.x_pos - Math.floor(screen_width / 2);
+	start_yrender_from = viewport.y_pos - Math.floor(screen_height / 2);
 	
 	let sprites_to_render = [];
 	
-	if (view_scope == "player") { sprites_to_render = nearby_sprites }
+	if (view_scope == "player" && enable_optimiser == true) { sprites_to_render = nearby_sprites }
 	else { sprites_to_render = Object.keys(sprites_list) }  
 	
 	// console.log(sprites_to_render)
@@ -958,17 +962,19 @@ function render_screen(view_scope) {
 			temp_char = "'";				// let temp_layer = -1;
 			// is_empty = false;
 			for (sprite in sprites_to_render) {
-				if (!(typeof sprites_list[sprites_to_render[sprite]] === 'undefined')) {
-					if ( y >= sprites_list[sprites_to_render[sprite]].y_pos && y < sprites_list[sprites_to_render[sprite]].y_pos + sprites_list[sprites_to_render[sprite]].y_size &&
-					x >= sprites_list[sprites_to_render[sprite]].x_pos && x < sprites_list[sprites_to_render[sprite]].x_pos + sprites_list[sprites_to_render[sprite]].x_size ) {
+                let temp_sprite = sprites_list[sprites_to_render[sprite]];
+                // console.log(temp_sprite);
+				if (!(typeof temp_sprite === 'undefined')) {
+					if ( y >= temp_sprite.y_pos && y < temp_sprite.y_pos + temp_sprite.y_size &&
+					x >= temp_sprite.x_pos && x < temp_sprite.x_pos + temp_sprite.x_size ) {
 						let temp_temp_char = "'";
 						// temp_char = uniconvert["heavy"];
 						
-						if (sprites_list[sprites_to_render[sprite]].direction == 270) {
-							temp_temp_char = sprites_list[sprites_to_render[sprite]].skin.data[y - sprites_list[sprites_to_render[sprite]].y_pos].charAt(sprites_list[sprites_to_render[sprite]].x_size + sprites_list[sprites_to_render[sprite]].x_pos - x - 1);
+						if (temp_sprite.direction == 270) {
+							temp_temp_char = temp_sprite.skin.data[y - temp_sprite.y_pos].charAt(temp_sprite.x_size + temp_sprite.x_pos - x - 1);
 						}
 						else {
-							temp_temp_char = sprites_list[sprites_to_render[sprite]].skin.data[y - sprites_list[sprites_to_render[sprite]].y_pos].charAt(x - sprites_list[sprites_to_render[sprite]].x_pos);
+							temp_temp_char = temp_sprite.skin.data[y - temp_sprite.y_pos].charAt(x - temp_sprite.x_pos);
 						}
 						if (temp_temp_char != "'") {
 							temp_char = temp_temp_char;
@@ -976,92 +982,13 @@ function render_screen(view_scope) {
 						}
 						// console.log(temp_char)
 						
-					} else if (sprites_list[sprites_to_render[sprite]].show_nametag == true &&
-						y == sprites_list[sprites_to_render[sprite]].y_pos + sprites_list[sprites_to_render[sprite]].y_size + 1 &&
-						x >= sprites_list[sprites_to_render[sprite]].x_pos + Math.trunc((sprites_list[sprites_to_render[sprite]].x_size / 2) - (sprites_list[sprites_to_render[sprite]].nametag.length / 2)) && x < sprites_list[sprites_to_render[sprite]].x_pos + sprites_list[sprites_to_render[sprite]].nametag.length + Math.trunc((sprites_list[sprites_to_render[sprite]].x_size / 2) - (sprites_list[sprites_to_render[sprite]].nametag.length / 2))) {
-						// console.log(x + sprites_list[sprites_to_render[sprite]].x_pos - start_xrender_from);
-						temp_char = sprites_list[sprites_to_render[sprite]].nametag.charAt(x - (sprites_list[sprites_to_render[sprite]].x_pos + Math.trunc((sprites_list[sprites_to_render[sprite]].x_size / 2) - (sprites_list[sprites_to_render[sprite]].nametag.length / 2))));
+					} else if (temp_sprite.show_nametag == true &&
+						y == temp_sprite.y_pos + temp_sprite.y_size + 1 &&
+						x >= temp_sprite.x_pos + Math.trunc((temp_sprite.x_size / 2) - (temp_sprite.nametag.length / 2)) && x < temp_sprite.x_pos + temp_sprite.nametag.length + Math.trunc((temp_sprite.x_size / 2) - (temp_sprite.nametag.length / 2))) {
+						// console.log(x + temp_sprite.x_pos - start_xrender_from);
+						temp_char = temp_sprite.nametag.charAt(x - (temp_sprite.x_pos + Math.trunc((temp_sprite.x_size / 2) - (temp_sprite.nametag.length / 2))));
 						break;
 					}
-				}
-			}
-			//if ( (y >= sprites_list["morio"]["y_pos"]) && (y < sprites_list["morio"]["y_pos"] + sprites_list["morio"]["y_size"]) && (x >= sprites_list["morio"]["x_pos"]) && (x < sprites_list["morio"]["x_pos"] + sprites_list["morio"]["x_size"]) ) {
-					
-			//	temp_char = uniconvert["heavy"];
-		
-			if (temp_char == "'") {
-				if ( y >= 0 && y < level.full.length &&  x >= 0 && x < level.full[0].length) {
-					
-					temp_char = level.full[y].charAt(x);
-				} else {
-					temp_char = uniconvert[" "];
-				} 
-			}
-			text_output += temp_char;
-		}
-	
-		// listy_text_output.push(text_output);
-		text_output += '\r\n';
-		// now render the sprites on top
-	}
-	
-	return text_output
-}
-
-function new_render_screen() {
-	screen_width = parseInt(el.clientWidth / font.x_size);
-	screen_height = parseInt(el.clientHeight / font.y_size);
-	
-	let half_height = Math.floor(screen_height / 2);
-    let half_width = Math.floor(screen_width / 2);
-	
-	let text_output = '';
-	
-	// start_yrender_from = sprites_list["player"].y_pos - half_height;
-    // start_xrender_from = sprites_list["player"].x_pos - half_width;
-	
-    start_xrender_from = viewport.x_pos - half_width;
-	start_yrender_from = viewport.y_pos - half_height;
-	
-	/*
-	if (check_if_cb_checked('cb_pov') == true) {
-		if (start_xrender_from < 0) {start_xrender_from = 0}
-		if (start_yrender_from < 0) {start_yrender_from = 0}
-		if (start_xrender_from + screen_width > level.width) { start_xrender_from =  level.width - screen_width}
-		if (start_yrender_from + screen_height > level.height) { start_yrender_from =  level.height - screen_height}
-	}
-	*/
-	
-    for (y = start_yrender_from; y < start_yrender_from + screen_height; y++) {
-		
-		for (x = start_xrender_from; x < start_xrender_from + screen_width ; x++ ) {
-			temp_char = "'";				// let temp_layer = -1;
-			// is_empty = false;
-			for (sprite in sprites_list) {
-				// console.log(sprites_list[sprite]["y_pos"]);
-				if ( y >= sprites_list[sprite].y_pos && y < sprites_list[sprite].y_pos + sprites_list[sprite].y_size &&
-				x >= sprites_list[sprite].x_pos && x < sprites_list[sprite].x_pos + sprites_list[sprite].x_size ) {
-					let temp_temp_char = "'";
-					// temp_char = uniconvert["heavy"];
-					
-                    if (sprites_list[sprite].direction == 270) {
-                        temp_temp_char = sprites_list[sprite].skin.data[y - sprites_list[sprite].y_pos].charAt(sprites_list[sprite].x_size + sprites_list[sprite].x_pos - x - 1);
-                    }
-                    else {
-                        temp_temp_char = sprites_list[sprite].skin.data[y - sprites_list[sprite].y_pos].charAt(x - sprites_list[sprite].x_pos);
-					}
-					if (temp_temp_char != "'") {
-						temp_char = temp_temp_char;
-						break;
-					}
-					// console.log(temp_char)
-					
-				} else if (sprites_list[sprite].show_nametag == true &&
-					y == sprites_list[sprite].y_pos + sprites_list[sprite].y_size + 1 &&
-					x >= sprites_list[sprite].x_pos + Math.trunc((sprites_list[sprite].x_size / 2) - (sprites_list[sprite].nametag.length / 2)) && x < sprites_list[sprite].x_pos + sprites_list[sprite].nametag.length + Math.trunc((sprites_list[sprite].x_size / 2) - (sprites_list[sprite].nametag.length / 2))) {
-					// console.log(x + sprites_list[sprite].x_pos - start_xrender_from);
-					temp_char = sprites_list[sprite].nametag.charAt(x - (sprites_list[sprite].x_pos + Math.trunc((sprites_list[sprite].x_size / 2) - (sprites_list[sprite].nametag.length / 2))));
-					break;
 				}
 			}
 			//if ( (y >= sprites_list["morio"]["y_pos"]) && (y < sprites_list["morio"]["y_pos"] + sprites_list["morio"]["y_size"]) && (x >= sprites_list["morio"]["x_pos"]) && (x < sprites_list["morio"]["x_pos"] + sprites_list["morio"]["x_size"]) ) {
@@ -1091,10 +1018,10 @@ function do_wall_damage(arg_sprite) {
 	let temp_sprite = deep_copy(sprites_list[arg_sprite]);
 	
 	let scope = {
-		start_x: temp_sprite.x_pos - 1,
-		start_y: temp_sprite.y_pos - 1,
-		end_x: temp_sprite.x_pos + temp_sprite.x_size + 1,
-		end_y: temp_sprite.y_pos + temp_sprite.y_size + 1
+		start_x: temp_sprite.x_pos - temp_sprite.wall_damage_range,
+        start_y: temp_sprite.y_pos - temp_sprite.wall_damage_range,
+        end_x: temp_sprite.x_pos + temp_sprite.x_size + temp_sprite.wall_damage_range,
+        end_y: temp_sprite.y_pos + temp_sprite.y_size + temp_sprite.wall_damage_range
 	}
 	
 	// set damage area within level to avoid error
@@ -1117,29 +1044,33 @@ function do_wall_damage(arg_sprite) {
 }
 
 function update_nearby_sprites(what_sprite) {
-	if (what_sprite == "all") {
-		nearby_sprites = [];
-		for (sprite in sprites_list) {
+	if (enable_optimiser == true) {
+		if (what_sprite == "all") {
+			nearby_sprites = [];
+			
+			for (sprite in sprites_list) {
+				if (
+				sprites_list[sprite].x_pos > start_xrender_from - view_distance_buffer && 
+				sprites_list[sprite].x_pos < start_xrender_from + screen_width + view_distance_buffer && 
+				sprites_list[sprite].y_pos > start_yrender_from - view_distance_buffer && 
+				sprites_list[sprite].y_pos < start_yrender_from + screen_height + view_distance_buffer 
+				) {
+					nearby_sprites.push(sprite);
+				}
+			}
+			
+		} else if (!(typeof sprites_list[what_sprite] === 'undefined')) {
 			if (
-			sprites_list[sprite].x_pos > start_xrender_from - view_distance_buffer && 
-			sprites_list[sprite].x_pos < start_xrender_from + screen_width + view_distance_buffer && 
-			sprites_list[sprite].y_pos > start_yrender_from - view_distance_buffer && 
-			sprites_list[sprite].y_pos < start_yrender_from + screen_height + view_distance_buffer 
-			) {
-				nearby_sprites.push(sprite);
-			}
+				sprites_list[what_sprite].x_pos > start_xrender_from - view_distance_buffer && 
+				sprites_list[what_sprite].x_pos < start_xrender_from + screen_width + view_distance_buffer && 
+				sprites_list[what_sprite].y_pos > start_yrender_from - view_distance_buffer && 
+				sprites_list[what_sprite].y_pos < start_yrender_from + screen_height + view_distance_buffer 
+				) {
+					nearby_sprites.push(what_sprite);
+				}
 		}
-	} else if (!(typeof sprites_list[what_sprite] === 'undefined')) {
-		if (
-			sprites_list[what_sprite].x_pos > start_xrender_from - view_distance_buffer && 
-			sprites_list[what_sprite].x_pos < start_xrender_from + screen_width + view_distance_buffer && 
-			sprites_list[what_sprite].y_pos > start_yrender_from - view_distance_buffer && 
-			sprites_list[what_sprite].y_pos < start_yrender_from + screen_height + view_distance_buffer 
-			) {
-				nearby_sprites.push(what_sprite);
-			}
+		// console.log("nearby_sprites: " + nearby_sprites);
 	}
-	console.log("nearby_sprites: " + nearby_sprites);
 }
 
 function update_sprites(sprites_list) {
@@ -1211,14 +1142,14 @@ function update_sprites(sprites_list) {
 			}
 		//}
 		
-		if (sprites_list[sprite].has_resistance == true) {
-			if (sprites_list[sprite].x_speed <= 0 - resistance) {sprites_list[sprite].x_speed = sprites_list[sprite].x_speed + (resistance + (sprites_list[sprite].x_speed * sprites_list[sprite].x_speed * resistance_ramp))}
-			if (sprites_list[sprite].x_speed >= resistance)     {sprites_list[sprite].x_speed = sprites_list[sprite].x_speed - (resistance + (sprites_list[sprite].x_speed * sprites_list[sprite].x_speed * resistance_ramp))}
-			if (sprites_list[sprite].y_speed <= 0 - resistance) {sprites_list[sprite].y_speed = sprites_list[sprite].y_speed + (resistance + (sprites_list[sprite].y_speed * sprites_list[sprite].y_speed * resistance_ramp))}
-			if (sprites_list[sprite].y_speed >= resistance)     {sprites_list[sprite].y_speed = sprites_list[sprite].y_speed - (resistance + (sprites_list[sprite].y_speed * sprites_list[sprite].y_speed * resistance_ramp))}
+		if (sprites_list[sprite].resistance != 0) {
+			if (sprites_list[sprite].x_speed <= 0 - sprites_list[sprite].resistance) {sprites_list[sprite].x_speed = sprites_list[sprite].x_speed + (sprites_list[sprite].resistance + (sprites_list[sprite].x_speed * sprites_list[sprite].x_speed * resistance_ramp))}
+			if (sprites_list[sprite].x_speed >= sprites_list[sprite].resistance)     {sprites_list[sprite].x_speed = sprites_list[sprite].x_speed - (sprites_list[sprite].resistance + (sprites_list[sprite].x_speed * sprites_list[sprite].x_speed * resistance_ramp))}
+			if (sprites_list[sprite].y_speed <= 0 - sprites_list[sprite].resistance) {sprites_list[sprite].y_speed = sprites_list[sprite].y_speed + (sprites_list[sprite].resistance + (sprites_list[sprite].y_speed * sprites_list[sprite].y_speed * resistance_ramp))}
+			if (sprites_list[sprite].y_speed >= sprites_list[sprite].resistance)     {sprites_list[sprite].y_speed = sprites_list[sprite].y_speed - (sprites_list[sprite].resistance + (sprites_list[sprite].y_speed * sprites_list[sprite].y_speed * resistance_ramp))}
 			
-			if ( 0 - resistance <= sprites_list[sprite].x_speed && sprites_list[sprite].x_speed <= resistance ) {sprites_list[sprite].x_speed = 0}
-			if ( 0 - resistance <= sprites_list[sprite].y_speed && sprites_list[sprite].y_speed <= resistance ) {sprites_list[sprite].y_speed = 0}
+			if ( 0 - sprites_list[sprite].resistance <= sprites_list[sprite].x_speed && sprites_list[sprite].x_speed <= sprites_list[sprite].resistance ) {sprites_list[sprite].x_speed = 0}
+			if ( 0 - sprites_list[sprite].resistance <= sprites_list[sprite].y_speed && sprites_list[sprite].y_speed <= sprites_list[sprite].resistance ) {sprites_list[sprite].y_speed = 0}
 		}
 		
 		collided_x = false;
@@ -1274,40 +1205,40 @@ function update_sprites(sprites_list) {
 			else {
 				if (bounced_left) {
 					if (sprites_list[sprite].x_pile < 0) {
-						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * bounciness;
+						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * sprites_list[sprite].bounciness;
 					}
 					if (sprites_list[sprite].x_speed < 0) {
-						sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * bounciness;
+						sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * sprites_list[sprite].bounciness;
 					}
 				}
 				if (bounced_right) {
 					if (sprites_list[sprite].x_pile > 0) {
-						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * bounciness;
+						sprites_list[sprite].x_pile = 0 - sprites_list[sprite].x_pile * sprites_list[sprite].bounciness;
 					}
 					if (sprites_list[sprite].x_speed > 0) {
-						sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * bounciness;
+						sprites_list[sprite].x_speed = 0 - sprites_list[sprite].x_speed * sprites_list[sprite].bounciness;
 					}
 				}
 				if (bounced_up) {
 					if (sprites_list[sprite].y_pile < 0) {
-						sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * bounciness;
+						sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * sprites_list[sprite].bounciness;
 					}
 					if (sprites_list[sprite].y_speed < 0) {
-						sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * bounciness;
+						sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * sprites_list[sprite].bounciness;
 					}
 				}
 				if (bounced_down) {
 					if (sprites_list[sprite].y_pile > 0) {
-						sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * bounciness;
+						sprites_list[sprite].y_pile = 0 - sprites_list[sprite].y_pile * sprites_list[sprite].bounciness;
 					}
 					if (sprites_list[sprite].y_speed > 0) {
-						sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * bounciness;
+						sprites_list[sprite].y_speed = 0 - sprites_list[sprite].y_speed * sprites_list[sprite].bounciness;
 					}
 				}
             }
 		
 			if (bounced_left || bounced_right || bounced_up || bounced_down) {
-				if (sprites_list[sprite].can_damage_walls == true) {
+				if (sprites_list[sprite].wall_damage_range > 0) {
 					do_wall_damage(sprite);
 				}
 			}
@@ -1425,6 +1356,13 @@ function update_level_spawns() {
 	}
 }
 
+function update_viewport() {
+    if (viewport.following_sprite = true && !(typeof sprites_list[viewport.sprite] === 'undefined')) {
+        viewport.x_pos = sprites_list[viewport.sprite].x_pos;
+        viewport.y_pos = sprites_list[viewport.sprite].y_pos;
+    }
+}
+
 var lastFrameTime = 0;  // the last frame time
 function update(time) {
     if (time - lastFrameTime < frame_time) { //skip the frame if the call is too early
@@ -1435,10 +1373,7 @@ function update(time) {
 	
 	sprites_to_delete = [];
 	
-	if (viewport.following_sprite = true && !(typeof sprites_list[viewport.sprite] === 'undefined')) {
-		viewport.x_pos = sprites_list[viewport.sprite].x_pos;
-		viewport.y_pos = sprites_list[viewport.sprite].y_pos;
-	}
+    update_viewport();
 	
 	manage_timers(timers);
 
@@ -1476,8 +1411,10 @@ function update(time) {
 }
 
 create_timer("do_ai", do_ai, 30, 'undefined', true);
-create_timer("update_nearby_sprites", update_nearby_sprites, 23, 'all', true);
-create_timer("check_objectives", check_objectives,30,'undefined',true)
+create_timer("update_nearby_sprites", update_nearby_sprites, update_nearby_interval, 'all', true);
+create_timer("check_objectives", check_objectives, 30, 'undefined', true);
+create_timer("minimap_update", update_minimap, 30, 'undefined', true);
+create_timer("objectives_update", update_objectives_display, 30, 'undefined', true);
 
 // Report the fps only every second, so no lagg
 var fpsOut = document.getElementById('fps');

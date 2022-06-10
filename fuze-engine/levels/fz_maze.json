@@ -7,7 +7,7 @@
   "entities": [
     {
       "name": "mario",
-	  "count": 10,
+	  "count": 5,
       "custom_properties": {
         "x_pos": 73,
         "y_pos": 30,
@@ -31,19 +31,11 @@
       }
     },
     {
-      "name": "peter",
-	  "count": 1,
-      "custom_properties": {
-        "x_pos": 100,
-        "y_pos": 200
-      }
-    },
-    {
       "name": "impostor",
 	  "count": 1,
       "custom_properties": {
-        "x_pos": "random",
-        "y_pos": "random"
+        "x_pos": 500,
+        "y_pos": 170
       }
     }
   ],
@@ -54,12 +46,12 @@
   "objectives": [
     {
       "type": "eliminate",
-      "target": "peter",
+      "target": "mario",
       "is_completed": false
     },
-    {
+	{
       "type": "eliminate",
-      "target": "mario",
+      "target": "impostor",
       "is_completed": false
     }
   ]}

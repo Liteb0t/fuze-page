@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Fuze Game a2.9.1</title>
+    <title>Fuze Game a2.9.2</title>
     <meta name="description" content="Play the in-development online browser game loosely derived from diep.io">
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,fuze game,update,online,diep,page,fuze page">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -184,36 +184,37 @@
 	<div id="level_list">
 	Loading...
 	</div>
-    <div id="settings">
-        WASD to move<br>
-        E or left click to shoot<br>
-        CTRL + scroll to zoom, zoom in if it lags<br>
-        <input type="checkbox" id="cb_pov">POV within map?
-        <br />
-        <input type="checkbox" id="cb_directional_shooting">Shoot without mouse
-        <br />
-        <input type="checkbox" id="cb_show_mouse_pos">Show mouse coords
-        <br />
-        <button type="button" onclick='respawn_player()'>Respawn</button>
-        <br />
-        <button type="button" onclick="toggle_dark_theme()">Toggle dark theme</button>
-        <br />
-    </div>
+	<div id="settings">
+	WASD to move<br>
+	E or left click to shoot<br>
+	CTRL + scroll to zoom, zoom in if it lags<br>
+	<input type="checkbox" id="cb_pov">POV within map?
+	<br />
+	<input type="checkbox" id="cb_directional_shooting">Shoot without mouse
+	<br />
+	<input type="checkbox" id="cb_show_mouse_pos">Show mouse co-ordinates
+	<br />
+	<button type="button" onclick='respawn_player()'>Respawn</button>
+	<br />
+	<button type="button" onclick="toggle_dark_theme()">Toggle dark theme</button>
+	<br />
+	</div>
 	<button type="button" id="btn_open_level" onclick="open_level()">Start game</button>
 	</div>
-	<pre id="minimap">
+	<pre id="minimap" style="display: none">
         Minimap: Level not loaded
 	</pre>
     <div id="controls" style="display: block">
 		<div>
-		Fuze game alpha 2.9.1<br>
+		Fuze game alpha 2.9.2<br>
 		</div>
 		<div id="fps">Loading...</div>
-		<br />
 		<button id="next_level_button" style="display:none" type="button" onclick="load_next_level()">Next level</button>
 		OBJECTIVES:<br />
 		<div id="objectives"></div>
 		<div id="mouse_coords_display"></div>
+		<button type="button" id="btn_levels" onclick="zoom(1)">Zoom in</button>
+		<button type="button" id="btn_levels" onclick="zoom(-1)">Zoom out</button>
     </div>
 	<div id="level_complete_screen" class="centred-window" style="display: none">
         <div class="header">

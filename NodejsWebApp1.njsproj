@@ -60,7 +60,6 @@
     <Content Include="fonts\IBMPlexMono-Medium.woff2" />
     <Content Include="fuze-engine\levels\fz_battleground.json" />
     <Content Include="fuze-engine\levels\fz_empty.json" />
-    <Content Include="fuze-engine\levels\fz_emptya.json" />
     <Content Include="fuze-engine\levels\fz_maze.json" />
     <Content Include="fuze-engine\levels\fz_racecourse.json" />
     <Content Include="fuze-engine\levels\includes.txt" />

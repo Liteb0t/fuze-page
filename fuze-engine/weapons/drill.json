@@ -4,7 +4,7 @@
   "cooldown": 7,
   "delete_after": 10,
   "properties": {
-	"can_damage_walls": true,
+	"wall_damage_range": 2,
 	"damage": 6,
 	"health": 6
 	}

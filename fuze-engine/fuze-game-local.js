@@ -1,5 +1,5 @@
 ﻿// customisable part of fuze engine
-// alpha 2.9.1
+// alpha 2.9.2
 
 var default_sprite = {
     "name": "default",
@@ -110,8 +110,6 @@ play_audio("sans_music", "Megalovania.mp3", {loop: true});
 play_audio("peter_sounds", "peter_owchie.mp3", {loop: true});
 play_audio("background_music", "phrygian.wav", {loop: true, volume: 0.3});
 
-create_timer("minimap_update", update_minimap, 30, 'undefined', true);
-create_timer("objectives_update", update_objectives_display, 30, 'undefined', true);
 
 function on_frame(sprites_list) {
 	// insert functions here

@@ -1,5 +1,6 @@
 {
   "name": "default",
+  "display_name": "default",
   "x_pos": -10,
   "y_pos": -10,
   "x_pile": 0,
@@ -18,15 +19,17 @@
   "minimap_character": "?",
   "move_towards": true,
   "weapons": [],
-  "can_damage_walls": false,
+  "wall_damage_range": 0,
+  "selectable_at_start": false,
   "delete_after": -1,
+  "resistance": 1,
+  "bounciness": 0.5,
   "use_ai": false,
   "ai": {
     "speed": 10,
     "targets": []
   },
   "nametag": "default",
-  "has_resistance": true,
   "skin": {
     "stored": "within_sprite",
     "data": "#####\n#####\n#####\n#####\n"

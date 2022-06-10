@@ -1,13 +1,6 @@
 {
   "entities": [
-    {
-      "name": "mario",
-	  "count": 1,
-      "custom_properties": {
-        "x_pos": 100,
-        "y_pos": 100
-      }
-    },
+    
     {
       "name": "sans",
 	  "count": 1,
@@ -16,12 +9,28 @@
         "y_pos": "random"
       }
     },
+	{
+      "name": "mario",
+	  "count": 2,
+      "custom_properties": {
+        "x_pos": 73,
+        "y_pos": 200
+      }
+    },
     {
       "name": "invader",
-	  "count": 5,
+	  "count": 2,
       "custom_properties": {
-        "x_pos": "random",
-        "y_pos": "random"
+        "x_pos": 730,
+        "y_pos": 40
+      }
+    },
+	{
+      "name": "impostor",
+	  "count": 2,
+      "custom_properties": {
+        "x_pos": 730,
+        "y_pos": 200
       }
     },
     {
@@ -39,7 +48,41 @@
         "x_pos": "random",
         "y_pos": "random"
       }
+    },
+	{
+      "name": "fishron",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": "random",
+        "y_pos": "random"
+      }
     }
+  ],
+  "spawners": [
+  {
+	  "name": "mario",
+	  "interval": 300,
+	  "args": {
+		"x_pos": 73,
+		"y_pos": 200
+	  }
+  },
+  {
+	  "name": "invader",
+	  "interval": 300,
+	  "args": {
+		"x_pos": 730,
+		"y_pos": 40
+	  }
+  },
+  {
+	  "name": "impostor",
+	  "interval": 300,
+	  "args": {
+		"x_pos": 730,
+		"y_pos": 200
+	  }
+  }
   ],
   "map": "load",
   "objectives": [

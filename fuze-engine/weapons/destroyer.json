@@ -1,10 +1,11 @@
 {
   "name": "destroyer",
-  "speed": 28,
+  "speed": 35,
   "cooldown": 40,
-  "delete_after": 70,
+  "delete_after": 60,
+  "resistance": 0.5,
   "properties": {
-	"can_damage_walls": true,
+	"wall_damage_range": 1,
 	"damage": 11,
 	"health": 30
 	}
