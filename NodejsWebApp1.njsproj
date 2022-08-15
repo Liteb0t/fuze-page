@@ -6,7 +6,7 @@
     <RootNamespace>NodejsWebApp1</RootNamespace>
     <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
     <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
-    <NodeExePath>G:\Program Files\nodejs\node.exe</NodeExePath>
+    <NodeExePath>C:\Program Files\nodejs\node.exe</NodeExePath>
     <Environment>NODE_SKIP_PLATFORM_CHECK=1</Environment>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -48,10 +48,8 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="docs\fuze-engine vs fuze-game anticheat.txt" />
-    <Content Include="downloads\fuzevd-1_1\fuzevd-installer.msi" />
     <Content Include="downloads\fuzevd-1_1\Release.7z" />
-    <Content Include="downloads\fuzevd-1_1\Release.zip" />
-    <Content Include="downloads\fuzevd-1_1\setup.exe" />
+    <Content Include="downloads\fuzevd-versions-server.fauv" />
     <Content Include="error.html">
       <SubType>Code</SubType>
     </Content>
@@ -124,6 +122,7 @@
     <Content Include="media\fuze-logo-new.png" />
     <Content Include="media\fuze-min-hover.png" />
     <Content Include="media\fuze-min.png" />
+    <Content Include="media\fuzecap-3.png" />
     <Content Include="media\fuzevd_cap_1-0.png" />
     <Content Include="media\fuzevd_cap_1-1.png" />
     <Content Include="media\fvd-icon-exp.ico" />
@@ -150,6 +149,7 @@
   <ItemGroup>
     <Folder Include="docs\" />
     <Folder Include="downloads\fuzevd-1_1\" />
+    <Folder Include="downloads\fuzevd-latest-stable\" />
     <Folder Include="fonts\" />
     <Folder Include="fuze-engine\" />
     <Folder Include="fuze-engine\levels\" />
