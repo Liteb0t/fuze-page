@@ -49,7 +49,16 @@
     </Content>
     <Content Include="docs\fuze-engine vs fuze-game anticheat.txt" />
     <Content Include="downloads\fuzevd-1_1\Release.7z" />
+    <Content Include="downloads\fuzevd-latest-libraries\ffmpeg.exe" />
+    <Content Include="downloads\fuzevd-latest-libraries\FuzeVD.exe" />
+    <Content Include="downloads\fuzevd-latest-libraries\yt-dlp.exe" />
     <Content Include="downloads\fuzevd-versions-server.fauv" />
+    <Content Include="downloads\fuzevd_2-0_x64\fuzevd-installer.msi" />
+    <Content Include="downloads\fuzevd_2-0_x64\fuzevd_2-0_x64.zip" />
+    <Content Include="downloads\fuzevd_2-0_x64\setup.exe" />
+    <Content Include="downloads\fuzevd_2-0_x86\fuzevd-installer.msi" />
+    <Content Include="downloads\fuzevd_2-0_x86\FuzeVD_2-0_x86.zip" />
+    <Content Include="downloads\fuzevd_2-0_x86\setup.exe" />
     <Content Include="error.html">
       <SubType>Code</SubType>
     </Content>
@@ -109,6 +118,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="libs\howler.core.min.txt" />
+    <Content Include="logs\fuzevd_telemetry_08_22.txt">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="main-styles.css">
       <SubType>Code</SubType>
     </Content>
@@ -129,9 +141,6 @@
     <Content Include="media\header.png" />
     <Content Include="media\mash_invasion.png" />
     <Content Include="media\mash_no_translation.png" />
-    <Content Include="media\Megalovania.mp3" />
-    <Content Include="media\peter_owchie.mp3" />
-    <Content Include="media\phrygian.wav" />
     <Content Include="media\warning-icon.png" />
     <Content Include="media\window-icon.png" />
     <Content Include="nav.html">
@@ -149,7 +158,9 @@
   <ItemGroup>
     <Folder Include="docs\" />
     <Folder Include="downloads\fuzevd-1_1\" />
-    <Folder Include="downloads\fuzevd-latest-stable\" />
+    <Folder Include="downloads\fuzevd-latest-libraries\" />
+    <Folder Include="downloads\fuzevd_2-0_x64\" />
+    <Folder Include="downloads\fuzevd_2-0_x86\" />
     <Folder Include="fonts\" />
     <Folder Include="fuze-engine\" />
     <Folder Include="fuze-engine\levels\" />
@@ -162,6 +173,7 @@
     <Folder Include="libs\" />
     <Folder Include="mario\" />
     <Folder Include="media\" />
+    <Folder Include="logs\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

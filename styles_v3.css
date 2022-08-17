@@ -7,6 +7,7 @@ body {
 	border-right: 1px solid #28343B;
 	border-bottom: 1px solid #28343B;
 	min-width: 610px;
+    max-width: 1100px;
 	margin-bottom: 10px;
 }
 
@@ -119,9 +120,11 @@ navbar #login_button:hover {
 	min-height: 300px;
 }
 
-#main p {
-	margin-top: 0;
-}
+    #main p {
+        margin-top: 0;
+        display: inline-block;
+        width: 100%;
+    }
 
 #main h2 {
 	border-top: 1px solid #aaa;
@@ -137,6 +140,24 @@ navbar #login_button:hover {
 	margin-top: 4px;
 	border: 1px solid #222;
 }
+
+.download-button {
+    padding: 8px;
+    font-weight: bold;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    background-color: rgba(90,170,90,1.0);
+    border: 2px solid #020;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+    .download-button:hover {
+        background: linear-gradient(#7D7,#4A4);
+        text-decoration: underline;
+        border: 2px solid #020;
+    }
 
 table {
 	border: 1px solid #222;
