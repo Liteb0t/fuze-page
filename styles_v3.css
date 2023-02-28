@@ -32,11 +32,10 @@ body {
     vertical-align: middle;
     font-size: 36px;
     color: white;
-    font-weight: thicc;
     display: block;
     margin: 0;
     float: left;
-	padding: 4px;
+    padding-left: 4px;
 }
 
 #banner a {
@@ -76,7 +75,10 @@ navbar a {
 	font-size: 18px;
 	color: #FFF;
 	float: left;
-	padding: 6px;
+	padding-left: 6px;
+	padding-right: 6px;
+	padding-top: 4px;
+	padding-bottom: 4px;
 	border-right: 1px solid #987;
 	background: none;
 }
