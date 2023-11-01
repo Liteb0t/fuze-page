@@ -61,30 +61,31 @@ server = http.createServer(function (req, res) {
         }
     });
 
-
+/*
     if (req.method == 'POST') {
         var body = '';
         req.on('data', function (data) {
             // body += data;
-            fs.writeFile('/logs/fuzevd_telemetry_08_22.txt', data + "\n")
+            fs.writeFile('/logs/fuze_telemetry_11_23.txt', data + "\n")
         });
-        // req.on('end', function () {
-            // try {
-                // var post = JSON.parse(body);
-                // deal_with_post_data(request,post);
-                // console.log(post); // <--- here I just output the parsed JSON
-                // response.writeHead(200, { "Content-Type": "text/plain" });
-                // response.end();
+         req.on('end', function () {
+             try {
+                 var post = JSON.parse(body);
+                 deal_with_post_data(request,post);
+                 console.log(post); // <--- here I just output the parsed JSON
+                 response.writeHead(200, { "Content-Type": "text/plain" });
+                 response.end();
                 return;
-            // }
-            //  catch (err) {
-            //     response.writeHead(500, { "Content-Type": "text/plain" });
-            //     response.write("Bad Post Data.  Is your data a proper JSON?\n");
-            //     response.end();
-            //     return;
-            // }
-        // });
+             }
+              catch (err) {
+                 response.writeHead(500, { "Content-Type": "text/plain" });
+                 response.write("Bad Post Data.  Is your data a proper JSON?\n");
+                 response.end();
+                 return;
+            }
+        });
     }
+*/
 });
 server.listen(5000);
 console.log('Server running at http://127.0.0.1:5000');
