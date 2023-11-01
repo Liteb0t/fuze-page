@@ -36,7 +36,8 @@ server = http.createServer(function (req, res) {
         '.ttf': 'application/font-ttf',
         '.eot': 'application/vnd.ms-fontobject',
         '.otf': 'application/font-otf',
-        '.wasm': 'application/wasm'
+        '.wasm': 'application/wasm',
+        '.7z': 'application/x-7z-compressed'
     };
 
     var contentType = mimeTypes[extname] || 'application/octet-stream';

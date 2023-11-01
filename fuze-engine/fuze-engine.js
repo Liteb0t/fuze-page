@@ -1,4 +1,4 @@
-﻿// Fuze engine a2.9.2
+﻿// Fuze engine a2.9.3
 
 // The HTML class that text will be rendered to
 // via document.getElementById(text_display).innerHTML(text_output)
@@ -11,7 +11,7 @@ var text_display = "game-display";
 var el = document.getElementById('game-display');
 var font_size = parseFloat(window.getComputedStyle(el, null).getPropertyValue('font-size'));
 var screen_width = parseInt(el.clientWidth / 8);
-var screen_height = parseInt(el.clientHeight / 16);
+var screen_height = parseInt(el.clientHeight / 19);
 var current_file;
 var level = "null";
 var start_xrender_from;
@@ -104,8 +104,9 @@ document.addEventListener('mouseup', function (event) {
 
 // update variables for mouse pos which are used for aiming weapons
 document.addEventListener("mousemove", function (event) {
-    mouse.x_pos = event.clientX;
-    mouse.y_pos = event.clientY;
+	let game_display_rect = document.getElementById("game-display").getBoundingClientRect();
+    mouse.x_pos = event.clientX - game_display_rect.left;
+    mouse.y_pos = event.clientY - game_display_rect.top;
 })
 
 // zoom the game according to window size, so the view distance is the same
@@ -922,7 +923,7 @@ function load_level(level_id) {
 
     update_objectives_display();
 
-	change_font_size(4);
+	change_font_size(2);
 	document.getElementById(text_display).innerHTML = render_screen( "all" )
 	
 	// requestAnimationFrame(update);
