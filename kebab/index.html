@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Best kebab</title>
+<link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+
+</head>
+
+<body>
+<header>
+<h1 style="display: inline">Best kebab</h1><h3 style="float: right; display: inline;">halal</h3>
+</header>
+<marquee>
+🚨🚨 BEST KEBAB IN TOWN!! 🚨🚨🚨 call 067892 48 213  text BEN SHAPIRO to 30568🚨🚨🚨 order now buy 1 get 1 free NOW ON! BEST DEALS ☜
+</marquee>
+<img src="https://media-cdn.tripadvisor.com/media/photo-s/29/4d/74/5b/caption.jpg">
+<img src="akinatoor.png" style="float: right;">
+
+<ol style="border: 1px solid #000;">
+  <li>with Cheese</li>
+  <li>Station approach rd, Luton</li>
+  <li>Rated 5/5 on tripadvisoor</li>
+  <li>halal</li>
+  <li>no haram</li>
+</ol>
+<img src="discount.png" id="discount" style="resize: both">
+<iframe style="float: right;" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2462.773441032947!2d-0.4152001!3d51.883348!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4876484587feebcb%3A0x6e6f978d315241af!2sBest%20Kebab!5e0!3m2!1sen!2suk!4v1699027655342!5m2!1sen!2suk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+</iframe>
+<form>
+<input type="radio" id="chicken" name="Pork" value="Chicken">
+<label for="Chicken">Tastey chicken</label><br>
+<input type="radio" id="Pork" name="Pork" value="Pork">
+<label for="Pork">Pork halal</label><br>
+<input type="submit" value="Order">
+</form>
+<audio controls id="my_audio" src="nokia.mp3" loop="loop"></audio>
+</body>
+<script>
+var el = document.getElementById("discount");
+var el2 = document.getElementsByTagName("body");
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function resizeDiscount() {
+	let z=-1;
+	el.width = 200;
+	el.height = 100;
+	while (z < 0) {
+		for (x=0; x<100; x++) {
+		
+		el.width ++;
+		el.height ++;
+		await sleep(20);
+		// el2.color
+		}
+		for (x=0; x<100; x++) {
+		el.width --;
+		el.height --;
+		await sleep(20);
+		}
+	}
+}
+resizeDiscount();
+</script>
+</html>

@@ -14,28 +14,35 @@
         }
 		
 		body {
-		margin: auto auto;
-		margin-top: 50px;
-		width: 600px;
+			margin: auto auto;
+			margin-top: 15vh;
+			width: 600px;
+			border: 5px solid #555;
+			border-radius: 5px;
 		}
-
-        .clear {
-            clear: both;
-        }
+		
+		#container {
+			padding: 20px;
+			background: linear-gradient(#FFF, #FBA);
+		}
 		
     </style>
 </head>
 <body>
     <div id="container">
         <div id="left">
-            <img src="https://fuze.page/media/warning-icon.png">
+            <img src="media/warning-icon.png" style="padding-top: 15px">
         </div>
         <div id="right">
             <h2>Well, this is embarrasing.</h2>
             <p>
-                That page couldn't be found [404].<br>
-                Check the URL for any typos, or click this link to go to the homepage.<br>
-                <a href="https://fuze.page/index.html">Go to Fuzepage homepage?</a>
+                404 - That page couldn't be found<br>
+                It either no longer exists, or never has. typo?<br>
+                <b>At this point, you have two options:</b>
+                <ul>
+					<li>Go back to the <a href="/">homepage</a></li>
+					<li>Order a <a href="./kebab/index">kebab</a>.</li>
+                </ul>
             </p>
         </div>
     </div>

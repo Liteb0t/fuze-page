@@ -62,11 +62,12 @@ server = http.createServer(function (req, res) {
     });
 
 /*
+ * This was for logging requests
     if (req.method == 'POST') {
         var body = '';
         req.on('data', function (data) {
             // body += data;
-            fs.writeFile('/logs/fuze_telemetry_11_23.txt', data + "\n")
+            fs.writeFile('/logs/fuze_telemetry_09_22.txt', data + "\n")
         });
          req.on('end', function () {
              try {

@@ -1,0 +1,23 @@
+header {
+	font-family: arial;
+	background-image: linear-gradient(red, yellow);
+}
+
+body {
+	background-image: url('halal.jpg');
+	background-repeat: repeat;
+}
+
+form {
+	margin-left: 10px;
+	background-color: rgba(171,80,20,0.5);
+}
+
+form input {
+	padding: 10px;
+	margin-bottom: 5px;
+}
+
+marquee {
+	color: #F11;
+}
