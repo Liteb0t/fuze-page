@@ -43,8 +43,11 @@ body {
 }
 
 #banner img {
-	border: 1px solid #fff;
 	vertical-align: text-top;
+	border: none;
+	border-right: 3px solid #666;
+	padding: 1px;
+	padding-right: 8px;
 }
 
 #banner h1 a:link, #banner h1 a:hover, #banner h1 a:active, #banner h1 a:visited {

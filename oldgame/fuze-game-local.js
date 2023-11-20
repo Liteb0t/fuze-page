@@ -51,10 +51,10 @@ default_level = {
 }
 
 // define weapons
-weapons = load_data("/fuze-engine/weapons/includes.txt");
+weapons = load_data("weapons/includes.txt");
 
 // load level data from a file. includes gives a list of filepaths
-levels = load_data("/fuze-engine/levels/includes.txt");
+levels = load_data("levels/includes.txt");
 
 // format newlines to be displayed in the game
 for (a_level in levels) {
@@ -70,7 +70,7 @@ for (a_level in levels) {
 
 // load sprites into memory
 // these are later deepcopied into sprites_list which are in-game sprites
-sprites = load_data("/fuze-engine/sprites/includes.txt");
+sprites = load_data("sprites/includes.txt");
 
 // Load the textures into memory as well
 for (the_sprite in sprites) {

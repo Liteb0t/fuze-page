@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Fuze Game a2.9.3</title>
-	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="../styles.css">
     <meta name="description" content="Play the in-development online browser game loosely derived from diep.io">
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,fuze game,update,online,diep,page,fuze page">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
-    <link rel="icon" href="media/favicon.png" type="image/png">
+    <link rel="icon" href="../media/favicon.png" type="image/png">
     <style>
         @font-face {
 			
@@ -182,17 +182,17 @@
 
 <div id="banner">
 <h1 id="title">
-<img src="media/fuze-min.png" style="border: none;border-right: 3px solid #666; padding: 1px;padding-right: 8px;">
+<img src="../media/fuze-min.png" width="94px" height="45px">
 Old Version
 </h1>
 </div>
 
 <navbar>
-<a href="index">Homepage</a>
-<a href="game">Play Fuze Game</a>
-<a href="oldgame">Old Version</a>
+<a href="../">Homepage</a>
+<a href="../game">Play Fuze Game</a>
+<a href="../oldgame">Old Version</a>
 <!--<a href="community.html">Community</a>-->
-<a href="thelizardpeoplearecontrollingusandweareallgoingtodie.html" id="login_button">Log in</a>
+<a href="../error.html" id="login_button">Log in</a>
 </navbar>
 
 <div id="main">
@@ -208,7 +208,7 @@ Old Version
 		</div>
 		<div id="settings">
 		WASD to move<br>
-		E or left click to shoot<br>sa
+		E or left click to shoot<br>
 		zoom in if it lags<br>
 		<input type="checkbox" id="cb_pov">POV within map?
 		<br />
@@ -287,9 +287,9 @@ Old Version
     
     <!--fuze-engine processes the interactions between objects and renders the text, while game-local creates, edits, and deletes objects-->
 	<!--howler is the sound library tho-->
-    <script src="/libs/howler.core.min.js"></script>
-    <script src="/fuze-engine/fuze-engine.js"></script>
-	<script src="/fuze-engine/fuze-game-local.js"></script>
+    <script src="libs/howler.core.min.js"></script>
+    <script src="fuze-engine.js"></script>
+	<script src="fuze-game-local.js"></script>
 	
 	<!--Listen for the key press, and toggle fullscreen when "f"-->
 	<script>

@@ -3,9 +3,10 @@
 // The HTML class that text will be rendered to
 // via document.getElementById(text_display).innerHTML(text_output)
 
-var level_path = "/fuze-engine/textures/maps/"
-var textures_path = "/fuze-engine/textures/"
-var sounds_path = "/fuze-engine/sounds/"
+var level_path = "textures/maps/"
+var textures_path = "textures/"
+var sounds_path = "sounds/"
+var folder_name = "/oldgame/"
 
 var text_display = "game-display";
 var el = document.getElementById('game-display');
@@ -655,7 +656,7 @@ function load_data(includes_file) {
 	for (txt_line in lines) {
 		let temp_obj_name = lines[txt_line].substr(lines[txt_line].lastIndexOf("/") + 1,lines[txt_line].length - (lines[txt_line].lastIndexOf("/") + (lines[txt_line].length - lines[txt_line].indexOf(".") + 1)));
 		console.log(temp_obj_name);
-		output[temp_obj_name] = JSON.parse(loadFile("/fuze-engine" + lines[txt_line]));
+		output[temp_obj_name] = JSON.parse(loadFile(lines[txt_line]));
 	}
 	console.log("output: " + output);
 	return output
@@ -664,7 +665,8 @@ function load_data(includes_file) {
 function loadFile(filePath) {
     var result = null;
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("GET", filePath, false);
+    console.log(filePath);
+    xmlhttp.open("GET", folder_name + filePath, false);
     xmlhttp.send();
     if (xmlhttp.status == 200) {
         result = xmlhttp.responseText;
