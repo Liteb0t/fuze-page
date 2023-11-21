@@ -5,6 +5,7 @@ var serveIndex = require("serve-index");
 var app = express();
 
 app.use(express.static(__dirname));
+app.use("/game", express.static(__dirname + "/fuzebox"));
 app.use("/media", serveIndex(__dirname + "/media"));
 
 // show error page if url not found

@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+	<title>Fuze Page</title>
+	<link rel="stylesheet" href="../styles.css">
+    <meta charset="UTF-8">
+    <meta name="description" content="How it feels to chew 5 gum">
+    <meta name="keywords" content="diep, io game, html games, gunna, io, fuze, browser game, best kebab">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="../media/favicon.png" type="image/png">
+</head>
+<body>
+
+<div id="banner">
+<h1 id="title">
+<img src="../media/fuze-min.png" width="94px" height="45px">
+The Fuze Game
+</h1>
+</div>
+
+<navbar>
+<a href="../">Homepage</a>
+<a href="../game">Play Fuze Game</a>
+<a href="../oldgame">Old Version</a>
+<!--<a href="community.html">Community</a>-->
+<a href="thelizardpeoplearecontrollingusandweareallgoingtodie.html" id="login_button">Log in</a>
+</navbar>
+
+<div id="main">
+	<h2>Under construction</h2>
+	<p>
+		Progress Report: Really just getting started with the rust framework.<br><br>
+		We aim to have a working public chat by the end of this year.<br><br>
+		For now, here is a fumo...<br>
+		<img src="../media/bidenomics!.jpeg">
+	</p>
+	<h2>Special offer - ben's wasps</h2>
+	<p>
+		For black friday, we are giving away 100,000 wasps.<br>
+		Enter code "SHAPIRO" for your chance to win!<br>
+		<form>
+		<input type="text" id="code-textbox"><br>
+		<button type="button" id="submit-code">Submit</button>
+		</form><br>
+		<img src="../media/win100000wasp.jpg">
+		<img src="../media/ben-shapiro-avatar.jpg">
+	</p>
+</div>
+<script type="module">
+	import init, { show_code } from "./pkg/fuzebox.js";
+	init();// .then(() => {
+	 	// show_code("harharhar");
+	// });	
+	document.getElementById("submit-code").onclick = () => {
+		show_code(document.getElementById("code-textbox").value);
+	}
+
+</script>
+</body>
+</html>
