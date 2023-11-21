@@ -1,0 +1,14 @@
+{
+  "name": "fuzebox",
+  "version": "0.1.0",
+  "files": [
+    "fuzebox_bg.wasm",
+    "fuzebox.js",
+    "fuzebox.d.ts"
+  ],
+  "module": "fuzebox.js",
+  "types": "fuzebox.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
