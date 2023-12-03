@@ -1,0 +1,20 @@
+{ 
+	"name": "sentry",
+	"speed": 40, 
+	"cooldown": 45, 
+	"delete_after": 120,
+	"properties": { 
+		"damage": 1, 
+		"health": 10,
+		"resistance": 5,
+		"friction": 1,
+		"use_ai": true,
+		"lock_direction": false,
+		"weapons": ["rock"],
+		"ai": {
+			"type": "sentry",
+			"speed": 0,
+			"targets": [ ]
+		}
+	}
+}

@@ -1,5 +1,6 @@
+/levels/fz_starter.json
+/levels/fz_basement.json
 /levels/fz_racecourse.json
 /levels/fz_battleground.json
 /levels/fz_maze.json
-/levels/fz_ocean.json
 /levels/fz_empty.json

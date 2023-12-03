@@ -5,16 +5,19 @@
   "x_speed": 0,
   "y_speed": 0,
   "type": "player",
-  "health": 120,
+  "health": 80,
   "show_nametag": true,
   "minimap_character": "P",
   "move_towards": true,
   "team": "player",
+  "friction": 1,
   "weapons": [ "rock", "destroyer" ],
-  "has_resistance": true,
   "skin": {
 
     "stored": "txt_file",
     "data": "snail"
-  }
+  },
+  "ai": {
+		"targets": ["enemies"]
+	}
 }

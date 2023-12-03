@@ -1,0 +1,16 @@
+{
+	"health": 9999,
+	"team": "none",
+	"x_size": 50,
+	"y_size": 5,
+	"damage": 0,
+	"show_nametag": false,
+	"skin": {
+	  "stored": "within_sprite",
+		"data": [
+		"Welcome to Fuze Game!",
+		"Complete the objectives on the top right",
+		"Use WASD to move, and E/R or click to shoot"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{ 
+	"name": "laser",
+	"speed": 300, 
+	"cooldown": 1, 
+	"delete_after": 15,
+	"properties": { 
+		"damage": 1, 
+		"health": 1,
+		"bounciness": 1,
+		"resistance": 0,
+		"friction": 0
+	}
+}

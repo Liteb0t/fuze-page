@@ -1,0 +1,20 @@
+{
+  "name": "goblin",
+  "health": 140,
+  "type": "enemy",
+  "lock_direction": true,
+  "use_ai": true,
+  "ai": {
+    "type": "sans",
+    "speed": 30,
+    "targets": [ "player" ]
+  },
+  "show_nametag": true,
+  "team": "enemies",
+  "weapons": [ "sentry", "bubble" ],
+  "minimap_character": "G",
+  "skin": {
+    "stored": "txt_file",
+    "data": "goblin"
+  }
+}

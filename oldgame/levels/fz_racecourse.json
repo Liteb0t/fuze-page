@@ -1,10 +1,43 @@
 {
   "map": "load",
   "spawn_location": {
-    "x_pos": 200,
-    "y_pos": 20
+    "x_pos": 305,
+    "y_pos": 25
   },
   "entities": [
+    {
+      "name": "tutorial_message",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 325,
+        "y_pos": 18,
+        "skin": {
+			"stored": "within_sprite",
+			"data": [
+				"Race around the map to reach your objectives.",
+				"Remember, your health regenerates 5 seconds",
+				"after taking damage.",
+				"",
+				"If you get lost, use the minimap!"
+			]
+		}
+      }
+    },
+    {
+      "name": "tutorial_message",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 200,
+        "y_pos": 28,
+        "x_size": 21,
+        "skin": {
+			"stored": "within_sprite",
+			"data": [
+				"do NOT kill Clippy!"
+			]
+		}
+      }
+    },
     {
       "name": "mario",
 	  "count": 1,
@@ -22,6 +55,15 @@
       }
     },
     {
+      "name": "peter",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 128,
+        "y_pos": 112,
+        "team": "player"
+      }
+    },
+    {
       "name": "invader",
 	  "count": 1,
       "custom_properties": {
@@ -31,15 +73,24 @@
     },
     {
       "name": "shark",
-	  "count": 1,
+	  "count": 3,
       "custom_properties": {
         "x_pos": "random",
         "y_pos": "random"
       }
     },
     {
+      "name": "clippy",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 246,
+        "y_pos": 13,
+        "weapons": ["rock"]
+      }
+    },
+    {
       "name": "impostor",
-	  "count": 2,
+	  "count": 1,
       "custom_properties": {
         "x_pos": 600,
         "y_pos": 100
@@ -62,6 +113,18 @@
     {
       "type": "eliminate",
       "target": "sans",
+
+      "is_completed": false
+    },
+    {
+      "type": "go to",
+      "target": "peter",
+
+      "is_completed": false
+    },
+    {
+      "type": "go to",
+      "target": "clippy",
 
       "is_completed": false
     }

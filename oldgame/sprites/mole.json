@@ -1,0 +1,20 @@
+{
+  "name": "mole",
+  "health": 200,
+  "resistance": 0,
+  "friction": 0,
+  "type": "enemy",
+  "team": "player",
+  "minimap_character": "m",
+  "use_ai": true,
+  "weapons": [ "drill" ],
+  "ai": {
+    "type": "mole",
+    "speed": 0,
+    "targets": [ ]
+  },
+  "skin": {
+    "stored": "txt_file",
+    "data": "mole"
+  }
+}

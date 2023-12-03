@@ -1,0 +1,110 @@
+	{
+	"entities": [
+
+	{
+		"name": "tutorial_message",
+		"count": 1,
+		"custom_properties": {
+			"x_pos": 110,
+			"y_pos": 60,
+			"skin": {
+				"stored": "within_sprite",
+				"data": [
+					"you will need a DRILL.                     ",
+					"if you have not selected one, kill yourself",
+					"this way  --->'''''''''''''''''''''''''''''"
+				]
+			}
+		}
+    },
+    {
+		"name": "tutorial_message",
+		"count": 1,
+		"custom_properties": {
+			"x_pos": 200,
+			"y_pos": 60,
+			"skin": {
+				"stored": "within_sprite",
+				"data": [
+					"dig down"
+					]
+				}
+			}
+    },
+    {
+      "name": "peter",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 225,
+        "y_pos": 53
+      }
+    },
+    {
+      "name": "invader",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 175,
+        "y_pos": 140
+      }
+    },
+    {
+      "name": "clippy",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 60,
+        "y_pos": 138
+      }
+    },
+	{
+      "name": "goblin",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 50,
+        "y_pos": 86
+      }
+    },
+	{
+      "name": "fishron",
+	  "count": 5,
+      "custom_properties": {
+        "x_pos": "random",
+        "y_pos": "random"
+      }
+    },
+	{
+      "name": "fishron",
+	  "count": 10,
+      "custom_properties": {
+        "x_pos": 160,
+        "y_pos": 160
+      }
+    }
+  ],
+  "spawners": [
+  {
+	  "name": "mario",
+	  "interval": 300,
+	  "args": {
+		"x_pos": 30,
+		"y_pos": 110
+	  }
+  }
+  ],
+  "map": "load",
+  "objectives": [
+
+    {
+      "type": "eliminate",
+      "target": "clippy",
+      "is_completed": false
+    }
+  ],
+  "scale": {
+    "x_scale": 12,
+    "y_scale": 12
+  },
+  "spawn_location": {
+    "x_pos": 83,
+    "y_pos": 67
+  }
+}

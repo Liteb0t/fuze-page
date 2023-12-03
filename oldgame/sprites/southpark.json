@@ -1,0 +1,10 @@
+{
+	"health": 150,
+	"name": "duh boys",
+	"team": "enemy",
+	"minimap-character": "S",
+	"skin": {
+	  "stored": "txt_file",
+		"data": "southpark"
+  }
+}

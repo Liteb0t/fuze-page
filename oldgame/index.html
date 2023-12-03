@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Fuze Game a2.9.3</title>
+    <title>Fuze Game a3.0.0</title>
 	<link rel="stylesheet" href="../styles.css">
-    <meta name="description" content="Play the in-development online browser game loosely derived from diep.io">
+    <meta name="description" content="Text-based shooter game. Explore each map and complete the objectives.">
     <meta name="keywords" content="fuze,game,shooter,play,new game,diep.io,games,fuze game,update,online,diep,page,fuze page">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
@@ -39,13 +39,14 @@
 		
         #game-display {
             position: absolute;
-            /*font-family: IBM; 
+            /* font-family: IBM; 
 			src: url('/fonts/EversonMono.ttf') format('truetype');
 			font-family: Consolas;
-			font-family: evermono;*/
+			font-family: evermono; */
 			font-family: fuzedsys;
             font-size: 18px;
-            width: 97%;
+            line-height: 1;
+            width: 98%;
             height: 73%;
             top: null;
             left: null;
@@ -53,6 +54,7 @@
 			background-color: rgb(255, 255, 255);
             user-select: none;
             -webkit-user-select: none;
+            transition: color 1s, background-color 1s;
         }
 		
 		#minimap {
@@ -84,7 +86,7 @@
             border: 2px solid black;
             padding: 2px;
             width: 400px;
-            height: 200px;
+            height: 210px;
             color: #fff;
         }
 		
@@ -135,6 +137,7 @@
             position: fixed;
             background-color: rgba(0, 0, 255, 0.50);
             padding: 2px;
+            line-height: 1.1;
 			right: 10px;
 			bottom: 10px;
 			width: 300px;
@@ -155,7 +158,7 @@
 
         #weapon_select_container {
             width: 390px;
-            height: 136px;
+            height: 150px;
         }
 
         .weapon_select {
@@ -165,7 +168,7 @@
             border: 1px solid #000;
             margin: 2px;
             width: 180px;
-            height: 128px;
+            height: 140px;
             overflow-y: auto;
         }
 
@@ -189,8 +192,8 @@ Old Version
 
 <navbar>
 <a href="../">Homepage</a>
-<a href="../game">Play Fuze Game</a>
-<a href="../oldgame">Old Version</a>
+<a href="../game">FuzeBox</a>
+<a href="../oldgame">Fuze Game</a>
 <!--<a href="community.html">Community</a>-->
 <a href="../error.html" id="login_button">Log in</a>
 </navbar>
@@ -201,7 +204,7 @@ Old Version
 		<div id="pause_menu" class="centred-window" style="display: block;">
 		<div class="header">
 		PAUSE MENU
-		<button type="button" id="btn_levels" onclick="toggle_div('pause_menu')" style="float:right;top:0;">[ x ]</button>
+		<button type="button" id="btn_levels" onclick="toggle_pause('menu')" style="float:right;top:0;">[ x ]</button>
 		</div>
 		<div id="level_list">
 		Loading...
@@ -216,7 +219,7 @@ Old Version
 		<br />
 		<input type="checkbox" id="cb_show_mouse_pos">Show mouse co-ordinates
 		<br />
-		<button type="button" onclick='respawn_player()'>Respawn</button>
+		<button type="button" onclick="respawn_player()">Respawn</button>
 		<br />
 		<button type="button" onclick="toggle_dark_theme()">Toggle dark theme</button>
 		<br />
@@ -228,7 +231,7 @@ Old Version
 		</pre>
 		<div id="controls" style="display: block">
 			<div>
-			Fuze game alpha 2.9.3<br>
+			Fuze game alpha 3.0.0 PRE-RELEASE<br>
 			</div>
 			<div id="fps">Loading...</div>
 			<button id="next_level_button" style="display:none" type="button" onclick="load_next_level()">Next level</button>
@@ -246,7 +249,7 @@ Old Version
 		<button type="button" onclick="unpause_game();hide_div('level_complete_screen')">Keep playing</button>
 		</div>
 
-		<div id="weapon_select" class="centred-window" style="display: none">
+		<div id="weapon_select" class="centred-window" style="display: none;">
 			<div class="header">
 				Choose your weapons
 			</div>
@@ -271,11 +274,13 @@ Old Version
 			<div class="header">
 				You have died!
 			</div>
-			<button type="button" onclick='respawn_player()'>Respawn</button><br>
+			<!--<button type="button" onclick="respawn_player()">Respawn</button><br>-->
+			<button type="button" onclick="restart_level()">Restart level</button>
+			<button type="button" id="next_level_button_respawn_window" onclick="load_next_level();hide_div('respawn_window');">Next level</button>
 		</div>
 
 		<div id="window_buttons">
-		<button type="button" id="btn_levels" onclick="toggle_div('pause_menu')">Pause menu</button>
+		<button type="button" id="btn_levels" onclick="toggle_pause('bottom')">Pause menu</button>
 		<button type="button" id="btn_settings" onclick="toggle_div('minimap')">Toggle minimap</button>
 		<button type="button" id="btn-fullscreen" onclick="toggleFullscreen()">Toggle Fullscreen</button>
 		</div>
@@ -290,41 +295,5 @@ Old Version
     <script src="libs/howler.core.min.js"></script>
     <script src="fuze-engine.js"></script>
 	<script src="fuze-game-local.js"></script>
-	
-	<!--Listen for the key press, and toggle fullscreen when "f"-->
-	<script>
-		var game_display_element = document.getElementById("game-display");
-		function toggleFullscreen() {
-			if (game_display_element.style["position"] == "fixed") { // if fullscreen
-				game_display_element.style["position"] = "absolute";
-				game_display_element.style["width"] = "97%";
-				game_display_element.style["height"] = "73%";
-				// game_display_element.style["top"] = "null";
-				// game_display_element.style["left"] = "null";
-				game_display_element.style.removeProperty("top");
-				game_display_element.style.removeProperty("left");
-				
-			}
-			else {
-				game_display_element.style["position"] = "fixed";
-				game_display_element.style["width"] = "100%";
-				game_display_element.style["height"] = "100%";
-				game_display_element.style["top"] = "0px";
-				game_display_element.style["left"] = "0px";
-				
-			}
-		}
-		/*
-		document.onkeypress = function (event){ 
-		// whatever we want to do goes in this block
-		event = event || window.event; // capture the event, and ensure we have an event
-		var key = event.key || event.which || event.keyCode; // find the key that was pressed
-		// MDN is better at this: https://developer.mozilla.org/en-US/docs/DOM/event.which
-		if(key===70){ // this is for 'f'
-			toggleFullscreen();
-		}
-		}
-		*/
-	</script>
 </body>
 </html>

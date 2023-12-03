@@ -1,10 +1,12 @@
 {
-"name": "sniper",
-"speed": 90,
-"cooldown": 25,
-"delete_after": 60,
-"properties": {
-  "damage": 4,
-  "health": 30
-  }
+	"name": "sniper",
+	"speed": 100,
+	"cooldown": 30,
+	"delete_after": 30,
+	"properties": {
+	  "damage": 8,
+	  "health": 17,
+	  "resistance": 0.3,
+		"bounciness": 0
+	  }
 }

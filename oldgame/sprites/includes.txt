@@ -7,3 +7,8 @@
 /sprites/impostor.json
 /sprites/default_sprite.json
 /sprites/shark.json
+/sprites/tutorial_message.json
+/sprites/southpark.json
+/sprites/clippy.json
+/sprites/goblin.json
+/sprites/kyle.json

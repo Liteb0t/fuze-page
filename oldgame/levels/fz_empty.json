@@ -4,7 +4,23 @@
     "x_pos": 200,
     "y_pos": 100
   },
-  "npc_list": [],
+  "entities": [
+		{
+			"name": "tutorial_message",
+			"count": 1,
+			"custom_properties": {
+				"x_pos": 210,
+				"y_pos": 98,
+				"skin": {
+					"stored": "within_sprite",
+					"data": [
+						"You have reached the end of the game!",
+						"Thanks for playing.                  "
+					]
+				}
+			}
+		}
+  ],
   "scale": {
     "x_scale": 18,
     "y_scale": 12

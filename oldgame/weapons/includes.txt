@@ -4,3 +4,5 @@
 /weapons/mine.json
 /weapons/bubble.json
 /weapons/drill.json
+/weapons/sentry.json
+/weapons/laser.json

@@ -10,7 +10,7 @@
   "type": "enemy",
   "team": "enemies",
   "health": 120,
-  "damage": 5,
+  "damage": 1,
   "direction": 90,
   "is_bullet": false,
   "lock_direction": false,
@@ -22,7 +22,7 @@
   "wall_damage_range": 0,
   "selectable_at_start": false,
   "delete_after": -1,
-  "resistance": 1,
+  "resistance": 1.5,
   "bounciness": 0.5,
   "use_ai": false,
   "ai": {

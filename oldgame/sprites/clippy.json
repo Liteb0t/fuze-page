@@ -1,0 +1,19 @@
+{
+  "name": "clippy",
+  "health": 40,
+  "type": "enemy",
+  "team": "enemies",
+  "lock_direction": true,
+  "minimap_character": "c",
+  "use_ai": true,
+  "weapons": [ "sniper" ],
+  "ai": {
+    "type": "sentry",
+    "speed": 0,
+    "targets": [ "player" ]
+  },
+  "skin": {
+    "stored": "txt_file",
+    "data": "clippy"
+  }
+}

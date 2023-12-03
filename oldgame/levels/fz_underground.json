@@ -41,14 +41,6 @@
         "y_pos": "random"
       }
     },
-    {
-      "name": "kyle",
-	  "count": 1,
-      "custom_properties": {
-        "x_pos": 350,
-        "y_pos": 100
-      }
-    },
 	{
       "name": "fishron",
 	  "count": 1,

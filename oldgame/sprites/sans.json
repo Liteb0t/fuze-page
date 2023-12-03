@@ -11,7 +11,7 @@
   "move_towards": true,
   "ai": {
     "type": "sans",
-    "speed": 39,
+    "speed": 35,
     "targets": [ "player" ]
   },
   "show_nametag": true,

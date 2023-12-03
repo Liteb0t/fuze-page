@@ -1,5 +1,5 @@
 ﻿// customisable part of fuze engine
-// alpha 2.9.3
+// alpha 3.0.0
 
 var default_sprite = {
     "name": "default",
@@ -11,27 +11,35 @@ var default_sprite = {
     "y_speed": 0,
     "type": "enemy",
     "team": "enemies",
-    "health": 120,
-    "damage": 5,
+    "health": 100,
+    "max_health": 100,
+    "health_regen_locked": false,
+    "damage": 1,
     "is_bullet": false,
+    "has_collided_this_frame": false,
     "lock_direction": false,
-	"can_damage_walls": false,
-    "cooldowns": [],
+    "cooldowns": ["empty", "empty", "empty", "empty"],
     "show_nametag": true,
     "minimap_character": "?",
-    "move_towards": true,
     "weapons": [],
     "delete_after": -1,
     "use_ai": false,
     "ai": {
         "speed": 10,
+        "target-type": "individual",
         "targets": []
     },
     "nametag": "default",
-    "has_resistance": true,
+    "resistance": 1.5,
+    "friction": 1,
     "skin": {
         "stored": "within_sprite",
-        "data": "#####\n#####\n#####\n#####\n"
+        "data": [
+        "#######",
+        "#######",
+        "#######",
+        "#######"
+        ]
     }
 }
 
@@ -47,11 +55,9 @@ default_level = {
     "y_scale": 12
   },
   "spawners": [],
-  "objectives": []
+  "objectives": [],
+  "theme": "light"
 }
-
-// define weapons
-weapons = load_data("weapons/includes.txt");
 
 // load level data from a file. includes gives a list of filepaths
 levels = load_data("levels/includes.txt");
@@ -74,7 +80,14 @@ sprites = load_data("sprites/includes.txt");
 
 // Load the textures into memory as well
 for (the_sprite in sprites) {
+	
+	sprites[the_sprite] = {
+		...default_sprite,
+		...sprites[the_sprite]
+	}
+	
     let temp_skin_data = {};
+    
     if (sprites[the_sprite].skin.stored == "txt_file") {
         temp_skin_data = load_sprite_skin(sprites[the_sprite].skin.data)
         sprites[the_sprite].skin.data = temp_skin_data.data;
@@ -82,34 +95,46 @@ for (the_sprite in sprites) {
         sprites[the_sprite].y_size = temp_skin_data.y_size;
         sprites[the_sprite].skin.stored = "within_sprite";
     }
+    else if (sprites[the_sprite].skin.stored == "within_sprite") {
+		console.log(the_sprite + " Has its skin stored within sprite")
+        // sprites[the_sprite].x_size = sprites[the_sprite].skin.data.x_size;
+        // sprites[the_sprite].y_size = sprites[the_sprite].data.y_size;
+	}
+    else {
+		console.log(the_sprite + " has a mysterious skin location...")
+	}
 }
+
+// define weapons
+weapons = load_data("weapons/includes.txt");
+
 for (weapon in weapons) {
-    sprites[weapons[weapon].name] = {
+    sprites[weapon] = {
         ...default_sprite,
         ...{
-            "skin": { "stored": "within_sprite", "data": load_sprite_skin(weapons[weapon].name).data },
+            "skin": { "stored": "within_sprite", "data": load_sprite_skin(weapon).data },
             "is_bullet": true,
             "lock_direction": true,
-            "move_towards": false,
+            "health_regen_locked": true,
             "show_nametag": false,
             "delete_after": weapons[weapon].delete_after,
-            "x_size": load_sprite_skin(weapons[weapon].name).x_size,
-            "y_size": load_sprite_skin(weapons[weapon].name).y_size
+            "x_size": load_sprite_skin(weapon).x_size,
+            "y_size": load_sprite_skin(weapon).y_size,
+            "friction": 0
         },
 		...weapons[weapon].properties
     }
-    console.log(sprites[weapons[weapon].name])
+    console.log(sprites[weapon])
 }
 
-var player_speed = 3;
+var player_speed = 4;
 
 // load levels in the level select menu
 update_pause_menu();
 
 play_audio("sans_music", "Megalovania.mp3", {loop: true});
 play_audio("peter_sounds", "peter_owchie.mp3", {loop: true});
-play_audio("background_music", "phrygian.wav", {loop: true, volume: 0.3});
-
+play_audio("background_music", "fuzegame-theme.opus", {loop: true, volume: 0.3});
 
 function on_frame(sprites_list) {
 	// insert functions here
@@ -142,13 +167,7 @@ function on_frame(sprites_list) {
 			use_weapon("player", 2, "mouse");
 		}
 		
-		if (keystate.KeyF == true) {
-			use_weapon("player", 3, "mouse");
-		}
 		
-		if (keystate.KeyM == true) {
-			use_weapon("player", 4, "stationary");
-		}
 		
 		if (keystate.KeyP == true) {
 			respawn_player();
@@ -177,6 +196,6 @@ function on_frame(sprites_list) {
 			}
         }
 	}
-	sounds["sans_music"].volume(sound_decay(calculate_distance("player", "sans")));
+	sounds["sans_music"].volume(0.8 * sound_decay(calculate_distance("player", "sans")));
 	sounds["peter_sounds"].volume(sound_decay(calculate_distance("player", "peter")));
 }

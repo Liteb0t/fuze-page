@@ -1,0 +1,24 @@
+{
+  "name": "kyle",
+  "health": 140,
+  "x_speed": 11,
+  "y_speed": -3,
+  "friction": 0,
+  "resistance": 0.8,
+  "type": "enemy",
+  "lock_direction": true,
+  "use_ai": true,
+  "ai": {
+    "type": "sans",
+    "speed": 73,
+    "targets": [ "player" ]
+  },
+  "show_nametag": true,
+  "team": "enemies",
+  "weapons": [ "destroyer", "drill", "drill" ],
+  "minimap_character": "🐒",
+  "skin": {
+    "stored": "txt_file",
+    "data": "kyle"
+  }
+}

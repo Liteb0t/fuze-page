@@ -2,7 +2,7 @@
   "name": "mario",
   "x_pos": 100,
   "y_pos": 100,
-  "health": 73,
+  "health": 40,
   "x_speed": -8,
   "y_speed": -3,
   "type": "enemy",
@@ -21,6 +21,5 @@
 
     "stored": "txt_file",
     "data": "mario"
-  },
-  "has_resistance": true
+  }
 }

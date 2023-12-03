@@ -1,0 +1,122 @@
+{
+  "map": "load",
+  "spawn_location": {
+    "x_pos": 40,
+    "y_pos": 30
+  },
+  "entities": [
+    {
+      "name": "tutorial_message",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 85,
+        "y_pos": 15
+      }
+    },
+    {
+      "name": "tutorial_message",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 206,
+        "y_pos": 25,
+        "skin": {
+			"stored": "within_sprite",
+			"data": [
+				"On the minimap there is a \"C\" near the top right.",
+				"Go and investigate..."
+			]
+		}
+      }
+    },
+    {
+      "name": "tutorial_message",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 264,
+        "y_pos": 100,
+        "skin": {
+			"stored": "within_sprite",
+			"data": [
+				"Now, get past this bully"
+			]
+		}
+      }
+    },
+    {
+      "name": "tutorial_message",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 40,
+        "y_pos": 93,
+        "skin": {
+			"stored": "within_sprite",
+			"data": [
+				"cartman ur fat"
+			]
+		}
+      }
+    },
+    {
+      "name": "tutorial_message",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 78,
+        "y_pos": 94,
+        "skin": {
+			"stored": "within_sprite",
+			"data": [
+				"shut up jew"
+			]
+		}
+      }
+    },
+    {
+      "name": "mario",
+	  "count": 3,
+      "custom_properties": {
+        "x_pos": 400,
+        "y_pos": 100
+      }
+    },
+    {
+      "name": "clippy",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 386,
+        "y_pos": 13
+      }
+    },
+    {
+      "name": "impostor",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 180,
+        "y_pos": 90
+      }
+    },
+    {
+      "name": "southpark",
+	  "count": 1,
+      "custom_properties": {
+        "x_pos": 24,
+        "y_pos": 96,
+        "health": 100000,
+        "show_nametag": false,
+        "team": "player",
+        "damage": 0
+      }
+    }
+  ],
+  "scale": {
+    "x_scale": 18,
+    "y_scale": 12
+  },
+  "objectives": [
+    {
+      "type": "go to",
+      "target": "southpark",
+
+      "is_completed": false
+    }
+  ]
+}
