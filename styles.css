@@ -58,7 +58,7 @@ navbar {
 	display: block;
 	position: sticky;
 	top: 0;
-	background-color: #35c;
+	background-color: #51b;
 	height: 38px;
 	border-top: 2px solid #89a;
 	border-bottom: 2px solid #789;
@@ -117,9 +117,9 @@ navbar #login_button:hover {
 #main {
 	background-color: #333;
 	color: white;
-    border-left: 1px solid #28343B;
-    border-right: 1px solid #28343B;
-    border-bottom: 1px solid #28343B;
+  border-left: 1px solid #28343B;
+  border-right: 1px solid #28343B;
+  border-bottom: 1px solid #28343B;
 	padding: 10px 10px 10px 10px;
 	margin: 0px;
 	min-height: 700px;
@@ -130,6 +130,10 @@ navbar #login_button:hover {
         display: inline-block;
         width: 100%;
     }
+    
+		#main img {
+				max-width: 100%;
+		}
     
     #main a {
 		color: #ee2;
