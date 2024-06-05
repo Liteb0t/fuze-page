@@ -1,0 +1,63 @@
+<h1>Software</h1>
+<h2>Fuze Game</h2>
+<p>
+  A javascript browser game, complete with levels, enemy AI, and weapons. I built it to be modular and easily customisable.<br><br>
+
+  The player, all weapons, and projectiles are stored in objects called "sprites". The sprite properties are stored in <abbr>JSON</abbr> files which contain properties such as health, speed, and damage. Textures are stored separately in txt files.<br><br>
+
+  The renderer reads the cached textures, including that of the level, and displays them on the screen at 30 frames per second.
+  <img src={~p"/images/fuze-game-preview.jpg"} style="max-width: 100%">
+</p>
+<hr />
+<h2>FuzeVD</h2>
+<p>
+  <b>This project is shelved indefinitely. No download is available at this time.</b><br>
+  <abbr title="Fuze Video Downloader">FuzeVD</abbr> downloads any Youtube video into a format of your choice.<br>
+  Contains a built-in updater, so you won't need to reinstall to get the latest features.<br />
+  The installer includes the libraries
+  <a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> and
+  <a href="https://ffmpeg.org/">ffmpeg</a>.<br>
+  <img src={~p"/images/fuzevd_2-0_capture1.png"} alt="Screenshot of the Fuze Video Downloader" width="400" height="473">
+</p>
+<hr />
+<h2>Fuze Tables</h2>
+<p>
+  Pure javascript library that lists <abbr>JSON</abbr> data in a table, with sortable and searchable columns. Under 500 lines of code!
+  <table class="fuze-table" id="company-table" />
+</p>
+<script src={~p"/files/fuze_tables.js"} type="text/javascript" />
+<script>
+var company_table = new FuzeTable("company-table", 
+	{
+		json_path: "/files/sample_data.json"
+		,title: "Companies"
+		,entries_per_page: 30
+		,columns: {
+			"Market_Value_NOK": {
+				display_name: "Market Value (NOK)"
+				,visible: false
+			}
+			,"Market_Value_USD": {
+				display_name: "Market Value (USD)"
+			}
+			,"Incorporation_Country": {
+				display_name: "Incorporation Country"
+			}
+			,"Voting": {
+				visible: false
+			}
+			,"Weight": {
+				visible: false
+			}
+			,"Ownership": {
+				visible: false
+			}
+		}
+		,clickable_rows: true
+		,on_row_click: doSomething
+	});
+
+function doSomething(index) {
+	alert(company_table.included_data[index].Name);
+}
+</script>

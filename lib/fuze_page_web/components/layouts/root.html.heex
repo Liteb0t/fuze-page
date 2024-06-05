@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <.live_title suffix=" · Fuze.page">
+      <%= assigns[:title] || "A page" %>
+    </.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/files/styles-v4.css"} />
+    <!--<link phx-track-static rel="stylesheet" href={~p"/assets/styles-v4.css"}>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
+    </script>
+    -->
+  </head>
+  <body>
+    <div id="main-page">
+      <%= @inner_content %>
+    </div>
+    <img id="footer-art" src={~p"/images/fuze-page-footer-art-v1.png"} alt="page artwork">
+  </body>
+</html>

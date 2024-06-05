@@ -1,0 +1,170 @@
+html {
+	background: linear-gradient(#d2a, #a8f);
+	display: flex;
+	min-height: 100%;
+	--footer-art-height: 90px;
+}
+
+body {
+	flex-grow: 1;
+	margin: 0;
+	min-height: 100%;
+	padding: 20px 0 var(--footer-art-height) 0;
+	position: relative;
+}
+
+#main-page {
+	border: 4px solid #333;
+	margin: 0 auto;
+	width: 90%;
+	max-width: 73em;
+}
+
+header {
+	background: linear-gradient(#000, #000, #666);
+	display: flex;
+	height: 73px;
+
+	#spacer {
+		flex-grow: 1;
+		background-image: url("/images/fuze-page-tile-white.png");
+		background-size: contain;
+		opacity: 0.5;
+	}
+}
+
+.top-navigation-bar {
+	background-color: #3c3;
+	border-top: 4px solid #333;
+	border-bottom: 4px solid #333;
+	display: flex;
+	flex-wrap: wrap;
+
+	a {
+		border-right: 2px solid #030;
+		color: #000;
+		font-size: 1.5em;
+		font-weight: bold;
+		padding: 6px 18px;
+		text-decoration: none;
+
+		&:hover {
+			background: linear-gradient(#6d6, #3b3);
+			text-decoration: underline;
+		}
+	}
+}
+
+main {
+	background-color: #fff;
+	min-height: 20em;
+	padding: 8px;
+
+	img {
+		max-width: 100%;
+	}
+}
+
+footer {
+	background-color: #ccc;
+	padding: 8px;
+}
+
+#footer-art {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin: 0 auto;
+	width: 100%;
+	z-index: -10;
+}
+
+/* FUZE TABLES */
+
+.fuze-table {
+	border: 2px solid #000;
+	box-sizing: border-box;
+	/* height: 100%; */
+	/* overflow-y: scroll; */
+
+
+	.table-title-and-navigation-container {
+		background-color: #cdf;
+		display: flex;
+		padding: 2px;
+		border-bottom: 2px solid #246;
+		z-index: 99;
+	}
+	
+	.table-title {
+	    flex: 1 0 auto;
+	}
+	
+	.showing-indexes {
+	    /* blah */
+	}
+	
+	.page-button:hover {
+	    background-color: #ec9;
+	}
+	
+	.table-container {
+		overflow-x: auto;
+		max-height: 350px;
+		padding: 0 2px 0 2px;
+		/*! overflow-y: clip; */
+		/*! max-height: 95%; */
+	}
+	
+	table {
+		border-collapse: collapse;
+		/*! position: relative; */
+		text-align: left;
+
+		td {
+			border: 2px solid #cde;
+			padding: 4px 8px 4px 8px;
+		}
+		
+		thead th {
+			background: #f2f9ff;
+			position: sticky;
+			padding: 4px;
+			border-bottom: 2px solid blue;
+		}
+		tbody {
+			tr:nth-child(odd) {
+			    background-color: #f2f2f2;
+			}
+			
+			tr:hover {
+				background-color: #dde;
+				cursor: pointer;
+			}
+		}
+	}
+	
+	.column-buttons {
+		float: right;
+		/*! width: 1em; */
+		text-align: center;
+		/*! cursor: pointer; */
+		/*! bottom: 0; */
+		/*! display: block; */
+		/*! position: absolute; */
+		/*! width: -moz-available; */
+		/* right: 0; */
+		/* top: 0; */
+
+		span {
+		    cursor: pointer;
+		    display: inline-block;
+		    width: 1.5em;
+		}
+		
+		span:hover {
+		    background-color: #cdf;
+		}
+	}
+}
