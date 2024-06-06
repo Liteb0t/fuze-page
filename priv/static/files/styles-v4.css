@@ -3,6 +3,10 @@ html {
 	display: flex;
 	min-height: 100%;
 	--footer-art-height: 90px;
+
+	#test-for-old-css {
+		display: none;
+	}
 }
 
 body {
